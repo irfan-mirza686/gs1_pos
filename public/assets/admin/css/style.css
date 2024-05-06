@@ -1,0 +1,25 @@
+*
+{
+	margin: 0;
+	padding: 0;
+}
+
+table {
+	display: block;
+	overflow-x: auto;
+	white-space: nowrap;
+}
+
+.pos-button-gaps {
+	padding:5px;
+}
+
+.pos-buttons-samesize {
+	width:120px !important;
+	height:80px !important;
+}
+
+.pos-right-gaps {
+	padding:5px;
+	padding-right:0;
+}
