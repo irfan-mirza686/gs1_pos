@@ -29,48 +29,7 @@
 @section("content")
 <div class="page-wrapper">
     <div class="page-content">
-    <!-- <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
-                <div class="col">
-                    <div class="card radius-10 border-start border-0 border-4 border-info">
-                        <div class="card-body">
-                            <a href="javascript:void(0);" data-url="{{route('view.new.items')}}" class="viewStockItems" id="viewNewItems"
-                                data-Type="new">
-                                <div class="d-flex align-items-center">
-                                    <div>
-                                        <p class="mb-0 text-secondary">New Mobiles</p>
-                                        <h4 class="my-1 text-info">{{$countNew}}</h4>
-                                        <p class="mb-0 font-13">+2.5% from last week</p>
-                                    </div>
-                                    <div class="widgets-icons-2 rounded-circle bg-gradient-blues text-white ms-auto">📱
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card radius-10 border-start border-0 border-4 border-danger">
-                        <div class="card-body">
-                            <a href="javascript:void(0);" data-url="{{route('view.used.items')}}" class="viewStockItems" id="viewUsedItems"
-                                data-Type="used">
-                                <div class="d-flex align-items-center">
-                                    <div>
-                                        <p class="mb-0 text-secondary">Used Mobiles</p>
-                                        <h4 class="my-1 text-danger">{{$countUsed}}</h4>
-                                        <p class="mb-0 font-13">+5.4% from last week</p>
-                                    </div>
-                                    <div class="widgets-icons-2 rounded-circle bg-gradient-burning text-white ms-auto">
-                                        📱
-                                    </div>
-                                </div>
-                            </a>
 
-                        </div>
-                    </div>
-                </div>
-
-            </div> -->
-        <!--end row-->
 
         <div class="row">
             <div class="col-12 col-lg-8">
