@@ -62,6 +62,7 @@ $(document).ready(function () {
                 $("#customerName").val(item.customerName);
                 $("#customerID").val(item.customerID);
                 $("#searchCustomer").val(item.customerMobile);
+                $("#mobile").val(item.customerMobile);
             }
         }
     });

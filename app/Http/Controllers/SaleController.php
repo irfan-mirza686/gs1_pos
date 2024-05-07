@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use App\Services\SaleService;
 use App\Http\Requests\PosRequest;
 use App\Models\Stock;
@@ -105,20 +107,58 @@ class SaleController extends Controller
     public function findProduct(Request $request)
     {
         if ($request->ajax()) {
-            try {
-                $product = Stock::where('barcode', 'LIKE', "%" . $request->barcode . "%")->orWhere('barcode_2', 'LIKE', "%" . $request->barcode . "%")->first();
-                if (isset ($product) && !empty ($product) && $product->qty <= 0) {
-                    return response()->json(['status' => 404, 'message' => 'Product was sold']);
+            // try {
+                $user_info = session('user_info');
+                $product = Product::where('barcode', 'LIKE', "%" . $request->barcode . "%")->first();
+
+                $searchAPiProduct = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . $user_info['token'],
+                ])->get('https://gs1ksa.org:3093/api/products', [
+                            'barcode' => $request->barcode,
+                        ]);
+                $searchAPiProductBody = $searchAPiProduct->getBody();
+                $findApiProduct = json_decode($searchAPiProductBody, true);
+                if (isset($findApiProduct) && !empty($findApiProduct)) {
+                    $findApiProduct = $findApiProduct[0];
                 }
+
+
                 // echo "<pre>"; print_r($product); exit;
-                if (isset ($product) && !empty ($product) && $product->qty > 0) {
-                    return response()->json(['status' => 200, 'product' => $product]);
-                } else {
-                    return response()->json(['status' => 404, 'message' => 'Product Not Found']);
+                if (isset ($product) && !empty ($product)) {
+                    $prodArray = [
+                        'prodID' => $product->id,
+                        'productName' => $product->name,
+                        'brand' => $product->brand,
+                        'desc1' => $product->details_page,
+                        'size' => $product->size,
+                        'price' => 1,
+                        'disc' => 0,
+                        'vat' => 0,
+                        'total_with_vat' => 0,
+                    ];
+                    return response()->json(['status' => 200, 'prodArray' => $prodArray]);
+                }else if($findApiProduct){
+                    $prodArray = [
+                        'prodID' => $findApiProduct['id'],
+                        'productName' => $findApiProduct['productnameenglish'],
+                        'brand' => $findApiProduct['BrandName'],
+                        'desc1' => $findApiProduct['details_page'],
+                        'size' => $findApiProduct['size'],
+                        'price' => 1,
+                        'disc' => 0,
+                        'vat' => 0,
+                        'total_with_vat' => 0,
+                    ];
+                    return response()->json(['status' => 200, 'prodArray' => $prodArray]);
+                }else{
+                    return response()->json([
+                        'not_found'=> 401,
+                        'message'=>'No Data Found!'
+                    ]);
                 }
-            } catch (\Throwable $th) {
-                return response()->json(['status' => 422, 'message' => $th->getMessage()]);
-            }
+            // } catch (\Throwable $th) {
+            //     return response()->json(['status' => 422, 'message' => $th->getMessage()]);
+            // }
 
         }
     }

@@ -23,7 +23,7 @@ class LogActivity
         $log['subject'] = $subject;
         $log['agent'] = Request::header('user-agent');
         $log['url'] = $url;
-        $log['user_id'] = Auth::user()->id;
+        $log['user_id'] = isset(Auth::user()->id)?Auth::user()->id:0;
         $log['username'] = auth()->check() ? auth()->user()->name : '';
         $log['date'] = $currentDate;
         LogActivityModel::create($log);

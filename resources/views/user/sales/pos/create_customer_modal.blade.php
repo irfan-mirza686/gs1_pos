@@ -9,7 +9,7 @@
             </div>
             <span>Enter all required fields to create an account.</span>
             <div class="modal-body" style="background-color: #F0F0F0;">
-                <form id="registerCustomerForm" action="">
+                <form id="registerCustomerForm" action="{{route('customer.store')}}">
                     <div class="row">
                         <div class="col-md-12 mb-1">
                             <label for="name" class="form-label">Customer Name <font style="color: red;">*</font>

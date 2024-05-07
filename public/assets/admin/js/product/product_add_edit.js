@@ -31,8 +31,6 @@ $(document).ready(function () {
         typingTimer = setTimeout(function() {
             doneTyping(search);
         }, doneTypingInterval);
-
-
     })
 
     // When user stops typing, do something

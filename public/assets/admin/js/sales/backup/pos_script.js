@@ -32,7 +32,6 @@ $(document).ready(function () {
     function afterScanedBarcode() {
         var isLoading = false;
         if (!isLoading) {
-            var barcode = $("#barcode").val();
             isLoading = true;
             $.ajax({
                 url: '/find/product/by/barcode',
@@ -46,7 +45,6 @@ $(document).ready(function () {
                     // $('.barcodeLoader').show();
                 },
                 success: function (resp) {
-                    // console.log(resp)
                     if (resp.status == 404) {
                         // playNotFoundSound();
                         $('.barcodeLoader').addClass('d-none');
@@ -67,9 +65,7 @@ $(document).ready(function () {
                     let updateQty = 1;
                     $(table).find("tr").each(function () {
                         check_value = $(this).data('barcode');
-                        console.log(resp.prodArray)
-                        if (resp.prodArray && check_value == barcode) {
-
+                        if (resp.product && check_value == resp.product.barcode) {
                             let getExistingQty = $(this).closest("tr").find(
                                 "input.quantity").val();
                             updateQty = parseInt(getExistingQty) + 1;
@@ -113,33 +109,36 @@ $(document).ready(function () {
                         }
                         // console.log(resp.product)
                         // amount = resp.product.price;
-                        amount = resp.prodArray.price;
-
-                                $('#otherProductsBody').append('<tr class="delete_add_more_item" data-barcode="'+barcode+'" id="delete_add_more_item">\
-                                    <td>\
-                                    <input type="text" name="barcode[]" value="'+barcode+'" class="form-control form-control-sm rounded-0 barcode text-start" readonly><input type="hidden" value="'+resp.prodArray.prodID+'" name="prodID[]">\
-                                    </td>\
-                                    <td>\
-                                    <input type="text" name="description[]" value="'+resp.prodArray.productName+'" class="form-control form-control-sm rounded-0 description text-start" readonly>\
-                                    </td>\
-                                    <td>\
-                                    <input type="text" name="price[]" value="'+resp.prodArray.price+'" class="form-control form-control-sm rounded-0 price text-end">\
-                                    </td>\
-                                    <td>\
-                                    <input type="text" name="quantity[]" value="'+updateQty+'" class="form-control form-control-sm rounded-0 quantity text-center">\
-                                    </td>\
-                                    <td>\
-                                    <input type="text" name="discount[]" value="'+resp.prodArray.disc+'" class="form-control form-control-sm rounded-0 discount text-end">\
-                                    </td>\
-                                    <td>\
-                                    <input type="text" name="vat[]" value="'+resp.prodArray.vat+'" class="form-control form-control-sm rounded-0 vat text-end">\
-                                    </td>\
-                                    <td>\
-                                    <input type="text" name="single_total[]" value="'+resp.prodArray.price+'" class="form-control form-control-sm rounded-0 single_total text-end" readonly>\
-                                    </td>\
-                                    <td style="float: right;" class="mt-2"><i class="btn btn-danger rounded-5 shadow btn-sm lni lni-close remove_button"></i> </td>\
-                                    </tr>'
-                                    );
+                        var price = 0;
+                        if (resp.product.price) {
+                            price = resp.product.price;
+                        }
+                        $('#otherProductsBody').append(
+                            '<tr class="delete_add_more_item" data-barcode="' +
+                            resp.product.barcode + '" id="delete_add_more_item">\
+                    <td>\
+                    <input type="text" name="productName[]" value="' + resp.product.name + '" class="form-control form-control-sm rounded-0 description text-start" readonly><input type="hidden" value="' +
+                            resp.product.product_id + '" name="product_id[]">\
+                    </td>\
+                    <td>\
+                    <input type="text" name="type[]" value="cash" class="form-control form-control-sm rounded-0 description text-start" readonly>\
+                    </td>\
+                    <td>\
+                    <input type="text" name="barcode[]" value="' + resp.product.barcode +
+                            '" class="form-control form-control-sm rounded-0 barcode text-start" readonly>\
+                    </td>\
+                    <td>\
+                    <input type="text" name="quantity[]" value="' + updateQty + '" class="form-control form-control-sm rounded-0 quantity text-center">\
+                    </td>\
+                    <td>\
+                    <input type="text" name="price[]" value="' + price + '" class="form-control form-control-sm rounded-0 price text-end">\
+                    </td>\
+                    <td>\
+                    <input type="text" name="single_total[]" value="' + price + '" class="form-control form-control-sm rounded-0 single_total text-end" readonly>\
+                    </td>\
+                    <td style="float: right;" class="mt-2"><i class="btn btn-danger rounded-5 shadow btn-sm lni lni-close remove_button"></i> </td>\
+                    </tr>'
+                        );
                         $(".barcodeLoader").hide();
                         $("#barcode").val('');
                         totalPurchaseAmount();
@@ -346,19 +345,17 @@ $(document).ready(function () {
         $('#total_amount').val(sum);
         $('#balance').val(totalAmount);
     }
-    $(document).on('keyup click', '.price,.discount,.quantity,.vat',function(){
+    $(document).on('keyup click', '.price,.discount,.quantity', function () {
         var cost = $(this).closest("tr").find("input.cost").val();
         var price = $(this).closest("tr").find("input.price").val();
-        var discount = $(this).closest("tr").find("input.discount").val();
+        // var discount = $(this).closest("tr").find("input.discount").val();
         var quantity = $(this).closest("tr").find("input.quantity").val();
-
         var vat = $(this).closest("tr").find("input.vat").val();
         var total = (quantity * price);
-        var afterVatTotal = ((total - discount) * vat) / 100;
-        var minusDiscount = (parseInt(total) + parseInt(afterVatTotal)) - discount;
-
-        $(this).closest("tr").find("input.single_total").val(minusDiscount);
-        $(this).closest("tr").find("input.net_vat").val(minusDiscount);
+        // var afterVatTotal = (total * vat) / 100;
+        // var minusDiscount = (parseInt(total) + parseInt(afterVatTotal)) - discount;
+        $(this).closest("tr").find("input.single_total").val(total);
+        $(this).closest("tr").find("input.net_vat").val(total);
         totalPurchaseAmount();
     });
     $("#cashTender").on('click', function () {

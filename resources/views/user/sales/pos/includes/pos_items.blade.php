@@ -4,11 +4,12 @@
             <thead class="rounded-10 shadow" style="background-color: #008CFF; color: white;">
                 <tr>
 
-                    <th width="20%">Product</th>
-                    <th width="10%">Type</th>
-                    <th width="20%">Barcode</th>
-                    <th width="10%">Qty</th>
-                    <th width="15%">Price</th>
+                    <th width="10%">GTIN</th>
+                    <th width="15%">Description</th>
+                    <th width="5%">Price</th>
+                    <th width="12%">Qty</th>
+                    <th width="12%">Discount</th>
+                    <th width="10%">Vat</th>
                     <th width="15%">Total</th>
                     <th width="10%">Action</th>
                 </tr>
@@ -70,8 +71,8 @@
                                 <!-- Row 3 Start -->
                                 <tr>
                                     <td class="pos-button-gaps"><button type="button"
-                                            class="btn btn-block  rounded-0 pos-buttons-samesize shadow"
-                                            id="cashTender" style="background-color: orangered; color: white;">F3 -
+                                            class="btn btn-block  rounded-0 pos-buttons-samesize shadow" id="cashTender"
+                                            style="background-color: orangered; color: white;">F3 -
                                             Tender </br>
                                             Cash</button></td>
                                     <td class="pos-button-gaps"><button type="button"
@@ -82,7 +83,7 @@
                                             class="btn btn-block  rounded-0 pos-buttons-samesize shadow"
                                             style="background-color: red; color: white;">F5 - Return </br>
                                             Items</button></td>
-                                            <td class="pos-button-gaps"><button type="button"
+                                    <td class="pos-button-gaps"><button type="button"
                                             class="btn btn-block btn-primary  rounded-0 pos-buttons-samesize shadow">F4
                                             - Last </br> Receipt</button></td>
                                 </tr>
@@ -94,7 +95,7 @@
                         <!------Left Side End ------------->
                     </td>
                     <td colspan="2">
-</tb>
+                        </tb>
 
                     <td colspan="9">
                         <!-- Right Side -->

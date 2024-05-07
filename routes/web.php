@@ -97,6 +97,17 @@ Route::
     Route::delete('role/delete/{id}', [GroupController::class, 'delete'])->name('role.delete');
     /* Roles Routes Start Here */
 
+    /* Customers Routes Start Here */
+    Route::get('customers', [CustomerController::class, 'index'])->name('customers');
+    Route::post('customers/list', [CustomerController::class, 'List'])->name('customer.list');
+    Route::get('customer/create', [CustomerController::class, 'create'])->name('customer.create');
+    Route::post('customer/store', [CustomerController::class, 'store'])->name('customer.store');
+    Route::get('customer/edit/{id}', [CustomerController::class, 'edit'])->name('customer.edit');
+    Route::post('customer/update/{id}', [CustomerController::class, 'update'])->name('customer.update');
+    Route::delete('customer/delete/{id}', [CustomerController::class, 'delete'])->name('customer.delete');
+    Route::get('autocomplete/customer', [CustomerController::class, 'autocompleteCustomer']);
+    /* Customers Routes Ends Here */
+
     /* User Products Routes Start Here */
     Route::get('products', [ProductController::class, 'index'])->name('products');
     Route::post('product/list', [ProductController::class, 'List'])->name('product.list');

@@ -37,21 +37,21 @@
 
         <div class="mb-3 col-md-3">
             <label for="MemberID" class="form-label">VAT # </label>
-            <input type="text" class="form-control rounded-0" id="vat_no" name="vat_no"
-                placeholder="Vat Number" value="">
+            <input type="text" class="form-control rounded-0" id="vat_no" name="vat_no" placeholder="Vat Number"
+                value="">
 
         </div>
 
         <div class="mb-3 col-md-3">
             <label for="invoice_no" class="form-label">Invoice # <font style="color: red;">*</font></label>
-            <input type="text" class="form-control rounded-0" id="invoice_no" name="invoice_no"
-                placeholder="Invoice #" value="{{$printInvoiceNo}}" readonly style="background-color: #D8FDBA">
+            <input type="text" class="form-control rounded-0" id="invoice_no" name="invoice_no" placeholder="Invoice #"
+                value="{{$printInvoiceNo}}" readonly style="background-color: #D8FDBA">
 
         </div>
 
     </div>
     <div class="row mt-1">
-        <div class="mb-3 col-md-4">
+        <div class="mb-3 col-md-3">
             <label for="searchCustomer" class="form-label">Search Customer <font style="color: red;">*</font>
             </label>
             <input type="text" class="form-control rounded-0" id="searchCustomer" name="mobileNumber"
@@ -59,7 +59,7 @@
 
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <label for="delivery" class="form-label">Delivery <font style="color: red;">*
                 </font>
             </label>
@@ -69,7 +69,7 @@
             </select>
         </div>
 
-        <div class="mb-3 col-md-4">
+        <div class="mb-3 col-md-3">
             <label for="customerName" class="form-label">Customer Name <font style="color: red;">*</font>
             </label>
             <input type="text" class="form-control rounded-0" id="customerName" name="customerName"
@@ -77,13 +77,21 @@
             <input type="hidden" name="customer_id" value="" id="customerID">
             <!-- <span>Current Balance: <span style="color: red;">2500</span></span> -->
         </div>
+        <div class="mb-3 col-md-3">
+            <label for="MemberID" class="form-label">Mobile # </label>
+            <input type="text" class="form-control rounded-0" id="mobile" name="mobile" placeholder="Mobile Number"
+                value="">
+
+        </div>
 
     </div>
     <div class="row mt-1">
-    <div class="mb-3 col-md-6">
+
+
+        <div class="mb-3 col-md-6">
             <label for="MemberID" class="form-label">Remarks </label>
-            <input type="text" class="form-control rounded-0" id="remkars" name="remkars"
-                placeholder="Remarks" value="">
+            <input type="text" class="form-control rounded-0" id="remkars" name="remkars" placeholder="Remarks"
+                value="">
 
         </div>
 
@@ -97,15 +105,7 @@
             </select>
         </div>
 
-        <div class="mb-3 col-md-3">
-            <label for="MemberID" class="form-label">Mobile # </label>
-            <input type="text" class="form-control rounded-0" id="remkars" name="remkars"
-                placeholder="Mobile Number" value="">
-
-        </div>
-
-</div>
-
+    </div>
 
     <div class="row">
         <label for="" class="form-label"><b>Scan Barode</b>

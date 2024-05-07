@@ -72,13 +72,15 @@ class CustomerController extends Controller
     {
         if ($request->ajax()) {
             try {
+                $user_info = session('user_info');
                 $data = $request->all();
                 // echo "<pre>"; print_r($data); exit;
                 $create = $this->customerService->saveCustomer($data, $id = null);
-                $create->user_id = Auth::user()->id;
+                // echo "<pre>"; print_r($create); exit;
+                $create->user_id = isset(Auth::user()->id)?Auth::user()->id:0;
                 \DB::beginTransaction();
                 if ($create->save()) {
-                    \LogActivity::addToLog(strtoupper(Auth::user()->name) . ' Add a Customer (' . $data['name'] . ')', \Config::get('app.url') . '/customer_view' . '/' . $create->id);
+                    \LogActivity::addToLog(strtoupper($user_info['memberData']['company_name_eng']) . ' Add a Customer (' . $data['name'] . ')', \Config::get('app.url') . '/customer_view' . '/' . $create->id);
                     \DB::commit();
                     return response()->json(['status' => 200, 'message' => 'Data has been saved successfully', 'customer' => $create]);
                 } else {
