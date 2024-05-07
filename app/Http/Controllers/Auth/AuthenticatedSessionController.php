@@ -63,6 +63,9 @@ class AuthenticatedSessionController extends Controller
                 $body = $response->getBody();
                 $data = json_decode($body, true);
                 // echo "<pre>"; print_r($data); exit;
+                if (@$data['error']) {
+                    return response()->json(['status' => 404, 'error' => @$data['error']]);
+                }
                 if ($data) {
                     return response()->json(['status' => 200, 'data' => $data]);
                 }

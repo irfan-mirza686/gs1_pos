@@ -40,6 +40,7 @@ $(document).ready(function () {
                 $(btn).removeAttr("disabled");
 
                 if (resp.status === 200) {
+
                     $(".memberLoginActivity").html("");
                     const modal = $("#activityPopup");
                     $(".memberLoginActivity").append('<option value="">-select-</option>');
@@ -48,6 +49,15 @@ $(document).ready(function () {
                     });
                     modal.find('input[name=email]').val(email);
                     modal.modal('show');
+                }
+
+                if (resp.status === 404) {
+                    console.log(resp)
+                    swalWithBootstrapButtons.fire(
+                        'Warning!',
+                        resp.error,
+                        'warning'
+                    )
                 }
             }, error: function (xhr, textStatus, errorThrown) {
 
@@ -109,6 +119,7 @@ $(document).ready(function () {
                         window.location.href = "dashboard";
                     }, 2000);
                 }
+
             }, error: function (xhr, textStatus, errorThrown) {
 
                 $(btn).text(btnVal);
