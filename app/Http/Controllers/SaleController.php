@@ -152,7 +152,7 @@ class SaleController extends Controller
                     return response()->json(['status' => 200, 'prodArray' => $prodArray]);
                 }else{
                     return response()->json([
-                        'not_found'=> 401,
+                        'not_found'=> 404,
                         'message'=>'No Data Found!'
                     ]);
                 }
