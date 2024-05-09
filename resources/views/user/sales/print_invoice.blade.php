@@ -135,13 +135,13 @@ $zatcaP2 = 'AQVJcmZhbgIPMzAwNDU2NDE2NTAwMDAzAxQyMDIxLTEyLTAxVDE5OjAwOjA5WgQGMTAw
 
 
 
-<tr>
+<!-- <tr>
   <td colspan="5" align="center">
     <strong>IrFan Mirza, +923366667686</strong><br>
 
   </td>
 
-  </tr>
+  </tr> -->
 
 
 
