@@ -63,6 +63,7 @@ $(document).ready(function () {
                 $("#customerID").val(item.customerID);
                 $("#searchCustomer").val(item.customerMobile);
                 $("#mobile").val(item.customerMobile);
+                $("#vat_no").val(item.vat_no);
             }
         }
     });

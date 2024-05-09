@@ -28,7 +28,7 @@ class ProductController extends Controller
     {
         $pageTitle = "Products";
         $user_info = session('user_info');
-
+        // echo "<pre>"; print_r($user_info); exit;
         // $products = Http::withHeaders([
         //     'Authorization' => 'Bearer ' . $user_info['token'],
         // ])->get('https://gs1ksa.org:3093/api/products', [

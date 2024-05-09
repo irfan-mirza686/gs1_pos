@@ -166,11 +166,12 @@ class SaleController extends Controller
     public function store(Request $request)
     {
         if ($request->ajax()) {
-            try {
+            // try {
                 $data = $request->all();
                 // echo "<pre>";
                 // print_r($data);
                 // exit();
+                $user_info = session('user_info');
                 $items = $this->saleService->makeItemsArr($data);
                 $pos = $this->saleService->saveSale($data, $id = "");
                 \DB::beginTransaction();
@@ -187,17 +188,17 @@ class SaleController extends Controller
                     // echo "<pre>";
                     // print_r($base64);
                     // exit;
-                    $this->saleService->updateStock($items);
-                    \LogActivity::addToLog(strtoupper(Auth::user()->name) . ' Add a new Sale Order (' . $data['invoice_no'] . ')', route('sale.view', $pos->order_no));
+
+                    \LogActivity::addToLog(strtoupper($user_info['memberData']['company_name_eng']) . ' Add a new Sale Order (' . $data['invoice_no'] . ')', route('sale.view', $pos->order_no));
                     \DB::commit();
                     return response()->json(['status' => 200, 'message' => 'Data has been saved successfully', 'invoice_no' => time(), 'print_invoiceNo' => $data['invoice_no']]);
                 } else {
                     return response()->json(['status' => 401, 'message' => 'Data has not been saved']);
                 }
 
-            } catch (\Throwable $th) {
-                return response()->json(['status' => 422, 'message' => $th->getMessage()]);
-            }
+            // } catch (\Throwable $th) {
+            //     return response()->json(['status' => 422, 'message' => $th->getMessage()]);
+            // }
 
         }
     }

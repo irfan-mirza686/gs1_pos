@@ -21,7 +21,8 @@
             </label>
             <select class="single-select appendHscodes form-control rounded-0" name="transactions" id="transactions">
                 <option disabled selected>Choose...</option>
-
+                <option value="cash">Cash</option>
+                <option value="credit">Credit</option>
             </select>
         </div>
 
@@ -101,6 +102,8 @@
             </label>
             <select class="single-select form-control rounded-0" name="type" id="type">
                 <option disabled selected>Choose...</option>
+                <option value="cash">Cash</option>
+                <option value="credit">Credit</option>
 
             </select>
         </div>

@@ -64,6 +64,7 @@ $(document).ready(function () {
                     $("#customerID").val(resp.customer.id);
                     $("#searchCustomer").val(resp.customer.mobile);
                     $("#mobile").val(resp.customer.mobile);
+                    $("#vat_no").val(resp.customer.vat);
                     let msgType = 'success';
                     let msgClass = 'bx bx-check-circle';
                     let message = resp.message;

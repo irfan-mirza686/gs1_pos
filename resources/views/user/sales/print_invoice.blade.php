@@ -32,11 +32,12 @@
  <tr>
 
   <td width="15"><strong>#.</strong></td>
-  <td width="15"><strong>Item</strong></td>
-  <td width="30"><strong>Type</strong></td>
+  <td width="15"><strong>Product</strong></td>
   <td width="15"><strong>Barcode</strong></td>
   <td width="15"><strong>Qty</strong></td>
   <td id="kitchenph" width="100"><strong>Price</strong></td>
+  <td width="10"><strong>Discount</strong></td>
+  <td width="10"><strong>Vat</strong></td>
 
   <td id="kitchentotalh" width="60" style="text-align: right;"><strong>Total</strong></td>
 
@@ -59,11 +60,12 @@ $counter = $counter+1;
 
   <td width="5">{{$counter}}</td>
   <td class="kitchen" width="25">{{$print['productName']}}</td>
-  <td class="kitchen" width="5">{{$print['type']}}</td>
   <td width="20">{{$print['barcode']}}</td>
 
   <td class="kitchen" width="5">{{$print['qty']}}</td>
   <td class="kitchen" width="20">{{$print['price']}}</td>
+  <td class="kitchen" width="5">{{$print['discount']}}</td>
+  <td class="kitchen" width="5">{{$print['vat']}}</td>
 
   <td class="kitchen" width="20" style="text-align: right;">{{number_format($print['sub_total'])}}</td>
 
@@ -90,10 +92,11 @@ $counter = $counter+1;
 </tr>
 
 
+
 <tr>
   <td colspan="3"><strong>Cash Amount:</strong></td>
   <td><strong></strong></td>
-  <td class="grandtotalFont"style="text-align: right;"><strong>{{number_format(@$getInvoiceData->paid_amount)}}</strong></td>
+  <td class="grandtotalFont"style="text-align: right;"><strong>{{number_format(@$getInvoiceData->tender_amount)}}</strong></td>
 </tr>
 
 

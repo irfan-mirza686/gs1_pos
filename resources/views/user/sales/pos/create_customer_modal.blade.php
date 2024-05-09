@@ -24,6 +24,12 @@
                         </div>
 
                         <div class="col-md-12 mb-1">
+                            <label for="input4" class="form-label">VAT No. <font style="color: red;">*</font></label>
+                            <input type="text" name="vat" class="form-control form-control-sm rounded-0" id="mobile"
+                                placeholder="VAT #">
+                        </div>
+
+                        <div class="col-md-12 mb-1">
                             <label for="cnic" class="form-label">CNIC</label>
                             <input type="text" name="cnic" class="form-control form-control-sm rounded-0" id="cnic"
                                 placeholder="CNIC">

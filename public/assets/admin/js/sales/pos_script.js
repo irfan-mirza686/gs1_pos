@@ -17,6 +17,9 @@ $(document).ready(function () {
     // $('input#barcode').keypress(function () {
     //     console.log($(this).val())
     // })
+    var isLoading = false;
+
+
     var typingTimer;
     var doneTypingInterval = 1000; // 1 second
 
@@ -377,6 +380,7 @@ $(document).ready(function () {
 
     $(document).on('submit', '#posForm', function (e) {
         e.preventDefault();
+
         let formData = new FormData($('#posForm')[0]);
         let url = $("#posForm").attr('action');
         console.log(formData)
