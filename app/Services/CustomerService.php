@@ -40,7 +40,7 @@ class CustomerService
         }
         $create->name = $data['name'];
         $create->mobile = $data['mobile'];
-        $create->cnic = $data['cnic'];
+        // $create->cnic = $data['cnic'];
         $create->vat = $data['vat'];
         $create->address = isset($data['address']) ? $data['address'] : null;
         return $create;

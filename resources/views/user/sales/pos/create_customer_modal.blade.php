@@ -29,11 +29,11 @@
                                 placeholder="VAT #">
                         </div>
 
-                        <div class="col-md-12 mb-1">
+                        <!-- <div class="col-md-12 mb-1">
                             <label for="cnic" class="form-label">CNIC</label>
                             <input type="text" name="cnic" class="form-control form-control-sm rounded-0" id="cnic"
                                 placeholder="CNIC">
-                        </div>
+                        </div> -->
 
                         <div class="col-md-12 mb-1">
                             <label for="address" class="form-label">Address</label>
