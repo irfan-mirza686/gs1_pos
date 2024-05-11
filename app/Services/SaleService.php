@@ -58,6 +58,7 @@ class SaleService
                 'price' => $data['price'][$i],
                 'discount' => $data['discount'][$i],
                 'vat' => $data['vat'][$i],
+                'vat_total' => $data['vat_total'][$i],
                 'sub_total' => $data['single_total'][$i],
             );
         }

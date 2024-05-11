@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ZatcaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\JournalMasterController;
@@ -20,7 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 // Route::middleware('auth:api')->group(function(){
-    
+
 // });
 
 Route::post('journal/master/{email?}',[JournalMasterController::class,'journalMaster']);
@@ -33,4 +34,6 @@ Route::post('product/search/description',[App\Http\Controllers\Api\ProductApiCon
 Route::post('product/search/gtin',[App\Http\Controllers\Api\ProductApiController::class,'productSearchGTIN']);
 Route::post('product/search/sku',[App\Http\Controllers\Api\ProductApiController::class,'productSearchSKU']);
 Route::post('update/product',[App\Http\Controllers\Api\ProductApiController::class,'UpdateProduct']);
+
+Route::post('post/zatca',[ZatcaController::class,'postZatcaData']);
 

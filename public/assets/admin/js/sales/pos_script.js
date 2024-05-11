@@ -37,130 +37,134 @@ $(document).ready(function () {
         if (!isLoading) {
             var barcode = $("#barcode").val();
             isLoading = true;
-            $.ajax({
-                url: '/find/product/by/barcode',
-                method: 'GET',
-                data: {
-                    barcode: $("#barcode").val()
-                },
-                async: true,
-                beforSend: function () {
-                    $('.barcodeLoader').removeClass('d-none');
-                    // $('.barcodeLoader').show();
-                },
-                success: function (resp) {
-                    // console.log(resp)
-                    if (resp.status == 404) {
-                        // playNotFoundSound();
-                        $('.barcodeLoader').addClass('d-none');
-                        // $('.barcodeLoader').hide();
+            if (barcode) {
+
+
+                $.ajax({
+                    url: '/find/product/by/barcode',
+                    method: 'GET',
+                    data: {
+                        barcode: $("#barcode").val()
+                    },
+                    async: true,
+                    beforSend: function () {
+                        $('.barcodeLoader').removeClass('d-none');
+                        // $('.barcodeLoader').show();
+                    },
+                    success: function (resp) {
+                        // console.log(resp)
+                        if (resp.status == 404) {
+                            // playNotFoundSound();
+                            $('.barcodeLoader').addClass('d-none');
+                            // $('.barcodeLoader').hide();
+                            $("#barcode").val('');
+                            var msgType = 'error';
+                            var position = 'bottom left';
+                            var msgClass = 'bx bx-check-circle';
+                            var message = resp.message;
+                            var sound = 'sound6';
+                            showMsg(msgType, position, msgClass, message, sound);
+
+                            return false;
+                        }
+                        var check_value = 0;
+                        var table = $('#otherProductsBody');
+                        var exist;
+                        let updateQty = 1;
+                        $(table).find("tr").each(function () {
+                            check_value = $(this).data('barcode');
+                            console.log(resp.prodArray)
+                            if (resp.prodArray && check_value == barcode) {
+
+                                let getExistingQty = $(this).closest("tr").find(
+                                    "input.quantity").val();
+                                updateQty = parseInt(getExistingQty) + 1;
+                                $(this).closest("tr").find("input.quantity")
+                                    .val(updateQty);
+                                // Calculate Price with Updated Qty....
+                                var price = $(this).closest("tr").find(
+                                    "input.price").val();
+
+
+                                var total = (updateQty * price);
+
+                                $(this).closest("tr").find("input.single_total")
+                                    .val(total);
+                                $(this).closest("tr").find("input.net_vat").val(
+                                    total);
+                                totalPurchaseAmount();
+                                exist = true;
+                            }
+                        });
+                        if (exist) {
+                            // playSound();
+                            console.log("ID exist")
+                            $(".barcodeLoader").hide();
+                            $("#barcode").val('');
+                            var msgType = 'warning';
+                            var position = 'bottom left';
+                            var msgClass = 'bx bx-check-circle';
+                            var message = 'Product Already Exist in list';
+                            var sound = 'sound5';
+                            showMsg(msgType, position, msgClass, message, sound);
+
+                            return false;
+                        } else {
+                            playSound();
+                            let rowCount = $('#otherProductsBody tr').length;
+                            let count = rowCount + 1;
+                            // console.log('total rows ' + rowCount)
+                            if (count > 0) {
+                                $("#invoiceSubmitBtn").removeClass("disabled");
+                            }
+                            // console.log(resp.product)
+                            // amount = resp.product.price;
+                            amount = resp.prodArray.price;
+
+                            $('#otherProductsBody').append('<tr class="delete_add_more_item" data-barcode="' + barcode + '" id="delete_add_more_item">\
+                                    <td>\
+                                    <input type="text" name="barcode[]" value="'+ barcode + '" class="form-control form-control-sm rounded-0 barcode text-start" readonly><input type="hidden" value="' + resp.prodArray.prodID + '" name="prodID[]">\
+                                    </td>\
+                                    <td>\
+                                    <input type="text" name="description[]" value="'+ resp.prodArray.productName + '" class="form-control form-control-sm rounded-0 description text-start" readonly>\
+                                    </td>\
+                                    <td>\
+                                    <input type="text" name="price[]" value="'+ resp.prodArray.price + '" class="form-control form-control-sm rounded-0 price text-end">\
+                                    </td>\
+                                    <td>\
+                                    <input type="text" name="quantity[]" value="'+ updateQty + '" class="form-control form-control-sm rounded-0 quantity text-center">\
+                                    </td>\
+                                    <td>\
+                                    <input type="text" name="discount[]" value="'+ resp.prodArray.disc + '" class="form-control form-control-sm rounded-0 discount text-end">\
+                                    </td>\
+                                    <td>\
+                                    <input type="text" name="vat[]" value="'+ resp.prodArray.vat + '" class="form-control form-control-sm rounded-0 vat text-end"><input type="hidden" name="vat_total[]" value="" class="form-control form-control-sm rounded-0 vat_total text-end">\
+                                    </td>\
+                                    <td>\
+                                    <input type="text" name="single_total[]" value="'+ resp.prodArray.price + '" class="form-control form-control-sm rounded-0 single_total text-end" readonly>\
+                                    </td>\
+                                    <td style="float: right;" class="mt-2"><i class="btn btn-danger rounded-5 shadow btn-sm lni lni-close remove_button"></i> </td>\
+                                    </tr>'
+                            );
+                            $(".barcodeLoader").hide();
+                            $("#barcode").val('');
+                            totalPurchaseAmount();
+                        }
+                    },
+                    error: function (resp) {
+                        $(".barcodeLoader").hide();
                         $("#barcode").val('');
                         var msgType = 'error';
                         var position = 'bottom left';
                         var msgClass = 'bx bx-check-circle';
-                        var message = resp.message;
-                        var sound = 'sound6';
-                        showMsg(msgType, position, msgClass, message, sound);
-
-                        return false;
+                        var message = resp.statusText;
+                        showMsg(msgType, position, msgClass, message);
+                    },
+                    complete: function () {
+                        isLoading = false;
                     }
-                    var check_value = 0;
-                    var table = $('#otherProductsBody');
-                    var exist;
-                    let updateQty = 1;
-                    $(table).find("tr").each(function () {
-                        check_value = $(this).data('barcode');
-                        console.log(resp.prodArray)
-                        if (resp.prodArray && check_value == barcode) {
-
-                            let getExistingQty = $(this).closest("tr").find(
-                                "input.quantity").val();
-                            updateQty = parseInt(getExistingQty) + 1;
-                            $(this).closest("tr").find("input.quantity")
-                                .val(updateQty);
-                            // Calculate Price with Updated Qty....
-                            var price = $(this).closest("tr").find(
-                                "input.price").val();
-
-
-                            var total = (updateQty * price);
-
-                            $(this).closest("tr").find("input.single_total")
-                                .val(total);
-                            $(this).closest("tr").find("input.net_vat").val(
-                                total);
-                            totalPurchaseAmount();
-                            exist = true;
-                        }
-                    });
-                    if (exist) {
-                        // playSound();
-                        console.log("ID exist")
-                        $(".barcodeLoader").hide();
-                        $("#barcode").val('');
-                        var msgType = 'warning';
-                        var position = 'bottom left';
-                        var msgClass = 'bx bx-check-circle';
-                        var message = 'Product Already Exist in list';
-                        var sound = 'sound5';
-                        showMsg(msgType, position, msgClass, message, sound);
-
-                        return false;
-                    } else {
-                        playSound();
-                        let rowCount = $('#otherProductsBody tr').length;
-                        let count = rowCount + 1;
-                        // console.log('total rows ' + rowCount)
-                        if (count > 0) {
-                            $("#invoiceSubmitBtn").removeClass("disabled");
-                        }
-                        // console.log(resp.product)
-                        // amount = resp.product.price;
-                        amount = resp.prodArray.price;
-
-                                $('#otherProductsBody').append('<tr class="delete_add_more_item" data-barcode="'+barcode+'" id="delete_add_more_item">\
-                                    <td>\
-                                    <input type="text" name="barcode[]" value="'+barcode+'" class="form-control form-control-sm rounded-0 barcode text-start" readonly><input type="hidden" value="'+resp.prodArray.prodID+'" name="prodID[]">\
-                                    </td>\
-                                    <td>\
-                                    <input type="text" name="description[]" value="'+resp.prodArray.productName+'" class="form-control form-control-sm rounded-0 description text-start" readonly>\
-                                    </td>\
-                                    <td>\
-                                    <input type="text" name="price[]" value="'+resp.prodArray.price+'" class="form-control form-control-sm rounded-0 price text-end">\
-                                    </td>\
-                                    <td>\
-                                    <input type="text" name="quantity[]" value="'+updateQty+'" class="form-control form-control-sm rounded-0 quantity text-center">\
-                                    </td>\
-                                    <td>\
-                                    <input type="text" name="discount[]" value="'+resp.prodArray.disc+'" class="form-control form-control-sm rounded-0 discount text-end">\
-                                    </td>\
-                                    <td>\
-                                    <input type="text" name="vat[]" value="'+resp.prodArray.vat+'" class="form-control form-control-sm rounded-0 vat text-end">\
-                                    </td>\
-                                    <td>\
-                                    <input type="text" name="single_total[]" value="'+resp.prodArray.price+'" class="form-control form-control-sm rounded-0 single_total text-end" readonly>\
-                                    </td>\
-                                    <td style="float: right;" class="mt-2"><i class="btn btn-danger rounded-5 shadow btn-sm lni lni-close remove_button"></i> </td>\
-                                    </tr>'
-                                    );
-                        $(".barcodeLoader").hide();
-                        $("#barcode").val('');
-                        totalPurchaseAmount();
-                    }
-                },
-                error: function (resp) {
-                    $(".barcodeLoader").hide();
-                    $("#barcode").val('');
-                    var msgType = 'error';
-                    var position = 'bottom left';
-                    var msgClass = 'bx bx-check-circle';
-                    var message = resp.statusText;
-                    showMsg(msgType, position, msgClass, message);
-                },
-                complete: function () {
-                    isLoading = false;
-                }
-            }); //  END AJAX....
+                }); //  END AJAX....
+            }
         }
     }
 
@@ -349,7 +353,7 @@ $(document).ready(function () {
         $('#total_amount').val(sum);
         $('#balance').val(totalAmount);
     }
-    $(document).on('keyup click', '.price,.discount,.quantity,.vat',function(){
+    $(document).on('keyup click', '.price,.discount,.quantity,.vat', function () {
         var cost = $(this).closest("tr").find("input.cost").val();
         var price = $(this).closest("tr").find("input.price").val();
         var discount = $(this).closest("tr").find("input.discount").val();
@@ -362,6 +366,7 @@ $(document).ready(function () {
 
         $(this).closest("tr").find("input.single_total").val(minusDiscount);
         $(this).closest("tr").find("input.net_vat").val(minusDiscount);
+        $(this).closest("tr").find("input.vat_total").val(afterVatTotal);
         totalPurchaseAmount();
     });
     $("#cashTender").on('click', function () {

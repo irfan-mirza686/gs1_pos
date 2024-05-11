@@ -112,6 +112,16 @@
 
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td class="pos-button-gaps text-start" colspan="5"><strong>Total Vat
+                                            VAT(15%):</strong></td>
+                                    <td class="pos-right-gaps" colspan="1">
+                                        <input type="text" name="total_vat" value="0" id="total_vat"
+                                            class="form-control form-control-sm rounded-0 text-end total_vat"
+                                            style="background-color: #F0F0F0" readonly>
+
+                                    </td>
+                                </tr>
 
                                 <!-- Row 1 Ends -->
 

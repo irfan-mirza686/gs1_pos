@@ -86,61 +86,61 @@ class SaleController extends Controller
 
 
 
-        return view('user.sales.pos.index', compact('pageTitle', 'printInvoiceNo', 'page_name','user_info'));
+        return view('user.sales.pos.index', compact('pageTitle', 'printInvoiceNo', 'page_name', 'user_info'));
     }
     /********************************************************************/
     public function findProduct(Request $request)
     {
         if ($request->ajax()) {
             // try {
-                $user_info = session('user_info');
-                $product = Product::where('barcode', 'LIKE', "%" . $request->barcode . "%")->first();
+            $user_info = session('user_info');
+            $product = Product::where('barcode', 'LIKE', "%" . $request->barcode . "%")->first();
 
-                $searchAPiProduct = Http::withHeaders([
-                    'Authorization' => 'Bearer ' . $user_info['token'],
-                ])->get('https://gs1ksa.org:3093/api/products', [
-                            'barcode' => $request->barcode,
-                        ]);
-                $searchAPiProductBody = $searchAPiProduct->getBody();
-                $findApiProduct = json_decode($searchAPiProductBody, true);
-                if (isset($findApiProduct) && !empty($findApiProduct)) {
-                    $findApiProduct = $findApiProduct[0];
-                }
-
-
-                // echo "<pre>"; print_r($product); exit;
-                if (isset ($product) && !empty ($product)) {
-                    $prodArray = [
-                        'prodID' => $product->id,
-                        'productName' => $product->name,
-                        'brand' => $product->brand,
-                        'desc1' => $product->details_page,
-                        'size' => $product->size,
-                        'price' => 1,
-                        'disc' => 0,
-                        'vat' => 15,
-                        'total_with_vat' => 0,
-                    ];
-                    return response()->json(['status' => 200, 'prodArray' => $prodArray]);
-                }else if($findApiProduct){
-                    $prodArray = [
-                        'prodID' => $findApiProduct['id'],
-                        'productName' => $findApiProduct['productnameenglish'],
-                        'brand' => $findApiProduct['BrandName'],
-                        'desc1' => $findApiProduct['details_page'],
-                        'size' => $findApiProduct['size'],
-                        'price' => 1,
-                        'disc' => 0,
-                        'vat' => 15,
-                        'total_with_vat' => 0,
-                    ];
-                    return response()->json(['status' => 200, 'prodArray' => $prodArray]);
-                }else{
-                    return response()->json([
-                        'status'=> 404,
-                        'message'=>'No Data Found!'
+            $searchAPiProduct = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $user_info['token'],
+            ])->get('https://gs1ksa.org:3093/api/products', [
+                        'barcode' => $request->barcode,
                     ]);
-                }
+            $searchAPiProductBody = $searchAPiProduct->getBody();
+            $findApiProduct = json_decode($searchAPiProductBody, true);
+            if (isset($findApiProduct) && !empty($findApiProduct)) {
+                $findApiProduct = $findApiProduct[0];
+            }
+
+
+            // echo "<pre>"; print_r($product); exit;
+            if (isset($product) && !empty($product)) {
+                $prodArray = [
+                    'prodID' => $product->id,
+                    'productName' => $product->name,
+                    'brand' => $product->brand,
+                    'desc1' => $product->details_page,
+                    'size' => $product->size,
+                    'price' => 1,
+                    'disc' => 0,
+                    'vat' => 15,
+                    'total_with_vat' => 0,
+                ];
+                return response()->json(['status' => 200, 'prodArray' => $prodArray]);
+            } else if ($findApiProduct) {
+                $prodArray = [
+                    'prodID' => $findApiProduct['id'],
+                    'productName' => $findApiProduct['productnameenglish'],
+                    'brand' => $findApiProduct['BrandName'],
+                    'desc1' => $findApiProduct['details_page'],
+                    'size' => $findApiProduct['size'],
+                    'price' => 1,
+                    'disc' => 0,
+                    'vat' => 15,
+                    'total_with_vat' => 0,
+                ];
+                return response()->json(['status' => 200, 'prodArray' => $prodArray]);
+            } else {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'No Data Found!'
+                ]);
+            }
             // } catch (\Throwable $th) {
             //     return response()->json(['status' => 422, 'message' => $th->getMessage()]);
             // }
@@ -152,34 +152,34 @@ class SaleController extends Controller
     {
         if ($request->ajax()) {
             // try {
-                $data = $request->all();
+            $data = $request->all();
+            // echo "<pre>";
+            // print_r($data);
+            // exit();
+            $user_info = session('user_info');
+            $items = $this->saleService->makeItemsArr($data);
+            $pos = $this->saleService->saveSale($data, $id = "");
+            \DB::beginTransaction();
+
+            $pos->items = $items;
+            if ($pos->save()) {
+
+                // $base64 = \Prgayman\Zatca\Facades\Zatca::sellerName('Zatca')
+                //     ->vatRegistrationNumber("300456416500003")
+                //     ->timestamp("2021-12-01T14:00:09Z")
+                //     ->totalWithVat('100.00')
+                //     ->vatTotal('15.00')
+                //     ->toBase64();
                 // echo "<pre>";
-                // print_r($data);
-                // exit();
-                $user_info = session('user_info');
-                $items = $this->saleService->makeItemsArr($data);
-                $pos = $this->saleService->saveSale($data, $id = "");
-                \DB::beginTransaction();
+                // print_r($base64);
+                // exit;
 
-                $pos->items = $items;
-                if ($pos->save()) {
-
-                    // $base64 = \Prgayman\Zatca\Facades\Zatca::sellerName('Zatca')
-                    //     ->vatRegistrationNumber("300456416500003")
-                    //     ->timestamp("2021-12-01T14:00:09Z")
-                    //     ->totalWithVat('100.00')
-                    //     ->vatTotal('15.00')
-                    //     ->toBase64();
-                    // echo "<pre>";
-                    // print_r($base64);
-                    // exit;
-
-                    \LogActivity::addToLog(strtoupper($user_info['memberData']['company_name_eng']) . ' Add a new Sale Order (' . $data['invoice_no'] . ')', route('sale.view', $pos->order_no));
-                    \DB::commit();
-                    return response()->json(['status' => 200, 'message' => 'Data has been saved successfully', 'invoice_no' => time(), 'print_invoiceNo' => $data['invoice_no']]);
-                } else {
-                    return response()->json(['status' => 401, 'message' => 'Data has not been saved']);
-                }
+                \LogActivity::addToLog(strtoupper($user_info['memberData']['company_name_eng']) . ' Add a new Sale Order (' . $data['invoice_no'] . ')', route('sale.view', $pos->order_no));
+                \DB::commit();
+                return response()->json(['status' => 200, 'message' => 'Data has been saved successfully', 'invoice_no' => time(), 'print_invoiceNo' => $data['invoice_no']]);
+            } else {
+                return response()->json(['status' => 401, 'message' => 'Data has not been saved']);
+            }
 
             // } catch (\Throwable $th) {
             //     return response()->json(['status' => 422, 'message' => $th->getMessage()]);
@@ -192,12 +192,19 @@ class SaleController extends Controller
     {
         $getInvoiceData = Sale::with('customer')->where('order_no', $invoice_no)->first();
         // $totalWithVat = $getInvoiceData
+        $totalVat = 0;
+// echo "<pre>"; print_r($getInvoiceData->items); exit;
+        // Loop through each object in the array
+        foreach ($getInvoiceData->items as $product) {
+            // Add vat_total of each product to the totalVat
+            $totalVat += $product['vat_total'];
+        }
         $base64 = (new ZatcaWrapper())
             ->sellerName('Saudi Leather Industries Factory Company Ltd')
             ->vatRegistrationNumber("300456416500003")
             ->timestamp("2021-12-01T14:00:09Z")
-            ->totalWithVat($getInvoiceData->tender_amount)
-            ->vatTotal($getInvoiceData->net_with_vat)
+            ->totalWithVat($getInvoiceData->total)
+            ->vatTotal($totalVat)
             ->csrCommonName('Saudi Leather Industries Factory Company Ltd')
             ->csrSerialNumber('2050011041')
             ->csrOrganizationIdentifier('3844')
@@ -208,8 +215,8 @@ class SaleController extends Controller
             ->csrLocationAddress('Dammam')
             ->csrIndustryBusinessCategory('Manufacturing')
             ->toBase64();
-            // echo "<pre>"; print_r($base64); exit();
+        // echo "<pre>"; print_r($base64); exit();
         // echo "<pre>"; print_r($getInvoiceData->toArray()); exit();
-        return view('user.sales.print_invoice', compact('getInvoiceData','base64'));
+        return view('user.sales.print_invoice', compact('getInvoiceData', 'base64','totalVat'));
     }
 }
