@@ -83,24 +83,9 @@ class SaleController extends Controller
         // echo "<pre>"; print_r($user_info); exit;
         $printInvoiceNo = time();
         $page_name = "pos";
-        $base64 = (new ZatcaWrapper())
-            ->sellerName('Irfan')
-            ->vatRegistrationNumber("300456416500003")
-            ->timestamp("2021-12-01T14:00:09Z")
-            ->totalWithVat('100.00')
-            ->vatTotal('15.00')
-            ->csrCommonName('ok ok ok')
-            ->csrSerialNumber('123456789')
-            ->csrOrganizationIdentifier('0686')
-            ->csrOrganizationUnitName('IT')
-            ->csrOrganizationName('OutSeller')
-            ->csrCountryName('Pakistan')
-            ->csrInvoiceType('Sell')
-            ->csrLocationAddress('Pakistan')
-            ->csrIndustryBusinessCategory('IT Industry')
-            ->toBase64();
 
-        // echo "<pre>"; print_r($base64); exit();
+
+
         return view('user.sales.pos.index', compact('pageTitle', 'printInvoiceNo', 'page_name','user_info'));
     }
     /********************************************************************/
@@ -133,7 +118,7 @@ class SaleController extends Controller
                         'size' => $product->size,
                         'price' => 1,
                         'disc' => 0,
-                        'vat' => 0,
+                        'vat' => 15,
                         'total_with_vat' => 0,
                     ];
                     return response()->json(['status' => 200, 'prodArray' => $prodArray]);
@@ -146,7 +131,7 @@ class SaleController extends Controller
                         'size' => $findApiProduct['size'],
                         'price' => 1,
                         'disc' => 0,
-                        'vat' => 0,
+                        'vat' => 15,
                         'total_with_vat' => 0,
                     ];
                     return response()->json(['status' => 200, 'prodArray' => $prodArray]);
@@ -206,7 +191,25 @@ class SaleController extends Controller
     public function view(Request $request, $invoice_no = null)
     {
         $getInvoiceData = Sale::with('customer')->where('order_no', $invoice_no)->first();
+        // $totalWithVat = $getInvoiceData
+        $base64 = (new ZatcaWrapper())
+            ->sellerName('Saudi Leather Industries Factory Company Ltd')
+            ->vatRegistrationNumber("300456416500003")
+            ->timestamp("2021-12-01T14:00:09Z")
+            ->totalWithVat($getInvoiceData->tender_amount)
+            ->vatTotal($getInvoiceData->net_with_vat)
+            ->csrCommonName('Saudi Leather Industries Factory Company Ltd')
+            ->csrSerialNumber('2050011041')
+            ->csrOrganizationIdentifier('3844')
+            ->csrOrganizationUnitName('1')
+            ->csrOrganizationName('OutSeller')
+            ->csrCountryName('KSA')
+            ->csrInvoiceType('zatca')
+            ->csrLocationAddress('Dammam')
+            ->csrIndustryBusinessCategory('Manufacturing')
+            ->toBase64();
+            // echo "<pre>"; print_r($base64); exit();
         // echo "<pre>"; print_r($getInvoiceData->toArray()); exit();
-        return view('user.sales.print_invoice', compact('getInvoiceData'));
+        return view('user.sales.print_invoice', compact('getInvoiceData','base64'));
     }
 }

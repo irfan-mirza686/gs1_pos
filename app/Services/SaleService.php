@@ -33,6 +33,7 @@ class SaleService
         $create->total = $data['totalAmount'];
         $create->date = date('Y-m-d');
         $create->time = $currentDate;
+        $create->net_with_vat = $data['net_with_vat'];
         $create->cashAmount = $data['cashAmount'];
         $create->tender_amount = $data['tender_amount'];
         $create->change_amount = $data['change_amount'];

@@ -106,7 +106,7 @@
                                     <td class="pos-button-gaps text-start" colspan="5"><strong>Net With
                                             VAT:</strong></td>
                                     <td class="pos-right-gaps" colspan="1">
-                                        <input type="text" name="" value="0" id="net_vat"
+                                        <input type="text" name="net_with_vat" value="0" id="net_vat"
                                             class="form-control form-control-sm rounded-0 text-end net_vat"
                                             style="background-color: #F0F0F0" readonly>
 

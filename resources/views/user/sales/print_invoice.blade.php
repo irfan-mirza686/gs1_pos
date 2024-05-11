@@ -119,7 +119,7 @@ $zatcaP2 = 'AQVJcmZhbgIPMzAwNDU2NDE2NTAwMDAzAxQyMDIxLTEyLTAxVDE5OjAwOjA5WgQGMTAw
 ?>
 <tr>
   <td colspan="5" align="center">
-    <strong><?php echo DNS2D::getBarcodeHTML(@$zatcaP2, 'QRCODE', 3,3);?> </strong><br>
+    <strong><?php echo DNS2D::getBarcodeHTML(@$base64, 'QRCODE', 3,3);?> </strong><br>
 
   </td>
 
