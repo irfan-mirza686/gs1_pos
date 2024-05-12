@@ -64,6 +64,6 @@
 @endsection
 
 @push("custom-script")
-<script src="{{asset('assets/admin/js/sweetalert2@11.js')}}">
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{asset('assets/admin/js/sales/sales.js')}}"></script>
 @endpush

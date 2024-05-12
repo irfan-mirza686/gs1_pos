@@ -22,14 +22,16 @@ class ProductService
         } else if ($id != null) {
             $addProduct = Product::find($id);
         }
-        $addProduct->name = $data['name'];
-        $addProduct->slug = \Str::slug($data['name']);
-        $addProduct->brand = $data['brand'];
-        $addProduct->unit_id = $data['unit_id'];
+        $addProduct->name = $data['productnameenglish'];
+        $addProduct->slug = \Str::slug($data['productnameenglish']);
+        // $addProduct->brand = $data['brand'];
+        $addProduct->size = $data['size'];
+        $addProduct->barcode = $data['product_code'];
+        $addProduct->unit = $data['unit'];
         $addProduct->purchase_price = $data['purchase_price'];
         $addProduct->selling_price = $data['selling_price'];
         $addProduct->details_page = isset($data['details_page']) ? $data['details_page'] : null;
-        $addProduct->status = $data['status'];
+        $addProduct->status = 'active';
         return $addProduct;
     }
 

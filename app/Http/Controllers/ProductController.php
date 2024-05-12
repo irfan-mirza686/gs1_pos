@@ -282,10 +282,12 @@ class ProductController extends Controller
                 }
             } else {
                 $create = $this->productService->storeProduct($data, $id = null);
-                $create->user_id = Auth::user()->id;
+
+                $create->user_id = isset(Auth::user()->id)?Auth::user()->id:0;
+                // echo "<pre>"; print_r($create); exit;
                 \DB::beginTransaction();
                 if ($create->save()) {
-                    \LogActivity::addToLog(strtoupper(Auth::user()->name) . ' Added a new product (' . $data['name'] . ')', \Config::get('app.url') . '/product' . '/' . $create->slug);
+                    \LogActivity::addToLog(strtoupper($user_info['memberData']['company_name_eng']) . ' Added a new product (' . $data['productnameenglish'] . ')', \Config::get('app.url') . '/product' . '/' . $create->slug);
                     \DB::commit();
                     return redirect(route('products'))->with('flash_message_success', 'Product successfully Added!');
                 } else {

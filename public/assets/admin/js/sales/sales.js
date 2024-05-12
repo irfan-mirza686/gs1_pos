@@ -35,7 +35,7 @@ $(document).ready(function () {
                 { data: 'order_no', name: 'order_no' },
                 { data: 'customer', name: 'customer' },
                 { data: 'total', name: 'total' },
-                { data: 'paid_amount', name: 'paid_amount' },
+                { data: 'cashAmount', name: 'cashAmount' },
                 { data: 'status', name: 'status' },
                 { data: 'action', name: 'action', orderable: false, searchable: false },
             ]

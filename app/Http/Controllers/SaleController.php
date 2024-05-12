@@ -27,12 +27,14 @@ class SaleController extends Controller
     public function index()
     {
         $pageTitle = "Sales";
-        return view('user.sales.index', compact('pageTitle'));
+        $user_info = session('user_info');
+        return view('user.sales.index', compact('pageTitle','user_info'));
     }
     /********************************************************************/
     public function List(Request $request)
     {
         if ($request->ajax()) {
+
             $data = $this->saleService->getAllSales();
             return Datatables::of($data)
                 ->addIndexColumn()
@@ -45,8 +47,8 @@ class SaleController extends Controller
                     return ($row->customer) ? strtoupper($row->customer->name) : '';
                 })
                 ->editColumn('status', function ($row) {
-                    if ($row->status == 'approved') {
-                        return '<span class="badge bg-success updateStatus" data-ProductID="' . $row->id . '" data-Status="inactive" style="cursor: pointer; width:100px;">' . strtoupper($row->status) . '</span>';
+                    if ($row->status == 'confirmed') {
+                        return '<span class="badge bg-success" data-ProductID="' . $row->id . '" data-Status="inactive" style="width:100px;">' . strtoupper($row->status) . '</span>';
                     } else if ($row->status == 'pending') {
                         return '<span class="badge bg-danger updateStatus" data-ProductID="' . $row->id . '" data-Status="active" style="cursor: pointer; width:100px;">' . strtoupper($row->status) . '</span>';
                     }
@@ -59,11 +61,7 @@ class SaleController extends Controller
                         <button class="btn btn-primary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
                         <ul class="dropdown-menu" style="">
                         <li><a class="dropdown-item openSalePrint" href="javascript:void(0);" data-OrderNo="' . $row->order_no . '" data-URL="' . route('sale.view', $row->order_no) . '"><i class="lni lni-eye" style="color: blue;"></i> View</a>
-                            </li>
-                            <li><a class="dropdown-item edit" href="' . route('sale.update', $row->order_no) . '" data-OrderNo="' . $row->order_no . '" ><i class="lni lni-pencil-alt" style="color: yelow;"></i> Edit</a>
-                            </li>
-                            <li><a class="dropdown-item del" href="' . route('sale.delete', $row->id) . '"><i class="lni lni-trash" style="color: red;"></i> Delete</a>
-                            </li>
+
 
                         </ul>
                     </div>

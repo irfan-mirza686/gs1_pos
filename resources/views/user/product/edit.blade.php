@@ -130,6 +130,7 @@
                                                 value="{{ $editProduct['productnamearabic'] ?? old('productnamearabic')}}">
 
                                         </div>
+                                        @endif
                                         <div class="mb-3 col-md-6 gs1" style="display:none;">
                                             <label for="size" class="form-label">Size <font style="color: red;">*</font>
                                             </label>
@@ -137,6 +138,7 @@
                                                 placeholder="size" value="{{ $editProduct['size'] ?? old('size')}}">
 
                                         </div>
+                                        @if($type=='gs1_product')
                                         <div class="mb-3 col-md-6 gs1" style="display:none;">
                                             <label for="producturl" class="form-label">Product URL <font
                                                     style="color: red;">*</font></label>
