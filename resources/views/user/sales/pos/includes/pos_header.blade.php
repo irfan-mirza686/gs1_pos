@@ -110,7 +110,7 @@
 
     </div>
 
-    <div class="row">
+    <div class="row col-md-3">
         <label for="" class="form-label"><b>Scan Barode</b>
             <font style="color: red;">*</font>
             <div class="input-group mb-3">
