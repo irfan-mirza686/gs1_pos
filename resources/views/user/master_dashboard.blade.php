@@ -103,7 +103,7 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center">
                             <div>
-                                <h6 class="mb-0">Sales Overview</h6>
+                                <h6 class="mb-0">Monthly Products Sale</h6>
                             </div>
                             <!-- <div class="dropdown ms-auto">
                                 <a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown"><i

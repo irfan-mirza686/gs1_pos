@@ -67,21 +67,21 @@ class HomeController extends Controller
         }
 // echo "<pre>"; print_r(array_values($productTypeCounts['non_gs1'])); exit;
         // Prepare data for the bar chart
-        $data = [
-            'labels' => array_values($months),
-            'datasets' => [
-                [
-                    'label' => 'Non GS1 Products',
-                    'backgroundColor' => 'rgba(255, 99, 132, 0.5)',
-                    'data' => array_values($productTypeCounts['non_gs1']),
-                ],
-                [
-                    'label' => 'GS1 Products',
-                    'backgroundColor' => 'rgba(54, 162, 235, 0.5)',
-                    'data' => array_values($productTypeCounts['gs1']),
-                ],
-            ],
-        ];
+        // $data = [
+        //     'labels' => array_values($months),
+        //     'datasets' => [
+        //         [
+        //             'label' => 'Non GS1 Products',
+        //             'backgroundColor' => 'rgba(255, 99, 132, 0.5)',
+        //             'data' => array_values($productTypeCounts['non_gs1']),
+        //         ],
+        //         [
+        //             'label' => 'GS1 Products',
+        //             'backgroundColor' => 'rgba(54, 162, 235, 0.5)',
+        //             'data' => array_values($productTypeCounts['gs1']),
+        //         ],
+        //     ],
+        // ];
 
         // echo "<pre>"; print_r($data); exit;
 
