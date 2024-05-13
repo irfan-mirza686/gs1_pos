@@ -432,7 +432,7 @@ $(document).ready(function () {
                         playSound();
                         $("#submitInvoiceSpinner").removeClass("spinner-border spinner-border-sm");
                         $("#cashTenderModal").modal('hide');
-                        // $("#locationID").select2("val", "");
+                        /// $("#locationID").select2("val", "");
                         $('#posForm').trigger("reset");
                         $("#otherProductsBody").html('');
                         $.each(resp.errors, function (key, value) {
