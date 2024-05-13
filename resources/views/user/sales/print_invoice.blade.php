@@ -151,6 +151,12 @@ $counter = $counter+1;
 </tr>
 
 <tr>
+  <td colspan="3"><strong>Total Amount:</strong></td>
+  <td><strong>ضريبة القيمة المضافة</strong></td>
+  <td class="grandtotalFont"style="text-align: right;"><strong>{{number_format(@$getInvoiceData->total)}}</strong></td>
+</tr>
+
+<tr>
   <td colspan="3"><strong>Paid Amount:</strong></td>
   <td><strong>المدفوع</strong></td>
   <td class="grandtotalFont"style="text-align: right;"><strong>{{number_format(@$getInvoiceData->cashAmount)}}</strong></td>
@@ -174,12 +180,7 @@ $counter = $counter+1;
   <td class="removeborder"></td>
   <td class="removeborder"></td>
 </tr>
-<?php
-$cr = 'AQVaYXRjYQIPMzAwNDU2NDE2NTAwMDAzAxQyMDIxLTEyLTAxVDE5OjAwOjA5WgQGMTAwLjAwBQUxNS4wMA==';
-$zatcaP2 = 'AQVJcmZhbgIPMzAwNDU2NDE2NTAwMDAzAxQyMDIxLTEyLTAxVDE5OjAwOjA5WgQGMTAwLjAwBQUxNS4wMAYIb2sgb2sgb2sHCTEyMzQ1Njc4OQgEMDY4NgkCSVQKCU91dFNlbGxlcgsIUGFraXN0YW4MBFNlbGwNCFBha2lzdGFuDgJJVA==';
 
-
-?>
 <tr>
   <td colspan="5" align="center">
     <strong><?php echo DNS2D::getBarcodeHTML(@$base64, 'QRCODE', 3,3);?> </strong><br>

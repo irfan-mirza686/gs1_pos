@@ -58,13 +58,24 @@ $(document).ready(function () {
                 $("#createCustomerModal").modal('hide');
                 removeContent(btn, btnVal);
                 if (resp.status === 200) {
-                    console.log(resp.customer)
+                    $(".delivery").html("");
+                    // console.log(resp.customer)
                     $("#registerCustomerForm")[0].reset();
                     $("#customerName").val(resp.customer.name);
                     $("#customerID").val(resp.customer.id);
                     $("#searchCustomer").val(resp.customer.mobile);
                     $("#mobile").val(resp.customer.mobile);
                     $("#vat_no").val(resp.customer.vat);
+                    const addresses = JSON.parse(resp.customer.address);
+                $(".delivery").append('<option value="">Choose...</option>');
+                        $.each(addresses, function (i, val) {
+                            // console.log(val)
+
+
+                            $(".delivery").append('<option value="' + val.key + '">&nbsp;&nbsp;&nbsp;' + val.address + '</option>');
+
+                        });
+
                     let msgType = 'success';
                     let msgClass = 'bx bx-check-circle';
                     let message = resp.message;

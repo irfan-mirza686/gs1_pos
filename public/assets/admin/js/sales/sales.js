@@ -59,14 +59,26 @@ $(document).ready(function () {
         select: function (event, ui) {
             var item = ui.item;
             if (item) {
+                $(".delivery").html("");
                 $("#customerName").val(item.customerName);
                 $("#customerID").val(item.customerID);
                 $("#searchCustomer").val(item.customerMobile);
                 $("#mobile").val(item.customerMobile);
                 $("#vat_no").val(item.vat_no);
+                // console.log(item)
+                const addresses = JSON.parse(item.address);
+                $(".delivery").append('<option value="">Choose...</option>');
+                        $.each(addresses, function (i, val) {
+                            // console.log(val)
+
+
+                            $(".delivery").append('<option value="' + val.key + '">&nbsp;&nbsp;&nbsp;' + val.address + '</option>');
+
+                        });
             }
         }
     });
+
 
 
     ///############## Display Messages ################/////////

@@ -1,3 +1,25 @@
+<style>
+    /* Custom CSS for responsive form layout */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    /* Responsive layout for inputs */
+    @media (min-width: 576px) {
+        .form-inline-label .form-group {
+            display: inline-block;
+            width: 50%;
+        }
+    }
+
+    @media (max-width: 575.98px) {
+        .form-inline-label .form-group {
+            display: block;
+            width: 100%;
+        }
+    }
+</style>
+
 <div class="card-body" style="background-color: #F0F0F0;">
 
     <!-- <input type="button" value="Open a Popup Window" onclick="window.open('https://www.quackit.com/javascript/examples/sample_popup.cfm','popUpWindow','height=500,width=400,left=100,top=100,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no, status=yes');"> -->
@@ -14,93 +36,76 @@
             <h4><mark>Cashier : {{ $user_info['memberData']['company_name_eng'] }}</mark></h4>
         </div>
     </div>
-    <div class="row mt-1">
-        <div class="col-md-3">
-            <label for="transactions" class="form-label">Transaction <font style="color: red;">*
-                </font>
-            </label>
-            <select class="single-select appendHscodes form-control rounded-0" name="transactions" id="transactions">
-                <option  selected>Choose...</option>
-                <option value="cash">Cash</option>
-                <option value="credit">Credit</option>
+    <!----- First Row----------------->
+    <div class="form-group row">
+        <label for="transactions" class="col-sm-1 col-form-label">Transactions <font style="color: red;">*</font></label>
+        <div class="col-sm-2">
+            <select class="single-select appendHscodes form-control rounded-0" name="transactions" id="transactions"
+                style="border-radius: 0">
+                <option selected>Choose...</option>
+                <option value="direct_sales_invoice" selected>Direct Sales Invoice</option>
+                <option value="direct_sales_return">Direct Sales Return</option>
             </select>
         </div>
-
-        <div class="col-md-3">
-            <label for="salesLocation" class="form-label">Sales Location <font style="color: red;">*
-                </font>
-            </label>
+        <label for="salesLocation" class="col-sm-1 col-form-label">Sales Locations <font style="color: red;">*</font></label>
+        <div class="col-sm-2">
             <select class="single-select appendHscodes form-control rounded-0" name="salesLocation" id="salesLocation">
                 <option disabled selected>Choose...</option>
-
+                @foreach($glnBarcode as $gln)
+                <option value="{{$gln}}">{{$gln}}</option>
+                @endforeach
             </select>
         </div>
-
-        <div class="mb-3 col-md-3">
-            <label for="MemberID" class="form-label">VAT # </label>
-            <input type="text" class="form-control rounded-0" id="vat_no" name="vat_no" placeholder="Vat Number"
-                value="">
-
+        <label for="vat" class="col-sm-1 col-form-label">VAT # <font style="color: red;">*</font></label>
+        <div class="col-sm-2">
+            <input type="text" class="form-control" name="vat_no" id="vat_no" placeholder="VAT #">
         </div>
-
-        <div class="mb-3 col-md-3">
-            <label for="invoice_no" class="form-label">Invoice # <font style="color: red;">*</font></label>
-            <input type="text" class="form-control rounded-0" id="invoice_no" name="invoice_no" placeholder="Invoice #"
-                value="{{$printInvoiceNo}}" readonly style="background-color: #D8FDBA">
-
+        <label for="invoice_no" class="col-sm-1 col-form-label">Invoice # <font style="color: red;">*</font></label>
+        <div class="col-sm-2">
+            <input type="text" id="invoice_no" name="order_no" value="{{$printInvoiceNo}}" class="form-control rounded-0"
+                aria-describedby="invoice_no" readonly style="background-color: #F0F0F0">
         </div>
-
     </div>
-    <div class="row mt-1">
-        <div class="mb-3 col-md-3">
-            <label for="searchCustomer" class="form-label">Search Customer <font style="color: red;">*</font>
-            </label>
-            <input type="text" class="form-control rounded-0" id="searchCustomer" name="mobileNumber"
-                placeholder="Search Customer by Mobile & Name ..." value="">
 
+    <!------- Second Row ---------------->
+    <div class="form-group row">
+        <label for="searchCustomer" class="col-sm-1 col-form-label">Search Customer <font style="color: red;">*</font></label>
+        <div class="col-sm-2">
+        <input type="text" class="form-control rounded-0" id="searchCustomer" name="mobileNumber"
+                placeholder="Search Customer by Mobile & Name ..." value="" style="background-color: #FFF372">
         </div>
-
-        <div class="col-md-3">
-            <label for="delivery" class="form-label">Delivery <font style="color: red;">*
-                </font>
-            </label>
-            <select class="single-select form-control rounded-0" name="delivery" id="delivery">
-                <option  selected>Choose...</option>
+        <label for="delivery" class="col-sm-1 col-form-label">Delivery <font style="color: red;">*</font></label>
+        <div class="col-sm-2">
+        <select class="single-select form-control rounded-0 delivery" name="delivery" id="delivery">
+                <option selected>Choose...</option>
 
             </select>
         </div>
-
-        <div class="mb-3 col-md-3">
-            <label for="customerName" class="form-label">Customer Name <font style="color: red;">*</font>
-            </label>
-            <input type="text" class="form-control rounded-0" id="customerName" name="customerName"
+        <label for="customerName" class="col-sm-1 col-form-label">Customer Name <font style="color: red;">*</font></label>
+        <div class="col-sm-2">
+        <input type="text" class="form-control rounded-0" id="customerName" name="customerName"
                 placeholder="Customer Name" value="" readonly style="background-color: #D8FDBA">
             <input type="hidden" name="customer_id" value="" id="customerID">
-            <!-- <span>Current Balance: <span style="color: red;">2500</span></span> -->
         </div>
-        <div class="mb-3 col-md-3">
-            <label for="MemberID" class="form-label">Mobile # </label>
-            <input type="text" class="form-control rounded-0" id="mobile" name="mobile" placeholder="Mobile Number"
+        <label for="mobile" class="col-sm-1 col-form-label">Mobile # <font style="color: red;">*</font></label>
+        <div class="col-sm-2">
+        <input type="text" class="form-control rounded-0" id="mobile" name="mobile" placeholder="Mobile Number"
                 value="">
-
         </div>
-
     </div>
-    <div class="row mt-1">
 
 
-        <div class="mb-3 col-md-6">
-            <label for="MemberID" class="form-label">Remarks </label>
-            <input type="text" class="form-control rounded-0" id="remkars" name="remkars" placeholder="Remarks"
+
+    <!---- Third Row ------->
+    <div class="form-group row">
+        <label for="remkars" class="col-sm-1 col-form-label">Remarks <font style="color: red;">*</font></label>
+        <div class="col-sm-5">
+        <input type="text" class="form-control rounded-0" id="remkars" name="remkars" placeholder="Remarks"
                 value="">
-
         </div>
-
-        <div class="col-md-3">
-            <label for="type" class="form-label">Type <font style="color: red;">*
-                </font>
-            </label>
-            <select class="single-select form-control rounded-0" name="type" id="type">
+        <label for="Type" class="col-sm-1 col-form-label">Type <font style="color: red;">*</font></label>
+        <div class="col-sm-2">
+        <select class="single-select form-control rounded-0" name="type" id="type">
                 <option selected>Choose...</option>
                 <option value="cash">Cash</option>
                 <option value="credit">Credit</option>
@@ -110,30 +115,25 @@
 
     </div>
 
-    <div class="row col-md-3">
-        <label for="" class="form-label"><b>Scan Barode</b>
-            <font style="color: red;">*</font>
-            <div class="input-group mb-3">
+    <!--- Fourth row --------->
+    <div class="form-group row">
+        <label for="remkars" class="col-sm-1 col-form-label">Scan Barode <font style="color: red;">*</font></label>
+        <div class="col-sm-5">
+        <div class="input-group mb-3">
                 <input type="text" class="form-control rounded-0" id="barcode" name="barcode"
-                    placeholder="Scan Barcode..." onmouseover="this.focus();"> <span class="input-group-text rounded-0"
+                    placeholder="Scan Barcode..." onmouseover="this.focus();" style="background-color: #FFF372;"> <span class="input-group-text rounded-0"
                     id="basic-addon2"><i class="fadeIn animated bx bx-barcode-reader"></i></span>
                 <div class="barcodeLoader d-none" style="margin-top: -37px; float: right;">
                     <img src="{{asset('assets/uploads/search-barcode.gif')}}" width="40" height="35"
                         style="margin-top: 38px; margin-left: -40px;">
                 </div>
             </div>
+        </div>
 
-            <!-- <div class="mb-3 col-md-12">
-                <label for="" class="form-label"><b>Scan Barode</b>
-                    <font style="color: red;">*</font>
-                </label>
-                <input type="text" class="form-control rounded-0" id="barcode" name="barcode"
-                    placeholder="Scan Barcode..." value="">
-                <div class="barcodeLoader" style="margin-top: -37px; float: right; display: none;">
-                    <img src="{{asset('assets/images/search-barcode.gif')}}" width="38" height="36">
-                </div>
-            </div> -->
 
     </div>
+
+
+
 
 </div>

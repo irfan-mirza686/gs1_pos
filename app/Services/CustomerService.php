@@ -24,7 +24,8 @@ class CustomerService
                     "customerID" => $value->id,
                     "customerName" => $value->name,
                     "customerMobile" => $value->mobile,
-                    "vat_no" => $value->vat
+                    "vat_no" => $value->vat,
+                    "address" => $value->address
                 );
             }
             return $customerAuto;
@@ -38,11 +39,20 @@ class CustomerService
         } else if ($id != null) {
             $create = Customer::find($id);
         }
+        $addressData = [];
+        foreach($data['address'] as $key => $value){
+            $addressData[] = array(
+                'key' => $key,
+                'address' => $value
+            );
+        }
+        $address = json_encode($addressData);
+        // echo "<pre>"; print_r($address); exit;
         $create->name = $data['name'];
         $create->mobile = $data['mobile'];
         // $create->cnic = $data['cnic'];
         $create->vat = $data['vat'];
-        $create->address = isset($data['address']) ? $data['address'] : null;
+        $create->address = isset($data['address']) ? $address : null;
         return $create;
     }
 }

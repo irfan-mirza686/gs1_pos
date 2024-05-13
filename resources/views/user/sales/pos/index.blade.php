@@ -49,6 +49,8 @@
 @endsection
 
 @push("custom-script")
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCsEUxB9psxb-LxhYx8hJtF248gj4bx49A"></script>
+<script src="{{asset('assets/admin/js/sales/drag_google_mark.js')}}"></script>
 <script src="{{asset('assets/admin/js/sales/sales.js')}}"></script>
 <script src="{{asset('assets/admin/js/sales/pos_script.js')}}"></script>
 <script src="{{asset('assets/admin/js/customer/customer_script.js')}}"></script>

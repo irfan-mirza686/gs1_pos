@@ -37,7 +37,7 @@ $(document).ready(function () {
         if (!isLoading) {
             var barcode = $("#barcode").val();
             isLoading = true;
-            if (barcode) {
+            if (barcode.length > 0) {
 
 
                 $.ajax({
@@ -324,17 +324,26 @@ $(document).ready(function () {
         totalPurchaseAmount();
     });
     /// CashTender PopUP ...
-    $(document).on('keyup click', '#cashAmount', function () {
+    $(document).on('keyup click', '#cashAmount,#spanAmount', function () {
         var sum = 0;
-        var cashAmount = $(this).val();
+        var cashAmount = $('#cashAmount').val();
+        var spanAmount = $('#spanAmount').val();
         var totalAmount = $("#totalAmount").val();
         var showCashTender = 0;
+        var tenderAmount = 0;
         if (!isNaN(cashAmount) && cashAmount.length != 0) {
             sum += parseFloat(cashAmount);
-            showCashTender = cashAmount - totalAmount;
+            showCashTender = (parseFloat(spanAmount) + parseFloat(cashAmount)) - totalAmount;
         }
+
+        if (!isNaN(spanAmount) && spanAmount.length != 0) {
+            sum += parseFloat(spanAmount);
+            tenderAmount = parseFloat(spanAmount) + parseFloat(cashAmount);
+        }
+
         $("#tenderAmount").val(cashAmount);
         $("#showChange").val(showCashTender);
+        $("#tenderAmount").val(tenderAmount);
     });
 
     function totalPurchaseAmount() {

@@ -14,6 +14,7 @@ use Prgayman\Zatca\Zatca;
 use Session;
 use App\Models\Sale;
 use App\ZatcaWrapper\ZatcaWrapper;
+use Stevebauman\Location\Facades\Location;
 
 class SaleController extends Controller
 {
@@ -82,9 +83,22 @@ class SaleController extends Controller
         $printInvoiceNo = time();
         $page_name = "pos";
 
+        $gln = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $user_info['token'],
+        ])->get('https://gs1ksa.org:3093/api/gln', [
+                    'user_id' => $user_info['memberData']['id'],
+                ]);
+        $glnBody = $gln->getBody();
+        $glnData = json_decode($glnBody, true);
+                $glnBarcode = [];
+        foreach ($glnData as $key => $value) {
+            $glnBarcode[] = $value['GLNBarcodeNumber'];
+        }
+        $clientIP = '103.239.147.187';
+        $userLocation = Location::get($clientIP);
+        // echo "<pre>"; print_r($glnBarcode); exit;
 
-
-        return view('user.sales.pos.index', compact('pageTitle', 'printInvoiceNo', 'page_name', 'user_info'));
+        return view('user.sales.pos.index', compact('pageTitle', 'printInvoiceNo', 'page_name', 'user_info','glnBarcode','userLocation'));
     }
     /********************************************************************/
     public function findProduct(Request $request)
@@ -172,9 +186,9 @@ class SaleController extends Controller
                 // print_r($base64);
                 // exit;
 
-                \LogActivity::addToLog(strtoupper($user_info['memberData']['company_name_eng']) . ' Add a new Sale Order (' . $data['invoice_no'] . ')', route('sale.view', $pos->order_no));
+                \LogActivity::addToLog(strtoupper($user_info['memberData']['company_name_eng']) . ' Add a new Sale Order (' . $data['order_no'] . ')', route('sale.view', $pos->order_no));
                 \DB::commit();
-                return response()->json(['status' => 200, 'message' => 'Data has been saved successfully', 'invoice_no' => time(), 'print_invoiceNo' => $data['invoice_no']]);
+                return response()->json(['status' => 200, 'message' => 'Data has been saved successfully', 'invoice_no' => time(), 'print_invoiceNo' => $data['order_no']]);
             } else {
                 return response()->json(['status' => 401, 'message' => 'Data has not been saved']);
             }

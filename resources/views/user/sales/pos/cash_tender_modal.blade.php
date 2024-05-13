@@ -13,31 +13,31 @@
                 <div class="row mb-1">
                     <label for="totalAmount" class="col-sm-4 col-form-label"><strong>Total Amount</strong></label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control rounded-0 text-end" value="0.00" id="totalAmount" name="totalAmount" placeholder="Choose Password">
+                        <input type="text" class="form-control rounded-0 text-end" value="0.00" id="totalAmount" name="totalAmount" placeholder="Total Amount">
                     </div>
                 </div>
                 <div class="row mb-1">
                     <label for="cashAmount" class="col-sm-4 col-form-label"><strong>Cash Amount</strong></label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control rounded-0 text-end" id="cashAmount" value="0.00" name="cashAmount" placeholder="Choose Password">
+                        <input type="text" class="form-control rounded-0 text-end" id="cashAmount" value="0.00" name="cashAmount" placeholder="Cash Amount">
                     </div>
                 </div>
                 <div class="row mb-1">
                     <label for="spanAmount" class="col-sm-4 col-form-label"><strong>Span Amount</strong></label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control rounded-0 text-end" value="0.00" id="spanAmount" placeholder="Choose Password">
+                        <input type="text" class="form-control rounded-0 text-end" value="0.00" id="spanAmount" placeholder="Span Amount">
                     </div>
                 </div>
                 <div class="row mb-1">
                     <label for="tenderAmount" class="col-sm-4 col-form-label"><strong>Tender Amount</strong></label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control rounded-0 text-end" value="0.00" id="tenderAmount" name="tender_amount" placeholder="Choose Password">
+                        <input type="text" class="form-control rounded-0 text-end" value="0.00" id="tenderAmount" name="tender_amount" placeholder="Tender Amount">
                     </div>
                 </div>
                 <div class="row mb-1">
                     <label for="input38" class="col-sm-4 col-form-label"><strong>Change</strong></label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control rounded-0 text-end" value="0.00" id="showChange" name="change_amount" placeholder="Choose Password">
+                        <input type="text" class="form-control rounded-0 text-end" value="0.00" id="showChange" name="change_amount" placeholder="Change Amount">
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -45,7 +45,7 @@
                     <button type="button" class="btn btn-block rounded-0 mt-2" data-bs-dismiss="modal" style="background-color: red; color: white; width: 100px;">Cancel</button>
                 </div>
             </div>
-          
+
         </div>
     </div>
 </div>
