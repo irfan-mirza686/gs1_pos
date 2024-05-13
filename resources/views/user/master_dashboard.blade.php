@@ -164,7 +164,7 @@
                             <div>
                                 <h6 class="mb-0">Products</h6>
                             </div>
-                            <div class="dropdown ms-auto">
+                            <!-- <div class="dropdown ms-auto">
                                 <a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown"><i
                                         class='bx bx-dots-horizontal-rounded font-22 text-option'></i>
                                 </a>
@@ -179,7 +179,7 @@
                                     <li><a class="dropdown-item" href="javascript:;">Something else here</a>
                                     </li>
                                 </ul>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="chart-container-2 mt-4 pieChartClass" data-pieChartData="{{ json_encode(session('pieChartData')) }}">
                             <canvas id="chart4"></canvas>
