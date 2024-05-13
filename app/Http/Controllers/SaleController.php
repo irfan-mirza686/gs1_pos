@@ -125,7 +125,8 @@ class SaleController extends Controller
             // echo "<pre>"; print_r($product); exit;
             if (isset($product) && !empty($product)) {
                 $prodArray = [
-                    'prodID' => $product->id,
+                    'product_id' => $product->id,
+                    'product_type' => 'non_gs1',
                     'productName' => $product->name,
                     'brand' => $product->brand,
                     'desc1' => $product->details_page,
@@ -138,7 +139,8 @@ class SaleController extends Controller
                 return response()->json(['status' => 200, 'prodArray' => $prodArray]);
             } else if ($findApiProduct) {
                 $prodArray = [
-                    'prodID' => $findApiProduct['id'],
+                    'product_id' => $findApiProduct['id'],
+                    'product_type' => 'gs1',
                     'productName' => $findApiProduct['productnameenglish'],
                     'brand' => $findApiProduct['BrandName'],
                     'desc1' => $findApiProduct['details_page'],

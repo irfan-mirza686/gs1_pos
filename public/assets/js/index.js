@@ -3,7 +3,9 @@ $(function() {
 
 
 // chart 1
-
+var gs1Products = JSON.parse(document.querySelector('.barChartClass').getAttribute('data-gs1Products'));
+var nonGs1Product = JSON.parse(document.querySelector('.barChartClass').getAttribute('data-nonGs1Product'));
+var pieChartData = JSON.parse(document.querySelector('.pieChartClass').getAttribute('data-pieChartData'));
   var ctx = document.getElementById("chart1").getContext('2d');
 
   var gradientStroke1 = ctx.createLinearGradient(0, 0, 0, 300);
@@ -19,8 +21,8 @@ $(function() {
         data: {
           labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
           datasets: [{
-            label: 'Laptops',
-            data: [65, 59, 80, 81,65, 59, 80, 81,59, 80, 81,65],
+            label: 'GS1',
+            data: gs1Products,
             borderColor: gradientStroke1,
             backgroundColor: gradientStroke1,
             hoverBackgroundColor: gradientStroke1,
@@ -28,8 +30,8 @@ $(function() {
             fill: false,
             borderWidth: 0
           }, {
-            label: 'Mobiles',
-            data: [28, 48, 40, 19,28, 48, 40, 19,40, 19,28, 48],
+            label: 'Non GS1',
+            data: nonGs1Product,
             borderColor: gradientStroke2,
             backgroundColor: gradientStroke2,
             hoverBackgroundColor: gradientStroke2,
@@ -223,7 +225,7 @@ var ctx = document.getElementById("chart4").getContext('2d');
       var myChart = new Chart(ctx, {
         type: 'pie',
         data: {
-          labels: ["Visits", "Not Visits"],
+          labels: ["GS1", "Non GS1"],
           datasets: [{
             backgroundColor: [
               gradientStroke1,
@@ -235,7 +237,7 @@ var ctx = document.getElementById("chart4").getContext('2d');
               gradientStroke2
             ],
 
-            data: [50, 100],
+            data: pieChartData,
       borderWidth: [1, 1]
           }]
         },

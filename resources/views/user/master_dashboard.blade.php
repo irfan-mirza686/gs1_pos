@@ -35,13 +35,13 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center">
                             <div class="me-auto">
-                                <p class="mb-0 text-white">Total Orders</p>
-                                <h4 class="my-1 text-white">4805</h4>
-                                <p class="mb-0 font-13 text-white">+2.5% from last week</p>
+                                <p class="mb-0 text-white">Total Sales</p>
+                                <h4 class="my-1 text-white">{{@$total_sales}}</h4>
+                                <!-- <p class="mb-0 font-13 text-white">+2.5% from last week</p> -->
                             </div>
-                            <div id="chart1x"><canvas width="81" height="35"
+                            <!-- <div id="chart1x"><canvas width="81" height="35"
                                     style="display: inline-block; width: 81px; height: 35px; vertical-align: top;"></canvas>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -51,13 +51,13 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center">
                             <div class="me-auto">
-                                <p class="mb-0 text-white">Total Revenue</p>
-                                <h4 class="my-1 text-white">$84,245</h4>
-                                <p class="mb-0 font-13 text-white">+5.4% from last week</p>
+                                <p class="mb-0 text-white">Total Sales Amount</p>
+                                <h4 class="my-1 text-white">{{@$total_sales_amount}}</h4>
+                                <!-- <p class="mb-0 font-13 text-white">+5.4% from last week</p> -->
                             </div>
-                            <div id="chart2x"><canvas width="80" height="40"
+                            <!-- <div id="chart2x"><canvas width="80" height="40"
                                     style="display: inline-block; width: 80px; height: 40px; vertical-align: top;"></canvas>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -67,13 +67,13 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center">
                             <div class="me-auto">
-                                <p class="mb-0 text-white">Bounce Rate</p>
-                                <h4 class="my-1 text-white">34.6%</h4>
-                                <p class="mb-0 font-13 text-white">-4.5% from last week</p>
+                                <p class="mb-0 text-white">Total Tax Amount</p>
+                                <h4 class="my-1 text-white">{{@$totalVat}}</h4>
+                                <!-- <p class="mb-0 font-13 text-white">-4.5% from last week</p> -->
                             </div>
-                            <div id="chart3x"><canvas width="75" height="40"
+                            <!-- <div id="chart3x"><canvas width="75" height="40"
                                     style="display: inline-block; width: 75px; height: 40px; vertical-align: top;"></canvas>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -83,13 +83,13 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center">
                             <div class="me-auto">
-                                <p class="mb-0 text-dark">Total Customers</p>
-                                <h4 class="my-1 text-dark">8.4K</h4>
-                                <p class="mb-0 font-13 text-dark">+8.4% from last week</p>
+                                <p class="mb-0 text-dark">Total Products</p>
+                                <h4 class="my-1 text-dark">{{$total_products}}</h4>
+                                <!-- <p class="mb-0 font-13 text-dark">+8.4% from last week</p> -->
                             </div>
-                            <div id="chart4x"><canvas width="100" height="25"
+                            <!-- <div id="chart4x"><canvas width="100" height="25"
                                     style="display: inline-block; width: 100px; height: 25px; vertical-align: top;"></canvas>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -124,11 +124,11 @@
                         </div>
                         <div class="d-flex align-items-center ms-auto font-13 gap-2 my-3">
                             <span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1"
-                                    style="color: #14abef"></i>Sales</span>
+                                    style="color: #14abef"></i>GS1</span>
                             <span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1"
-                                    style="color: #ffc107"></i>Visits</span>
+                                    style="color: #ffc107"></i>Non GS1</span>
                         </div>
-                        <div class="chart-container-1">
+                        <div class="chart-container-1 barChartClass" data-gs1Products="{{ json_encode(session('gs1Products')) }}" data-nonGs1Product="{{ json_encode(session('nonGs1Product')) }}">
                             <canvas id="chart1"></canvas>
                         </div>
                     </div>
@@ -162,7 +162,7 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center">
                             <div>
-                                <h6 class="mb-0">Trending Products</h6>
+                                <h6 class="mb-0">Products</h6>
                             </div>
                             <div class="dropdown ms-auto">
                                 <a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown"><i
@@ -181,16 +181,16 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="chart-container-2 mt-4">
+                        <div class="chart-container-2 mt-4 pieChartClass" data-pieChartData="{{ json_encode(session('pieChartData')) }}">
                             <canvas id="chart4"></canvas>
                         </div>
                     </div>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">
-                            Visits <span class="badge bg-success rounded-pill">50</span>
+                            GS1 Products <span class="badge bg-success rounded-pill">{{@$totalGs1Products}}</span>
                         </li>
                         <li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">
-                            Not Visits <span class="badge bg-danger rounded-pill">100</span>
+                            Non GS1 Products <span class="badge bg-danger rounded-pill">{{@$total_products}}</span>
                         </li>
 
                     </ul>

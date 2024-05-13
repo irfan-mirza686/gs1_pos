@@ -34,7 +34,7 @@ class SaleService
         $create->customer_id = $data['customer_id'];
         $create->total = $data['totalAmount'];
         $create->date = date('Y-m-d');
-        $create->time = $currentDate;
+        $create->time = date('h:i:s A',strtotime($currentDate));
         $create->net_with_vat = $data['net_with_vat'];
         $create->cashAmount = $data['cashAmount'];
         $create->tender_amount = $data['tender_amount'];
@@ -52,10 +52,9 @@ class SaleService
         for ($i = 0; $i < count($data['description']); $i++) {
             $purchaseItems[] = array(
                 'productName' => $data['description'][$i],
-                // 'product_id' => $data['product_id'][$i],
-                // 'type' => $data['type'][$i],
+                'product_id' => $data['product_id'][$i],
+                'product_type' => $data['product_type'][$i],
                 'barcode' => $data['barcode'][$i],
-                // 'barcode_2' => $data['barcode_2'][$i],
                 'qty' => $data['quantity'][$i],
                 'price' => $data['price'][$i],
                 'discount' => $data['discount'][$i],
