@@ -42,7 +42,7 @@ class CustomerService
         $addressData = [];
         foreach($data['address'] as $key => $value){
             $addressData[] = array(
-                'key' => $key+1,
+                'id' => $key+1,
                 'address' => $value
             );
         }
