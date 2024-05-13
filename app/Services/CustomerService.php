@@ -42,7 +42,7 @@ class CustomerService
         $addressData = [];
         foreach($data['address'] as $key => $value){
             $addressData[] = array(
-                'key' => $key,
+                'key' => $key+1,
                 'address' => $value
             );
         }
@@ -50,7 +50,6 @@ class CustomerService
         // echo "<pre>"; print_r($address); exit;
         $create->name = $data['name'];
         $create->mobile = $data['mobile'];
-        // $create->cnic = $data['cnic'];
         $create->vat = $data['vat'];
         $create->address = isset($data['address']) ? $address : null;
         return $create;
