@@ -533,7 +533,7 @@
                     <!--end row-->
                 </div>
             </div>
-        </div> -->
+        </div>
         <!--end row-->
 
     </div>
