@@ -29,9 +29,75 @@
 @section("content")
 <div class="page-wrapper">
     <div class="page-content">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-2 row-cols-xxl-4">
+            <div class="col">
+                <div class="card radius-10 bg-gradient-cosmic">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="me-auto">
+                                <p class="mb-0 text-white">Total Orders</p>
+                                <h4 class="my-1 text-white">4805</h4>
+                                <p class="mb-0 font-13 text-white">+2.5% from last week</p>
+                            </div>
+                            <div id="chart1x"><canvas width="81" height="35"
+                                    style="display: inline-block; width: 81px; height: 35px; vertical-align: top;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card radius-10 bg-gradient-ibiza">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="me-auto">
+                                <p class="mb-0 text-white">Total Revenue</p>
+                                <h4 class="my-1 text-white">$84,245</h4>
+                                <p class="mb-0 font-13 text-white">+5.4% from last week</p>
+                            </div>
+                            <div id="chart2x"><canvas width="80" height="40"
+                                    style="display: inline-block; width: 80px; height: 40px; vertical-align: top;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card radius-10 bg-gradient-ohhappiness">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="me-auto">
+                                <p class="mb-0 text-white">Bounce Rate</p>
+                                <h4 class="my-1 text-white">34.6%</h4>
+                                <p class="mb-0 font-13 text-white">-4.5% from last week</p>
+                            </div>
+                            <div id="chart3x"><canvas width="75" height="40"
+                                    style="display: inline-block; width: 75px; height: 40px; vertical-align: top;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card radius-10 bg-gradient-kyoto">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="me-auto">
+                                <p class="mb-0 text-dark">Total Customers</p>
+                                <h4 class="my-1 text-dark">8.4K</h4>
+                                <p class="mb-0 font-13 text-dark">+8.4% from last week</p>
+                            </div>
+                            <div id="chart4x"><canvas width="100" height="25"
+                                    style="display: inline-block; width: 100px; height: 25px; vertical-align: top;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+        </div>
 
-        <!-- <div class="row">
+        <div class="row">
             <div class="col-12 col-lg-8">
                 <div class="card radius-10">
                     <div class="card-body">
@@ -39,7 +105,7 @@
                             <div>
                                 <h6 class="mb-0">Sales Overview</h6>
                             </div>
-                            <div class="dropdown ms-auto">
+                            <!-- <div class="dropdown ms-auto">
                                 <a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown"><i
                                         class='bx bx-dots-horizontal-rounded font-22 text-option'></i>
                                 </a>
@@ -54,7 +120,7 @@
                                     <li><a class="dropdown-item" href="javascript:;">Something else here</a>
                                     </li>
                                 </ul>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="d-flex align-items-center ms-auto font-13 gap-2 my-3">
                             <span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1"
@@ -66,7 +132,7 @@
                             <canvas id="chart1"></canvas>
                         </div>
                     </div>
-                    <div class="row row-cols-1 row-cols-md-3 row-cols-xl-3 g-0 row-group text-center border-top">
+                    <!-- <div class="row row-cols-1 row-cols-md-3 row-cols-xl-3 g-0 row-group text-center border-top">
                         <div class="col">
                             <div class="p-3">
                                 <h5 class="mb-0">24.15M</h5>
@@ -88,7 +154,7 @@
                                         5.62%</span></small>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <div class="col-12 col-lg-4">
@@ -116,26 +182,21 @@
                             </div>
                         </div>
                         <div class="chart-container-2 mt-4">
-                            <canvas id="chart2"></canvas>
+                            <canvas id="chart4"></canvas>
                         </div>
                     </div>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">
-                            Jeans <span class="badge bg-success rounded-pill">25</span>
+                            Visits <span class="badge bg-success rounded-pill">50</span>
                         </li>
                         <li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">
-                            T-Shirts <span class="badge bg-danger rounded-pill">10</span>
+                            Not Visits <span class="badge bg-danger rounded-pill">100</span>
                         </li>
-                        <li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">
-                            Shoes <span class="badge bg-primary rounded-pill">65</span>
-                        </li>
-                        <li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">
-                            Lingerie <span class="badge bg-warning text-dark rounded-pill">14</span>
-                        </li>
+
                     </ul>
                 </div>
             </div>
-        </div> -->
+        </div>
         <!--end row-->
 
         <!-- <div class="card radius-10">
@@ -470,7 +531,7 @@
                     </div>
                     <div class="card-body">
                         <div class="chart-container-1">
-                            <canvas id="chart4"></canvas>
+                            <canvas id="chart4x"></canvas>
                         </div>
                     </div>
                     <ul class="list-group list-group-flush">
@@ -530,10 +591,10 @@
                             </div>
                         </div>
                     </div>
-                    <!--end row-->
+
                 </div>
             </div>
-        </div>
+        </div> -->
         <!--end row-->
 
     </div>
@@ -544,15 +605,15 @@
 @push("custom-script")
 <script src="{{asset('assets/plugins/vectormap/jquery-jvectormap-2.0.2.min.js')}}"></script>
 <script src="{{asset('assets/plugins/vectormap/jquery-jvectormap-world-mill-en.js')}}"></script>
-<script src="{{asset('assets/plugins/chartjs/js/Chart.min.js')}}"></script>
-<script src="{{asset('assets/plugins/chartjs/js/Chart.extension.js')}}"></script>
-<script src="{{asset('assets/plugins/sparkline-charts/jquery.sparkline.min.js')}}"></script>
+<!-- <script src="{{asset('assets/plugins/chartjs/js/Chart.min.js')}}"></script> -->
+<!-- <script src="{{asset('assets/plugins/chartjs/js/Chart.extension.js')}}"></script> -->
+<!-- <script src="{{asset('assets/plugins/sparkline-charts/jquery.sparkline.min.js')}}"></script> -->
 <!--Morris JavaScript -->
-<script src="{{asset('assets/plugins/raphael/raphael-min.js')}}"></script>
-<script src="{{asset('assets/plugins/morris/js/morris.js')}}"></script>
+<!-- <script src="{{asset('assets/plugins/raphael/raphael-min.js')}}"></script> -->
+<!-- <script src="{{asset('assets/plugins/morris/js/morris.js')}}"></script> -->
 
 <script src="{{asset('assets/js/index.js')}}"></script>
-<script src="{{asset('assets/admin/js/dashboard/load_items.js')}}"></script>
+<!-- <script src="{{asset('assets/admin/js/dashboard/load_items.js')}}"></script> -->
 <script src="{{asset('assets/plugins/chartjs/js/Chart.min.js')}}"></script>
-<script src="{{asset('assets/plugins/chartjs/js/chartjs-custom.js')}}"></script>
+<!-- <script src="{{asset('assets/plugins/chartjs/js/chartjs-custom.js')}}"></script> -->
 @endpush
