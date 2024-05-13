@@ -36,7 +36,7 @@ class HomeController extends Controller
             }
         }
         $products = Product::get();
-        $total_products = $products->count();
+        $local_products = $products->count();
 
         // Retrieve items from the database
         $items = Sale::select('items', 'created_at')->get(); // Assuming 'items' is the JSON column name
@@ -95,7 +95,9 @@ class HomeController extends Controller
         $apiProductsBody = $apiProducts->getBody();
         $apiProductssData = json_decode($apiProductsBody, true);
         $totalGs1Products = count($apiProductssData);
-        $pieChartData = [$totalGs1Products,$total_products];
+        $pieChartData = [$totalGs1Products,$local_products];
+
+        $total_products = $local_products + $totalGs1Products;
         session(['gs1Products' => array_values($productTypeCounts['gs1']),'nonGs1Product'=>array_values($productTypeCounts['non_gs1']),'pieChartData'=>$pieChartData]);
 // echo "<pre>"; print_r(count($apiProductssData)); exit;
         return view('user.master_dashboard', compact('pageTitle','user_info','total_sales','total_sales_amount','totalVat','total_products','totalGs1Products'));
