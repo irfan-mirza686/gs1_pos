@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductRequest;
+use App\Http\Requests\SaleRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -160,10 +162,10 @@ class SaleController extends Controller
         }
     }
     /********************************************************************/
-    public function store(Request $request)
+    public function store(SaleRequest $request)
     {
         if ($request->ajax()) {
-            // try {
+            try {
             $data = $request->all();
             // echo "<pre>";
             // print_r($data);
@@ -193,9 +195,9 @@ class SaleController extends Controller
                 return response()->json(['status' => 401, 'message' => 'Data has not been saved']);
             }
 
-            // } catch (\Throwable $th) {
-            //     return response()->json(['status' => 422, 'message' => $th->getMessage()]);
-            // }
+            } catch (\Throwable $th) {
+                return response()->json(['status' => 500, 'message' => $th->getMessage()], 500);
+            }
 
         }
     }

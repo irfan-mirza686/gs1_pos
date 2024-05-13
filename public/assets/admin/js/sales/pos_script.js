@@ -410,8 +410,10 @@ $(document).ready(function () {
                     $('#submitInvoiceSpinner').addClass('spinner-border spinner-border-sm');
                 },
                 success: function (resp) {
+
                     if (resp.status == 200) {
-                        console.log(resp)
+                        $(".delivery").html("");
+                        $(".delivery").append('<option value="">Choose...</option>');
                         playSound();
                         window.open("/pos/print_invoice_pos/" + resp.print_invoiceNo, "_blank",
                             "scrollbars=1,resizable=1,height=500,width=500");
@@ -426,7 +428,7 @@ $(document).ready(function () {
                         $('#posForm').trigger("reset");
                         $("#otherProductsBody").html('');
                         $("#invoice_no").val(resp.invoice_no);
-                    } else if (resp.status == 400) {
+                    } else if (resp.status === 400) {
                         playSound();
                         $("#submitInvoiceSpinner").removeClass("spinner-border spinner-border-sm");
                         $("#cashTenderModal").modal('hide');
@@ -434,11 +436,17 @@ $(document).ready(function () {
                         $('#posForm').trigger("reset");
                         $("#otherProductsBody").html('');
                         $.each(resp.errors, function (key, value) {
-                            var msgType = 'error';
+                            // $.notify(value[0], {globalPosition: 'top right',className: 'error'});
+                            var msgType = 'warning';
                             var position = 'top-right';
                             var msgClass = 'bx bx-check-circle';
-                            var message = value;
-                            showMsg(msgType, position, msgClass, message);
+                            var message = value[0];
+                            showMsg(msgType, msgClass, message);
+
+                    //         let msgType = 'warning';
+                    // let msgClass = 'bx bx-check-circle';
+                    // let message = resp.message;
+                    // showMsg(msgType, msgClass, message);
 
                         });
                         return false;
@@ -492,15 +500,14 @@ $(document).ready(function () {
         $(btn).text(btnVal);
     }
 
-    function showMsg(msgType, position, msgClass, message, sound) {
+    function showMsg(msgType, msgClass, message) {
         Lobibox.notify(msgType, {
             pauseDelayOnHover: true,
             continueDelayOnInactiveTab: false,
-            position: position,
+            position: 'top right',
             icon: msgClass,
             size: 'mini',
-            msg: message,
-            sound: sound
+            msg: message
         });
     }
 
