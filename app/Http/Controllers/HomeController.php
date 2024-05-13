@@ -100,7 +100,7 @@ class HomeController extends Controller
         $total_products = $local_products + $totalGs1Products;
         session(['gs1Products' => array_values($productTypeCounts['gs1']),'nonGs1Product'=>array_values($productTypeCounts['non_gs1']),'pieChartData'=>$pieChartData]);
 // echo "<pre>"; print_r(count($apiProductssData)); exit;
-        return view('user.master_dashboard', compact('pageTitle','user_info','total_sales','total_sales_amount','totalVat','total_products','totalGs1Products'));
+        return view('user.master_dashboard', compact('pageTitle','user_info','total_sales','total_sales_amount','totalVat','total_products','totalGs1Products','local_products'));
     }
     public function viewUsedItems(Request $request)
     {

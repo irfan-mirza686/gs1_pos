@@ -190,7 +190,7 @@
                             GS1 Products <span class="badge bg-success rounded-pill">{{@$totalGs1Products}}</span>
                         </li>
                         <li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">
-                            Non GS1 Products <span class="badge bg-danger rounded-pill">{{@$total_products}}</span>
+                            Non GS1 Products <span class="badge bg-danger rounded-pill">{{@$local_products}}</span>
                         </li>
 
                     </ul>
