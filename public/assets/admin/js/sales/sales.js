@@ -72,7 +72,7 @@ $(document).ready(function () {
                             // console.log(val)
 
 
-                            $(".delivery").append('<option value="' + val.key + '">&nbsp;&nbsp;&nbsp;' + val.address + '</option>');
+                            $(".delivery").append('<option value="' + val.address + '">&nbsp;&nbsp;&nbsp;' + val.address + '</option>');
 
                         });
             }

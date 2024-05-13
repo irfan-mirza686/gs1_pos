@@ -29,6 +29,8 @@ class SaleService
         $create->salesLocation = isset($data['salesLocation'])?$data['salesLocation']:'';
         $create->vat_no = isset($data['vat_no'])?$data['vat_no']:'';
         $create->order_no = $data['order_no'];
+        $create->delivery = $data['delivery'];
+        $create->remkars = $data['remkars'];
         $create->customer_id = $data['customer_id'];
         $create->total = $data['totalAmount'];
         $create->date = date('Y-m-d');
