@@ -77,7 +77,7 @@ class SaleController extends Controller
         }
     }
     /********************************************************************/
-    public function pos()
+    public function pos(Request $request)
     {
         $pageTitle = "POS";
         $user_info = session('user_info');
@@ -92,13 +92,17 @@ class SaleController extends Controller
                 ]);
         $glnBody = $gln->getBody();
         $glnData = json_decode($glnBody, true);
+        // echo "<pre>"; print_r($glnData); exit;
                 $glnBarcode = [];
+                $glnName = [];
         foreach ($glnData as $key => $value) {
             $glnBarcode[] = $value['GLNBarcodeNumber'];
+            $glnName[] = $value['locationNameEn'];
         }
-        $clientIP = '103.239.147.187';
+        // $clientIP = '103.239.147.187';
+        $clientIP = $request->ip();
         $userLocation = Location::get($clientIP);
-        // echo "<pre>"; print_r($glnBarcode); exit;
+        // echo "<pre>"; print_r($glnName); exit;
 
         return view('user.sales.pos.index', compact('pageTitle', 'printInvoiceNo', 'page_name', 'user_info','glnBarcode','userLocation'));
     }
