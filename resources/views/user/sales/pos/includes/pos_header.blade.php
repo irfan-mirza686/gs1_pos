@@ -68,7 +68,7 @@
     </div>
 
     <!------- Second Row ---------------->
-    <div class="form-group row">
+    <div class="form-group row" style="margin-top: -18px;">
         <label for="searchCustomer" class="col-sm-1 col-form-label">Search Customer <font style="color: red;">*</font></label>
         <div class="col-sm-2">
         <input type="text" class="form-control rounded-0" id="searchCustomer" name="mobileNumber"
@@ -97,7 +97,7 @@
 
 
     <!---- Third Row ------->
-    <div class="form-group row">
+    <div class="form-group row" style="margin-top: -18px;">
         <label for="remkars" class="col-sm-1 col-form-label">Remarks <font style="color: red;">*</font></label>
         <div class="col-sm-5">
         <input type="text" class="form-control rounded-0" id="remkars" name="remkars" placeholder="Remarks"
