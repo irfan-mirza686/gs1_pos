@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
+use App\Models\CustomerAddress;
 use Illuminate\Http\Request;
 use App\Services\CustomerService;
 use App\Http\Requests\CustomerRequest;
@@ -71,7 +73,7 @@ class CustomerController extends Controller
     public function store(CustomerRequest $request)
     {
         if ($request->ajax()) {
-            try {
+            // try {
                 $user_info = session('user_info');
                 $data = $request->all();
                 // echo "<pre>"; print_r($data); exit;
@@ -80,15 +82,22 @@ class CustomerController extends Controller
                 $create->user_id = isset(Auth::user()->id)?Auth::user()->id:0;
                 \DB::beginTransaction();
                 if ($create->save()) {
+                    foreach($data['address'] as $key => $value){
+                        $address = new CustomerAddress;
+                        $address->customer_id = $create->id;
+                        $address->address = $value;
+                        $address->save();
+                    }
+                    $customer = Customer::with('customer_address')->find($create->id);
                     \LogActivity::addToLog(strtoupper($user_info['memberData']['company_name_eng']) . ' Add a Customer (' . $data['name'] . ')', \Config::get('app.url') . '/customer_view' . '/' . $create->id);
                     \DB::commit();
-                    return response()->json(['status' => 200, 'message' => 'Data has been saved successfully', 'customer' => $create]);
+                    return response()->json(['status' => 200, 'message' => 'Data has been saved successfully', 'customer' => $customer]);
                 } else {
                     return response()->json(['status' => 422, 'message' => 'Data has not been saved']);
                 }
-            } catch (\Throwable $th) {
-                return response()->json(['status' => 422, 'message' => $th->getMessage()]);
-            }
+            // } catch (\Throwable $th) {
+            //     return response()->json(['status' => 422, 'message' => $th->getMessage()]);
+            // }
         }
     }
     /********************************************************************/

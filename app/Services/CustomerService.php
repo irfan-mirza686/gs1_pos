@@ -16,7 +16,8 @@ class CustomerService
     public function autocompCustomer($request)
     {
         $customerAuto = [];
-        $customers = Customer::where('mobile', 'LIKE', "%" . $request->term . "%")->orWhere('name', 'LIKE', "%" . $request->term . "%")->orWhere('cnic', 'LIKE', "%" . $request->term . "%")->paginate(5);
+        $customers = Customer::with('customer_address')->where('mobile', 'LIKE', "%" . $request->term . "%")->orWhere('name', 'LIKE', "%" . $request->term . "%")->paginate(5);
+        // echo "<pre>"; print_r($customers->toArray()); exit;
         if ($customers) {
             foreach ($customers as $key => $value) {
                 $customerAuto[] = array(
@@ -25,7 +26,7 @@ class CustomerService
                     "customerName" => $value->name,
                     "customerMobile" => $value->mobile,
                     "vat_no" => $value->vat,
-                    "address" => $value->address
+                    "address" => $value->customer_address
                 );
             }
             return $customerAuto;
@@ -39,19 +40,19 @@ class CustomerService
         } else if ($id != null) {
             $create = Customer::find($id);
         }
-        $addressData = [];
-        foreach($data['address'] as $key => $value){
-            $addressData[] = array(
-                'id' => $key+1,
-                'address' => $value
-            );
-        }
-        $address = json_encode($addressData);
+        // $addressData = [];
+        // foreach($data['address'] as $key => $value){
+        //     $addressData[] = array(
+        //         'id' => $key+1,
+        //         'address' => $value
+        //     );
+        // }
+        // $address = json_encode($addressData);
         // echo "<pre>"; print_r($address); exit;
         $create->name = $data['name'];
         $create->mobile = $data['mobile'];
         $create->vat = $data['vat'];
-        $create->address = isset($data['address']) ? $address : null;
+        // $create->address = isset($data['address']) ? $address : null;
         return $create;
     }
 }

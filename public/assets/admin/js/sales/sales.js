@@ -66,9 +66,9 @@ $(document).ready(function () {
                 $("#mobile").val(item.customerMobile);
                 $("#vat_no").val(item.vat_no);
                 // console.log(item)
-                const addresses = JSON.parse(item.address);
+                // const addresses = JSON.parse(item.address);
                 $(".delivery").append('<option value="">Choose...</option>');
-                        $.each(addresses, function (i, val) {
+                        $.each(item.address, function (i, val) {
                             // console.log(val)
 
 
