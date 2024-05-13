@@ -51,7 +51,7 @@
         <div class="col-sm-2">
             <select class="single-select appendHscodes form-control rounded-0" name="salesLocation" id="salesLocation">
                 <option disabled selected>Choose...</option>
-                @foreach($glnBarcode as $gln)
+                @foreach($glnName as $gln)
                 <option value="{{$gln}}">{{$gln}}</option>
                 @endforeach
             </select>

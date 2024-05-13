@@ -99,12 +99,12 @@ class SaleController extends Controller
             $glnBarcode[] = $value['GLNBarcodeNumber'];
             $glnName[] = $value['locationNameEn'];
         }
-        // $clientIP = '103.239.147.187';
-        $clientIP = $request->ip();
+        $clientIP = '103.239.147.187';
+        // $clientIP = $request->ip();
         $userLocation = Location::get($clientIP);
         // echo "<pre>"; print_r($glnName); exit;
 
-        return view('user.sales.pos.index', compact('pageTitle', 'printInvoiceNo', 'page_name', 'user_info','glnBarcode','userLocation'));
+        return view('user.sales.pos.index', compact('pageTitle', 'printInvoiceNo', 'page_name', 'user_info','glnBarcode','userLocation','glnName'));
     }
     /********************************************************************/
     public function findProduct(Request $request)
