@@ -58,7 +58,7 @@
 
                                     <div class="border p-4 rounded">
                                         <div class="text-center">
-                                            <h3 class="">Sign in</h3>
+                                            <h3 class="">Select Activity</h3>
                                             <!-- <p>Don't have an account yet? <a href="{{ route('register') }}">Sign up here</a>
                                     </p> -->
                                         </div>
