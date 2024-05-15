@@ -63,7 +63,7 @@ $(document).ready(function () {
                             var msgClass = 'bx bx-check-circle';
                             var message = resp.message;
                             var sound = 'sound6';
-                            showMsg(msgType, position, msgClass, message, sound);
+                            showMsg(msgType, msgClass, message);
 
                             return false;
                         }
@@ -106,7 +106,7 @@ $(document).ready(function () {
                             var msgClass = 'bx bx-check-circle';
                             var message = 'Product Already Exist in list';
                             var sound = 'sound5';
-                            showMsg(msgType, position, msgClass, message, sound);
+                            showMsg(msgType, msgClass, message);
 
                             return false;
                         } else {
@@ -158,7 +158,7 @@ $(document).ready(function () {
                         var position = 'bottom left';
                         var msgClass = 'bx bx-check-circle';
                         var message = resp.statusText;
-                        showMsg(msgType, position, msgClass, message);
+                        showMsg(msgType, msgClass, message);
                     },
                     complete: function () {
                         isLoading = false;
@@ -423,7 +423,7 @@ $(document).ready(function () {
                         var position = 'top-right';
                         var msgClass = 'bx bx-check-circle';
                         var message = resp.message;
-                        showMsg(msgType, position, msgClass, message);
+                        showMsg(msgType, msgClass, message);
                         $("#cashTenderModal").modal('hide');
                         $('#posForm').trigger("reset");
                         $("#otherProductsBody").html('');
@@ -460,7 +460,7 @@ $(document).ready(function () {
                         var position = 'bottom right';
                         var msgClass = 'bx bx-check-circle';
                         var message = resp.message;
-                        showMsg(msgType, position, msgClass, message);
+                        showMsg(msgType, msgClass, message);
 
                         // $("#locationID").select2("val", "");
                         $('#posForm').trigger("reset");
@@ -477,7 +477,7 @@ $(document).ready(function () {
                     var position = 'bottom left';
                     var msgClass = 'bx bx-check-circle';
                     var message = resp.statusText;
-                    showMsg(msgType, position, msgClass, message);
+                    showMsg(msgType, msgClass, message);
                     return false;
                 },
                 complete: function () {

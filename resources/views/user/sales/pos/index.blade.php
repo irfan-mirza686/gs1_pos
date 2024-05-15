@@ -3,6 +3,7 @@
 
 @section("style")
 <link href="{{asset('assets/admin/css/style.css')}}" rel="stylesheet" />
+
 @endsection
 
 @section("content")
@@ -35,7 +36,7 @@
 
             @include('user.sales.pos.includes.pos_header')
 
-            <hr style="border: 1px solid;">
+            <!-- <hr style="border: 1px solid;"> -->
             @include('user.sales.pos.includes.pos_items')
             @include('user.sales.pos.cash_tender_modal')
         </form>

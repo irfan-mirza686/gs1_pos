@@ -1,4 +1,40 @@
-<div class="card-body mt-4">
+<style>
+       /* Container for horizontal scrolling */
+.tbl-container {
+    max-width: 100%;
+    overflow-x: auto; /* Enable horizontal scrolling if needed */
+}
+
+/* Table styles */
+table#posTable {
+    width: 100%;
+    border-collapse: collapse; /* Ensure table borders collapse properly */
+}
+
+/* Table header (thead) styles */
+thead {
+    background-color: #008CFF;
+    color: white;
+    display: table;
+    width: 100%;
+    table-layout: fixed; /* Ensure consistent column widths */
+}
+
+/* Scrollable tbody styles */
+tbody#otherProductsBody {
+    max-height: 300px;
+    overflow: auto;
+    display: block;
+}
+
+/* Ensure each table row occupies full width */
+tbody#otherProductsBody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed; /* Ensure consistent column widths */
+}
+    </style>
+<div class="card-body">
     <div class="tbl-container bdr">
         <table class="table table-sm table-responsive" id="posTable" width="100%">
             <thead class="rounded-10 shadow" style="background-color: #008CFF; color: white;">
@@ -14,7 +50,7 @@
                     <th width="10%">Action</th>
                 </tr>
             </thead>
-            <tbody id="otherProductsBody" class="field_wrapper mt-4">
+            <tbody id="otherProductsBody" class="field_wrapper mt-1">
 
             </tbody>
 

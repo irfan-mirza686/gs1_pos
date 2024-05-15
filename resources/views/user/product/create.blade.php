@@ -99,7 +99,7 @@
                                         <div class="mb-3 col-md-12">
                                             <label for="ProductNameE" class="form-label">Product Type <font
                                                     style="color: red;">*</font></label>
-                                            <select class="single-select" name="product_type" id="product_type">
+                                            <select class="single-select form-control" name="product_type" id="product_type">
                                                 <option disabled selected>Choose...</option>
                                                 <option value="gs1">GS1</option>
                                                 <option value="non_gs1">Non GS1</option>
@@ -258,7 +258,7 @@
                                         <div class="col-12 gs1" style="display: none;">
                                             <label for="BrandName" class="form-label">Brand Name EN <font
                                                     style="color: red;">*</font></label>
-                                            <select class="single-select" name="BrandName" id="BrandName">
+                                            <select class="single-select form-control" name="BrandName" id="BrandName">
                                                 <option disabled selected>-select-</option>
                                                 @foreach($productData['brandsData'] as $brand)
                                                 <option value="{{$brand['name_ar']}}">{{$brand['name_ar']}}</option>
@@ -267,7 +267,7 @@
                                         </div>
                                         <div class="col-12 gs1" style="display: none;">
                                             <label for="BrandNameAr" class="form-label">Brand Name AR </label>
-                                            <select class="single-select" name="BrandNameAr" id="BrandNameAr">
+                                            <select class="single-select form-control" name="BrandNameAr" id="BrandNameAr">
                                                 <option disabled selected>-select-</option>
                                                 @foreach($productData['brandsData'] as $brand)
                                                 <option value="{{$brand['name_ar']}}">{{$brand['name_ar']}}</option>
@@ -276,7 +276,7 @@
                                         </div>
                                         <div class="col-12">
                                             <label for="unit" class="form-label">Unit Code</label>
-                                            <select class="single-select" name="unit" id="unit">
+                                            <select class="single-select form-control" name="unit" id="unit">
                                                 <option disabled selected>-select-</option>
                                                 @foreach($productData['unitsData'] as $unit)
                                                 <option value="{{$unit['unit_name']}}">{{$unit['unit_name']}}</option>
@@ -285,7 +285,7 @@
                                         </div>
                                         <div class="col-12 gs1" style="display: none;">
                                             <label for="Origin" class="form-label">Origin</label>
-                                            <select class="single-select" name="Origin" id="Origin">
+                                            <select class="single-select form-control" name="Origin" id="Origin">
                                                 <option disabled selected>-select-</option>
                                                 @foreach($productData['countryOfSaleData'] as $country)
                                                 <option value="{{$country['Alpha3']}}">{{$country['country_name']}}</option>
@@ -296,7 +296,7 @@
                                             <label for="countrySale" class="form-label">Country Of Sale <font
                                                     style="color: red;">*</font>
                                             </label>
-                                            <select class="single-select" name="countrySale" id="countrySale">
+                                            <select class="single-select form-control" name="countrySale" id="countrySale">
                                                 <option disabled selected>Choose...</option>
                                                 @foreach($productData['countryOfSaleData'] as $country)
                                                 <option value="{{$country['Alpha3']}}">{{$country['country_name']}}</option>
@@ -307,7 +307,7 @@
                                             <label for="prod_lang" class="form-label">Product Description Language <font
                                                     style="color: red;">*
                                                 </font></label>
-                                            <select class="single-select" name="prod_lang" id="prod_lang">
+                                            <select class="single-select form-control" name="prod_lang" id="prod_lang">
                                                 <option value="" disabled selected>Choose...</option>
                                                 @foreach($productData['prodLangSaleData'] as $lang)
                                                 <option value="{{$lang['language_name']}}">{{$lang['language_name']}}</option>
@@ -319,7 +319,7 @@
                                             <label for="gtin_type" class="form-label">GTIN Type <font
                                                     style="color: red;">*</font>
                                             </label>
-                                            <select class="single-select" name="ProductType" id="gtin_type">
+                                            <select class="single-select form-control" name="ProductType" id="gtin_type">
                                                 <option disabled selected>Choose...</option>
                                                 @foreach($productData['prodTypesData'] as $type)
                                                 <option value="{{$type['name']}}">{{$type['name']}}</option>
@@ -331,7 +331,7 @@
                                             <label for="PackagingType" class="form-label">Package Type <font
                                                     style="color: red;">*</font>
                                             </label>
-                                            <select class="single-select" name="PackagingType" id="PackagingType">
+                                            <select class="single-select form-control" name="PackagingType" id="PackagingType">
                                                 <option disabled selected>Choose...</option>
                                                 @foreach($productData['pkgTypesData'] as $pkg_type)
                                                 <option value="{{$pkg_type['name']}}">{{$pkg_type['name']}}</option>
@@ -342,7 +342,7 @@
                                         <div class="col-12 gs1" style="display: none;">
                                             <label for="gpc" class="form-label">GPC <font style="color: red;">*</font>
                                             </label>
-                                            <select class="single-select appendGpc" name="gpc" id="appendGpc">
+                                            <select class="single-select form-control appendGpc" name="gpc" id="appendGpc">
                                                 <option disabled selected>Choose...</option>
 
                                             </select>
@@ -352,7 +352,7 @@
                                             <label for="hscode" class="form-label">HSCode <font style="color: red;">*
                                                 </font>
                                             </label>
-                                            <select class="single-select appendHscodes" name="HsDescription"
+                                            <select class="single-select form-control appendHscodes" name="HsDescription"
                                                 id="appendHscodes">
                                                 <option disabled selected>Choose...</option>
 
