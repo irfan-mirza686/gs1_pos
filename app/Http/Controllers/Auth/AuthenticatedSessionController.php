@@ -67,6 +67,7 @@ class AuthenticatedSessionController extends Controller
                     return response()->json(['status' => 404, 'error' => @$data['error']]);
                 }
                 if ($data) {
+                    Session::put(['activtyData'=>$data,'email'=>$request->email]);
                     return response()->json(['status' => 200, 'data' => $data]);
                 }
 
@@ -99,12 +100,20 @@ class AuthenticatedSessionController extends Controller
         }
     }
     /************************************************************************/
+    public function memberActivity(Request $request)
+    {
+        $pageTitle = "Member Activity";
+        $activtyData = session('activtyData');
+        $email = session('email');
+        return view('user.auth.activity',compact('activtyData','email'));
+    }
+    /************************************************************************/
     public function loginMember(Request $request)
     {
         if ($request->ajax()) {
 
             try {
-
+                // echo "<pre>"; print_r($request->all()); exit;
                 $response = Http::post('https://gs1ksa.org:3093/api/users/memberLogin', [
                     'email' => $request->email,
                     'password' => $request->password,

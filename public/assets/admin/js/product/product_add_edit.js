@@ -33,9 +33,59 @@ $(document).ready(function () {
         }, doneTypingInterval);
     })
 
+     // Initialize Select2 on your <select> element
+    $('.appendGpc').select2({
+        placeholder: 'Type to search...',
+        tags: true, // Enable user-defined tags
+        tokenSeparators: [',', ' '], // Define separators for multiple tags
+        createTag: function (params) {
+            // Allow user to create a new tag (option) on the fly
+            var term = $.trim(params.term);
+console.log("search keywords: " + term)
+            if (term === '') {
+                return null; // Return null if term is empty
+            }
+
+            return {
+                id: term,
+                text: term,
+                newTag: true // Mark the tag as a new user-created tag
+            };
+        }
+    });
+
+    // Event listener to handle selection changes (select2:select)
+    $('.appendGpc').on('select2:select', function(e) {
+        var selectedOption = e.params.data;
+
+        if (selectedOption.newTag) {
+            // Handle newly created tag (user-defined option)
+            var search = selectedOption.text;
+            doneTyping(search)
+            console.log('Newly created tag:', selectedOption.text);
+        } else {
+            // Handle existing option selection
+            console.log('Selected option:', selectedOption.text);
+        }
+    });
+
+    // Event listener to handle user input (input event)
+    $('.appendGpc').on('input', function() {
+        var typedValue = $(this).val();
+
+        // Output typed value (useful for real-time feedback or processing)
+        console.log('Typed Value:', typedValue);
+    });
+
+
+
+
+
+
     // When user stops typing, do something
     function doneTyping(search) {
         // console.log(search)
+        $(".appendGpc").html("");
         $.ajax({
             url: '/get-gpc-based-on-productname',
             type: 'POST',

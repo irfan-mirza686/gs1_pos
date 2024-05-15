@@ -58,6 +58,7 @@ Route::
             Route::get('/', [AuthenticatedSessionController::class, 'create'])->name('login');
             Route::post('/', [AuthenticatedSessionController::class, 'store'])->name('userlogin');
             Route::post('/check/email', [AuthenticatedSessionController::class, 'checkEmail'])->name('check.email');
+            Route::get('/member/activity', [AuthenticatedSessionController::class, 'memberActivity'])->name('member.activity');
             Route::post('/login/member', [AuthenticatedSessionController::class, 'loginMember'])->name('login.member');
         });
 

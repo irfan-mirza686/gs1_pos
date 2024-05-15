@@ -40,15 +40,17 @@ $(document).ready(function () {
                 $(btn).removeAttr("disabled");
 
                 if (resp.status === 200) {
-
-                    $(".memberLoginActivity").html("");
-                    const modal = $("#activityPopup");
-                    $(".memberLoginActivity").append('<option value="">-select-</option>');
-                    $.each(resp.data, function (i, item) {
-                        $(".memberLoginActivity").append('<option value="' + item.cr_activity + '" >&nbsp;&nbsp;&nbsp;' + item.cr_activity + '</option>');
-                    });
-                    modal.find('input[name=email]').val(email);
-                    modal.modal('show');
+                    setTimeout(function() {
+                        window.location.href = "member/activity";
+                    }, 1000);
+                    // $(".memberLoginActivity").html("");
+                    // const modal = $("#activityPopup");
+                    // $(".memberLoginActivity").append('<option value="">-select-</option>');
+                    // $.each(resp.data, function (i, item) {
+                    //     $(".memberLoginActivity").append('<option value="' + item.cr_activity + '" >&nbsp;&nbsp;&nbsp;' + item.cr_activity + '</option>');
+                    // });
+                    // modal.find('input[name=email]').val(email);
+                    // modal.modal('show');
                 }
 
                 if (resp.status === 404) {
@@ -72,13 +74,13 @@ $(document).ready(function () {
 
     // Activity FOrm submit....
     /// SUbmit Add Brand Form ....
-    $(document).on('submit', '#activityForm', function (e) {
+    $(document).on('submit', '#activityFormData', function (e) {
         e.preventDefault();
 
-        let formData = new FormData($('#activityForm')[0]);
+        let formData = new FormData($('#activityFormData')[0]);
         let btn = $('.loginActivityBtn');
         let btnVal = $('.loginActivityBtn').text();
-        let url = $("#activityForm").attr('action');
+        let url = $("#activityFormData").attr('action');
         let creating = ' Processing...';
         let email = formData.get('email');
         const swalWithBootstrapButtons = Swal.mixin({
@@ -116,7 +118,7 @@ $(document).ready(function () {
                         'success'
                     )
                     setTimeout(function() {
-                        window.location.href = "dashboard";
+                        window.location.href = "/dashboard";
                     }, 2000);
                 }
 
