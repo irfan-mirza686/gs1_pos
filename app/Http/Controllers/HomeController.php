@@ -24,6 +24,7 @@ class HomeController extends Controller
         $pageTitle = "Dashboard";
 
         $user_info = session('user_info');
+
         $sales = Sale::get();
         $total_sales = $sales->count();
         $total_sales_amount = $sales->sum('total');
@@ -35,6 +36,7 @@ class HomeController extends Controller
                 $totalVat += $product['vat_total'];
             }
         }
+
         $products = Product::get();
         $local_products = $products->count();
 
@@ -83,7 +85,7 @@ class HomeController extends Controller
         //     ],
         // ];
 
-        // echo "<pre>"; print_r($data); exit;
+        // echo "<pre>"; print_r(array_values($productTypeCounts['gs1'])); exit;
 
         $apiProducts = Http::withHeaders([
             'Authorization' => 'Bearer ' . $user_info['token'],

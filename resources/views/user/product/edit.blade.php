@@ -194,7 +194,7 @@
                                                     <input type="file" class="image-upload" name="front_image"
                                                         id="front_image" accept="image/*">
                                                     <label for="front_image" class="image-label">
-                                                    <img id="front_image_preview" src="https://gs1ksa.org:3093/uploads/products/memberProductsImages/front_image-1715000284204.jpg" alt="Front Image">
+                                                    <img id="front_image_preview" src="{{ $front_image }}" alt="Front Image">
                                                         <span class="image-placeholder-text">Click to upload front
                                                             image</span>
                                                     </label>
@@ -416,6 +416,7 @@
             reader.readAsDataURL(input.files[0]);
         }
     });
-</script>
+
+    </script>
 
 @endpush

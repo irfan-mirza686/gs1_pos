@@ -40,11 +40,11 @@ tbody#otherProductsBody tr {
             <thead class="rounded-10 shadow" style="background-color: #008CFF; color: white;">
                 <tr>
 
-                    <th width="10%">GTIN</th>
-                    <th width="15%">Description</th>
-                    <th width="5%">Price</th>
-                    <th width="12%">Qty</th>
-                    <th width="12%">Discount</th>
+                    <th width="15%">GTIN</th>
+                    <th width="20%">Description</th>
+                    <th width="10%">Price</th>
+                    <th width="10%">Qty</th>
+                    <th width="10%">Discount</th>
                     <th width="10%">Vat</th>
                     <th width="15%">Total</th>
                     <th width="10%">Action</th>
@@ -135,7 +135,7 @@ tbody#otherProductsBody tr {
 
                     <td colspan="9">
                         <!-- Right Side -->
-                        <table width="100%">
+                        <table width="100%" id="calculationTable">
                             <tbody style="display:table; width:100%;">
                                 <!-- Row 1 -->
                                 <tr>
@@ -149,7 +149,7 @@ tbody#otherProductsBody tr {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="pos-button-gaps text-start" colspan="5"><strong>Total Vat
+                                    <td class="pos-button-gaps text-start" colspan="5"><strong>Total
                                             VAT(15%):</strong></td>
                                     <td class="pos-right-gaps" colspan="1">
                                         <input type="text" name="total_vat" value="0" id="total_vat"

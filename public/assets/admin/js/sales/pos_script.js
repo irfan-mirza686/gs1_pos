@@ -122,28 +122,28 @@ $(document).ready(function () {
                             amount = resp.prodArray.price;
 
                             $('#otherProductsBody').append('<tr class="delete_add_more_item" data-barcode="' + barcode + '" id="delete_add_more_item">\
-                                    <td>\
+                                    <td width="15%">\
                                     <input type="text" name="barcode[]" value="'+ barcode + '" class="form-control form-control-sm rounded-0 barcode text-start" readonly><input type="hidden" value="' + resp.prodArray.product_id + '" name="product_id[]"><input type="hidden" value="' + resp.prodArray.product_type + '" name="product_type[]">\
                                     </td>\
-                                    <td>\
+                                    <td width="20%">\
                                     <input type="text" name="description[]" value="'+ resp.prodArray.productName + '" class="form-control form-control-sm rounded-0 description text-start" readonly>\
                                     </td>\
-                                    <td>\
+                                    <td width="10%">\
                                     <input type="text" name="price[]" value="'+ resp.prodArray.price + '" class="form-control form-control-sm rounded-0 price text-end">\
                                     </td>\
-                                    <td>\
+                                    <td width="10%">\
                                     <input type="text" name="quantity[]" value="'+ updateQty + '" class="form-control form-control-sm rounded-0 quantity text-center">\
                                     </td>\
-                                    <td>\
+                                    <td width="10%">\
                                     <input type="text" name="discount[]" value="'+ resp.prodArray.disc + '" class="form-control form-control-sm rounded-0 discount text-end">\
                                     </td>\
-                                    <td>\
+                                    <td width="10%">\
                                     <input type="text" name="vat[]" value="'+ resp.prodArray.vat + '" class="form-control form-control-sm rounded-0 vat text-end"><input type="hidden" name="vat_total[]" value="" class="form-control form-control-sm rounded-0 vat_total text-end">\
                                     </td>\
-                                    <td>\
+                                    <td width="15%">\
                                     <input type="text" name="single_total[]" value="'+ resp.prodArray.price + '" class="form-control form-control-sm rounded-0 single_total text-end" readonly>\
                                     </td>\
-                                    <td style="float: right;" class="mt-2"><i class="btn btn-danger rounded-5 shadow btn-sm lni lni-close remove_button"></i> </td>\
+                                    <td  class="mt-2 text-center" width="10%"><i class="btn btn-danger rounded-5 shadow btn-sm lni lni-close remove_button"></i> </td>\
                                     </tr>'
                             );
                             $(".barcodeLoader").hide();
@@ -361,7 +361,18 @@ $(document).ready(function () {
         // $('#tender_amount').val(sum);
         $('#total_amount').val(sum);
         $('#balance').val(totalAmount);
+
+        var total_vat = 0;
+        $(".vat_total").each(function () {
+            var value = $(this).val();
+            if (!isNaN(value) && value.length != 0) {
+                total_vat += parseFloat(value);
+            }
+        });
+console.log("total vat: " + total_vat)
+        $('#total_vat').val(total_vat);
     }
+
     $(document).on('keyup click', '.price,.discount,.quantity,.vat', function () {
         var cost = $(this).closest("tr").find("input.cost").val();
         var price = $(this).closest("tr").find("input.price").val();

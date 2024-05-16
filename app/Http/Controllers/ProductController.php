@@ -101,9 +101,11 @@ class ProductController extends Controller
                 ->editColumn('type', function ($row) {
                     // return $row['type'];
                     if ($row['type'] == 'gs1_product') {
-                        return '<span class="badge bg-info" style="width:100px;">' . strtoupper($row['type']) . '</span>';
+                        return '<span class="badge bg-gradient-quepal text-white shadow-sm w-100">' . strtoupper($row['type']) . '</span>';
+                        // return '<span class="badge bg-info" style="width:100px;">' . strtoupper($row['type']) . '</span>';
                     } else {
-                        return '<span class="badge bg-primary" style="width:100px;">' . strtoupper($row['type']) . '</span>';
+                        return '<span class="badge bg-gradient-blooker text-white shadow-sm w-100">' . strtoupper($row['type']) . '</span>';
+                        // return '<span class="badge bg-primary" style="width:100px;">' . strtoupper($row['type']) . '</span>';
                     }
                 })
                 ->editColumn('productnameen', function ($row) {

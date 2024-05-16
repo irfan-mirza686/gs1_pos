@@ -180,7 +180,7 @@
                                                     <input type="file" class="image-upload" name="front_image"
                                                         id="front_image" accept="image/*">
                                                     <label for="front_image" class="image-label">
-                                                        <img src="{{ asset('placeholder.png') }}" alt="Front Image">
+                                                        <img src="{{asset('assets/uploads/sidebar_icons/reports.png')}}" alt="Front Image">
                                                         <span class="image-placeholder-text">Click to upload front
                                                             image</span>
                                                     </label>
