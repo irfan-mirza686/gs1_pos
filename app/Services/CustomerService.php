@@ -9,7 +9,7 @@ class CustomerService
 {
     public function getAllData()
     {
-        return Customer::with('user')->get();
+        return Customer::with('customer_address')->get();
     }
     /********************************************************************/
 

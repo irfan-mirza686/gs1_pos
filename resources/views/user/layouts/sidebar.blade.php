@@ -68,9 +68,9 @@
                 </li>
                 <li> <a href="#"><i class="bx bx-right-arrow-alt"></i>Categories</a>
                 </li>
-                <li> <a href="#"><i class="bx bx-right-arrow-alt"></i>Brands</a>
+                <li> <a href="{{route('brands')}}"><i class="bx bx-right-arrow-alt"></i>Brands</a>
                 </li>
-                <li> <a href="#"><i class="bx bx-right-arrow-alt"></i>Units</a>
+                <li> <a href="{{route('units')}}"><i class="bx bx-right-arrow-alt"></i>Units</a>
                 </li>
                 <li> <a href="#"><i class="bx bx-right-arrow-alt"></i>Print Barcodes</a>
                 </li>
@@ -112,6 +112,8 @@
                 <li> <a href="{{route('sales')}}"><i class="bx bx-right-arrow-alt"></i>Sales Returns</a>
                 </li>
                 <li> <a href="{{route('sales')}}"><i class="bx bx-right-arrow-alt"></i>POS</a>
+                </li>
+                <li> <a href="{{route('customers')}}"><i class="bx bx-right-arrow-alt"></i>Customers</a>
                 </li>
 
             </ul>

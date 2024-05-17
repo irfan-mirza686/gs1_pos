@@ -98,6 +98,19 @@
 
     <!---- Third Row ------->
     <div class="form-group row" style="margin-top: -18px;">
+    <label for="remkars" class="col-sm-1 col-form-label">Scan Barode <font style="color: red;">*</font></label>
+        <div class="col-sm-2">
+        <div class="input-group mb-3">
+                <input type="text" class="form-control rounded-0" id="barcode" name="barcode"
+                    placeholder="Scan Barcode..." onmouseover="this.focus();" style="background-color: #FFF372;"> <span class="input-group-text rounded-0"
+                    id="basic-addon2"><i class="fadeIn animated bx bx-barcode-reader"></i></span>
+                <div class="barcodeLoader d-none" style="margin-top: -37px; float: right;">
+                    <img src="{{asset('assets/uploads/search-barcode.gif')}}" width="40" height="35"
+                        style="margin-top: 38px; margin-left: -40px;">
+                </div>
+            </div>
+        </div>
+
         <label for="remkars" class="col-sm-1 col-form-label">Remarks <font style="color: red;">*</font></label>
         <div class="col-sm-5">
         <input type="text" class="form-control rounded-0" id="remkars" name="remkars" placeholder="Remarks"
@@ -116,7 +129,7 @@
     </div>
 
     <!--- Fourth row --------->
-    <div class="form-group row">
+    <!-- <div class="form-group row">
         <label for="remkars" class="col-sm-1 col-form-label">Scan Barode <font style="color: red;">*</font></label>
         <div class="col-sm-5">
         <div class="input-group mb-3">
@@ -131,7 +144,7 @@
         </div>
 
 
-    </div>
+    </div> -->
 
 
 

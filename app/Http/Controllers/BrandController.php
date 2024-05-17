@@ -2,35 +2,37 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Brand;
+use App\Services\BrandService;
 use Illuminate\Http\Request;
-use App\Services\UnitService;
-use App\Models\Country;
-use App\Http\Requests\UnitRequest;
+use App\Models\Customer;
+use App\Models\CustomerAddress;
+use App\Services\CustomerService;
+use App\Http\Requests\CustomerRequest;
 use Auth;
 use DataTables;
-use App\Models\Unit;
 
-class UnitController extends Controller
+class BrandController extends Controller
 {
-    private $unitService;
+    private $brandService;
 
-    public function __construct(UnitService $unitService)
+    public function __construct(BrandService $brandService)
     {
-        $this->unitService = $unitService;
+        $this->brandService = $brandService;
     }
     /********************************************************************/
 
     public function index(Request $request)
     {
-        $pageTitle = 'Units';
+        $pageTitle = 'Brands';
         $user_info = session('user_info');
-        return view('user.unit.index', compact('pageTitle','user_info'));
+        return view('user.brands.index', compact('pageTitle','user_info'));
     }
     /********************************************************************/
     public function List(Request $request)
     {
         if ($request->ajax()) {
-            $data = Unit::get();
+            $data = Brand::get();
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->editColumn('status', function ($row) {
@@ -45,8 +47,8 @@ class UnitController extends Controller
                 })
                 ->addColumn('action', function ($row) {
 
-                    $btn = '<a href="' . route('unit.update',$row->id) . '" data-toggle="tooltip"  data-name="' . $row->name . '" data-status="' . $row->status . '"  data-id="' . $row->id . '" data-original-title="Edit Unit" class="btn btn-primary btn-sm edit"><i class="fadeIn animated bx bx-edit"></i></a>';
-                    $btn = $btn . ' <a href="' . route('unit.delete',$row->id) . '"data-toggle="tooltip"  data-name="' . $row->name . '" data-status="' . $row->status . '"  data-id="' . $row->id . '" data-original-title="Delete Unit" class="btn btn-danger btn-sm del"><i class="fadeIn animated bx bx-trash"></i></a>';
+                    $btn = '<a href="' . route('brand.update',$row->id) . '" data-toggle="tooltip"  data-name="' . $row->name . '" data-status="' . $row->status . '"  data-id="' . $row->id . '" data-original-title="Edit Brand" class="btn btn-primary btn-sm edit"><i class="fadeIn animated bx bx-edit"></i></a>';
+                    $btn = $btn . ' <a href="' . route('brand.delete',$row->id) . '"data-toggle="tooltip"  data-name="' . $row->name . '" data-status="' . $row->status . '"  data-id="' . $row->id . '" data-original-title="Delete Brand" class="btn btn-danger btn-sm del"><i class="fadeIn animated bx bx-trash"></i></a>';
                     return $btn;
                 })
                 ->rawColumns(['status','action'])
@@ -55,12 +57,12 @@ class UnitController extends Controller
     }
 
     /********************************************************************/
-    public function store(UnitRequest $request)
+    public function store(Request $request)
     {
 
         $data = $request->all();
         try {
-            $country = $this->unitService->store($data, $id = "");
+            $country = $this->brandService->store($data, $id = "");
             if ($country->save()) {
                 return response()->json(['status' => 200, 'message' => 'Data has been created successfully']);
             } else {
@@ -74,11 +76,11 @@ class UnitController extends Controller
     }
 
     /********************************************************************/
-    public function update(UnitRequest $request, $id = null)
+    public function update(Request $request, $id = null)
     {
         $data = $request->all();
         try {
-            $country = $this->unitService->store($data, $id);
+            $country = $this->brandService->store($data, $id);
             if ($country->save()) {
                 return response()->json(['status' => 200, 'message' => 'Data has been updated successfully']);
             } else {
@@ -93,7 +95,7 @@ class UnitController extends Controller
     {
 
         try {
-            if (Unit::find($id)->delete()) {
+            if (Brand::find($id)->delete()) {
                 return response()->json(['status' => 200, 'message' => 'Data has been deleted successfully']);
             } else {
                 return response()->json(['status' => 422, 'message' => 'Data has been not deleted']);

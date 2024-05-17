@@ -27,9 +27,7 @@ $(document).ready(function () {
                 { data: 'DT_RowIndex', name: 'DT_RowIndex' },
                 { data: 'name', name: 'name' },
                 { data: 'mobile', name: 'mobile' },
-                { data: 'cnic', name: 'cnic' },
                 { data: 'address', name: 'address' },
-                { data: 'created_by', name: 'created_by' },
                 { data: 'status', name: 'status' },
                 { data: 'action', name: 'action', orderable: false, searchable: false },
             ]

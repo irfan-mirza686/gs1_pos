@@ -31,7 +31,8 @@ class CustomerController extends Controller
     public function index()
     {
         $pageTitle = "Customers";
-        return view('user.customers.index',compact('pageTitle'));
+        $user_info = session('user_info');
+        return view('user.customers.index',compact('pageTitle','user_info'));
     }
     /********************************************************************/
     public function List(Request $request)
@@ -40,10 +41,18 @@ class CustomerController extends Controller
             $data = $this->customerService->getAllData();
             return Datatables::of($data)
                 ->addIndexColumn()
+                ->editColumn('address', function ($row) {
+                    if ($row->customer_address) {
+                        $badge = [];
+                        foreach ($row->customer_address as $value) {
 
-                ->editColumn('created_by', function ($row) {
-                    return ($row->user)?$row->user->name:'';
+                                $badge[] = '<span class="badge bg-info style="cursor: pointer; width:100px;">' . $value['address'] . '</span>';
+
+                        }
+                        return implode(' | ', $badge);
+                    }
                 })
+
                 ->editColumn('status', function ($row) {
                     if ($row->status == 'active') {
                         return '<span class="badge bg-success" style="width:100px;">' . strtoupper($row->status) . '</span>';
@@ -57,7 +66,7 @@ class CustomerController extends Controller
                     <div class="dropdown">
                         <button class="btn btn-primary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
                         <ul class="dropdown-menu" style="">
-                        <li><a class="dropdown-item updateProductItemSellingPrice" data-customerID="' . $row->id . '" style="cursor: pointer;"><i class="lni lni-eye" style="color: blue;"></i> Pay Now</a>
+                        <li><a class="dropdown-item edit" data-customerID="' . $row->id . '" style="cursor: pointer;"><i class="lni lni-eye" style="color: blue;"></i> Edit</a>
                             </li>
                         </ul>
                     </div>
@@ -65,7 +74,7 @@ class CustomerController extends Controller
 
                     return $btn;
                 })
-                ->rawColumns(['status', 'action'])
+                ->rawColumns(['status', 'address','action'])
                 ->make(true);
         }
     }

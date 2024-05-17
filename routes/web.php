@@ -22,6 +22,7 @@ use App\Http\Controllers\UserProfileController;
 // Frontend Controllers....
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Gs1AppsController;
+use App\Http\Controllers\BrandController;
 
 
 
@@ -54,6 +55,7 @@ require __DIR__ . '/auth.php';
 
 Route::
         namespace('Auth')->middleware('guest')->group(function () {
+
 
             Route::get('/', [AuthenticatedSessionController::class, 'create'])->name('login');
             Route::post('/', [AuthenticatedSessionController::class, 'store'])->name('userlogin');
@@ -108,6 +110,26 @@ Route::
     Route::delete('customer/delete/{id}', [CustomerController::class, 'delete'])->name('customer.delete');
     Route::get('autocomplete/customer', [CustomerController::class, 'autocompleteCustomer']);
     /* Customers Routes Ends Here */
+
+     /* Brands Routes Start Here */
+     Route::get('brands', [BrandController::class, 'index'])->name('brands');
+     Route::post('brands/list', [BrandController::class, 'List'])->name('brand.list');
+     Route::get('brand/create', [BrandController::class, 'create'])->name('brand.create');
+     Route::post('brand/store', [BrandController::class, 'store'])->name('brand.store');
+     Route::get('brand/edit/{id}', [BrandController::class, 'edit'])->name('brand.edit');
+     Route::post('brand/update/{id}', [BrandController::class, 'update'])->name('brand.update');
+     Route::delete('brand/delete/{id}', [BrandController::class, 'delete'])->name('brand.delete');
+     /* Brands Routes Ends Here */
+
+      /* Unit Routes Start Here */
+    Route::get('units', [UnitController::class, 'index'])->name('units');
+    Route::post('units/list', [UnitController::class, 'List'])->name('unit.list');
+    Route::get('unit/create', [UnitController::class, 'create'])->name('unit.create');
+    Route::post('unit/store', [UnitController::class, 'store'])->name('unit.store');
+    Route::get('unit/edit/{id}', [UnitController::class, 'edit'])->name('unit.edit');
+    Route::post('unit/update/{id}', [UnitController::class, 'update'])->name('unit.update');
+    Route::delete('unit/delete/{id}', [UnitController::class, 'delete'])->name('unit.delete');
+    /* Unit Routes Ends Here */
 
     /* User Products Routes Start Here */
     Route::get('products', [ProductController::class, 'index'])->name('products');
