@@ -24,6 +24,7 @@ $(document).ready(function () {
             columns: [
                 { data: 'DT_RowIndex', name: 'DT_RowIndex' },
                 { data: 'type', name: 'type' },
+                { data: 'image', name: 'image' },
                 { data: 'productnameen', name: 'productnameen' },
                 { data: 'productnamear', name: 'productnamear' },
                 { data: 'brand', name: 'brand' },

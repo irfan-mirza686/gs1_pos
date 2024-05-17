@@ -51,3 +51,9 @@ function filePath($folder_name)
 {
     return public_path('assets/uploads/' . $folder_name);
 }
+
+function getFile($folder_name, $filename)
+{
+
+    return asset('assets/uploads/'.$folder_name.'/'.$filename);
+}

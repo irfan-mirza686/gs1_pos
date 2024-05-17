@@ -66,6 +66,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>Type</th>
+                                <th>Image</th>
                                 <th>Product Name EN</th>
                                 <th>Product Name AR</th>
                                 <th>Brand EN</th>
@@ -79,6 +80,7 @@
                                 <th></th>
                                 <th><input type="text" class="form-control form-control-sm column-search rounded-0"
                                         data-column="1" placeholder="Search by Product Type" /></th>
+                                        <th></th>
                                 <th><input type="text" class="form-control form-control-sm column-search rounded-0"
                                         data-column="2" placeholder="Search by Product Name EN" /></th>
                                 <th><input type="text" class="form-control form-control-sm column-search rounded-0"

@@ -61,9 +61,12 @@ class ProductController extends Controller
             $apiArrayData = [];
             if ($apiProductssData) {
                 foreach ($apiProductssData as $key => $apiP) {
+                    $url = 'https://gs1ksa.org:3093/';
+                    $image = ($apiP['front_image'])?$url . $apiP['front_image']:asset('assets/uploads/no-image.png');
                     $apiArrayData[] = array(
                         'id' => $apiP['id'],
                         'user_id' => $apiP['user_id'],
+                        'image' => $image,
                         'productnameenglish' => $apiP['productnameenglish'],
                         'productnamearabic' => $apiP['productnamearabic'],
                         'BrandName' => $apiP['BrandName'],
@@ -80,9 +83,11 @@ class ProductController extends Controller
             $localArrayData = [];
             if ($localProducts) {
                 foreach ($localProducts as $key => $local) {
+                    $image = ($local['front_image'])?$local['front_image']:asset('assets/uploads/no-image.png');
                     $localArrayData[] = array(
                         'id' => $local['id'],
                         'user_id' => $local['user_id'],
+                        'image' => $image,
                         'productnameenglish' => $local['name'],
                         'productnamearabic' => '',
                         'BrandName' => '',
@@ -97,9 +102,14 @@ class ProductController extends Controller
             // $data = $this->productService->getAllProducts();
             return Datatables::of($mergeProducts)
                 ->addIndexColumn()
+                ->editColumn('image', function ($row) {
 
+                    return '<img src="' . $row['image'] . '" border="0"
+                    width="50" height="50" class="img-rounded product-img-2" align="center" />';
+                })
                 ->editColumn('type', function ($row) {
                     // return $row['type'];
+
                     if ($row['type'] == 'gs1_product') {
                         return '<span class="badge bg-gradient-quepal text-white shadow-sm w-100">' . strtoupper($row['type']) . '</span>';
                         // return '<span class="badge bg-info" style="width:100px;">' . strtoupper($row['type']) . '</span>';
@@ -146,7 +156,7 @@ class ProductController extends Controller
 
                     return $btn;
                 })
-                ->rawColumns(['type', 'barcode', 'action'])
+                ->rawColumns(['type','image', 'barcode', 'action'])
                 ->make(true);
         }
     }
