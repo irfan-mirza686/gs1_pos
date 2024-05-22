@@ -22,7 +22,7 @@ class UnitController extends Controller
     {
         try {
             $data = Unit::get();
-            return response()->json(['brands' => $data], 200);
+            return response()->json(['units' => $data], 200);
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
         }
