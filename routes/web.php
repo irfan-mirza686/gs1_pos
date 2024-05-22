@@ -142,7 +142,7 @@ Route::
     Route::get('product/view/{slug?}', [ProductController::class, 'view'])->name('product.view');
     Route::get('product/items/{slug?}', [ProductController::class, 'items'])->name('product.items');
     Route::get('product/edit', [ProductController::class, 'edit'])->name('product.edit');
-    Route::post('product/update', [ProductController::class, 'update'])->name('product.update');
+    Route::post('product/update/{id}', [ProductController::class, 'update'])->name('product.update');
     Route::get('product/delete/{id}', [ProductController::class, 'delete'])->name('product.delete');
     Route::get('autocomplete/product', [ProductController::class, 'autocompleteProduct']);
     // Route::get('load/products',[ProductController::class,'loadProducts']); // not in used for now.

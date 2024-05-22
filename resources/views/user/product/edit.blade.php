@@ -86,9 +86,9 @@
                     </div>
                 </div>
             </div>
-            <form action="{{route('product.update')}}" method="post" enctype="multipart/form-data">@csrf
-            <input type="hidden" name="type" value="{{$type}}">
-            @if($type=='gs1_product')
+            <form action="{{route('product.update',$editProduct['id'])}}" method="post" enctype="multipart/form-data">@csrf
+            <input type="hidden" name="product_type" value="{{$product_type}}">
+            @if($product_type=='gs1')
             <input type="hidden" name="product_id" value="{{$editProduct['id']}}">
             @else
             <input type="hidden" name="product_id" value="{{$editProduct['id']}}">
@@ -107,8 +107,8 @@
                                                     style="color: red;">*</font></label>
                                             <select class="single-select form-control" name="product_type" id="product_type" disabled>
                                                 <option disabled selected>Choose...</option>
-                                                <option value="gs1" {{($type=='gs1_product')?'selected':''}}>GS1</option>
-                                                <option value="non_gs1" {{($type=='non_gs1')?'selected':''}}>Non GS1</option>
+                                                <option value="gs1" {{($product_type=='gs1')?'selected':''}}>GS1</option>
+                                                <option value="non_gs1" {{($product_type=='non_gs1')?'selected':''}}>Non GS1</option>
                                             </select>
 
                                         </div>
@@ -121,8 +121,8 @@
                                                 value="{{ $editProduct['productnameenglish'] ?? old('productnameenglish')}}">
 
                                         </div>
-                                        @if($type=='gs1_product')
-                                        <div class="mb-3 col-md-6 gs1" style="display:none;">
+                                        @if($product_type=='gs1')
+                                        <div class="mb-3 col-md-6">
                                             <label for="productnamearabic" class="form-label">Product Name AR <font
                                                     style="color: red;">*</font></label>
                                             <input type="text" class="form-control" id="productnamearabic"
@@ -131,15 +131,15 @@
 
                                         </div>
                                         @endif
-                                        <div class="mb-3 col-md-6 gs1" style="display:none;">
+                                        <div class="mb-3 col-md-6">
                                             <label for="size" class="form-label">Size <font style="color: red;">*</font>
                                             </label>
                                             <input type="text" class="form-control" id="size" name="size"
                                                 placeholder="size" value="{{ $editProduct['size'] ?? old('size')}}">
 
                                         </div>
-                                        @if($type=='gs1_product')
-                                        <div class="mb-3 col-md-6 gs1" style="display:none;">
+                                        @if($product_type=='gs1')
+                                        <div class="mb-3 col-md-6">
                                             <label for="producturl" class="form-label">Product URL <font
                                                     style="color: red;">*</font></label>
                                             <input type="text" class="form-control" id="producturl" name="product_url"
@@ -167,7 +167,7 @@
                                             <label for="barcode" class="form-label">Barcode <font
                                                     style="color: red;">*</font></label>
                                             <input type="text" class="form-control" id="barcode"
-                                                name="barcode" placeholder="Barcode"
+                                                name="product_code" placeholder="Barcode"
                                                 value="{{ $editProduct['barcode'] ?? old('barcode')}}" readonly>
                                         </div>
 
@@ -176,15 +176,23 @@
                                             <textarea class="form-control" name="details_page" id="descriptionen"
                                                 rows="3">{!! $editProduct['details_page'] !!}</textarea>
                                         </div>
-                                        @if($type=='gs1_product')
+                                        @if($product_type=='gs1')
                                         <div class="mb-3">
                                             <label for="details_page_ar" class="form-label">Description AR</label>
                                             <textarea class="form-control" name="details_page_ar" id="details_page_ar"
                                                 rows="3">{!! $editProduct['details_page_ar'] !!}</textarea>
                                         </div>
+                                        @endif
                                         <?php
-                                        $url = 'https://gs1ksa.org:3093/';
+                                        if($product_type=='gs1'){
+                                            $url = 'https://gs1ksa.org:3093/';
                                             $front_image = $url . $editProduct['front_image'];
+                                            $back_image = $url . $editProduct['back_image'];
+                                        }else{
+                                            $front_image = getFile('products',$editProduct['front_image']);
+                                            $back_image = getFile('products',$editProduct['back_image']);
+                                        }
+
                                         ?>
                                         <div class="form-row p-2 gs1 mb-3 col-md-6">
                                             <div class="form-group">
@@ -208,14 +216,14 @@
                                                     <input type="file" class="image-upload" name="back_image"
                                                         id="back_image" accept="image/*">
                                                     <label for="back_image" class="image-label">
-                                                        <img src="{{ asset('assets/uploads/retail_pos.png') }}" alt="Back Image">
+                                                        <img src="{{ $front_image }}" alt="Back Image">
                                                         <span class="image-placeholder-text">Click to upload back
                                                             image</span>
                                                     </label>
                                                 </div>
                                             </div>
                                         </div>
-
+                                        @if($product_type=='gs1')
                                         <div class="form-row p-2 gs1 mb-3 col-md-4">
                                             <div class="form-group">
 
@@ -269,7 +277,7 @@
                             <div class="col-lg-4">
                                 <div class="border border-3 p-4 rounded">
                                     <div class="row g-3">
-                                    @if($type=='gs1_product')
+                                    @if($product_type=='gs1')
                                         <div class="col-12">
                                             <label for="BrandName" class="form-label">Brand Name EN <font
                                                     style="color: red;">*</font></label>
@@ -289,7 +297,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        @endif
+
                                         <div class="col-12">
                                             <label for="unit" class="form-label">Unit Code</label>
                                             <select class="single-select form-control" name="unit" id="unit">
@@ -299,7 +307,6 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        @if($type=='gs1_product')
                                         <div class="col-12">
                                             <label for="Origin" class="form-label">Origin</label>
                                             <select class="single-select form-control" name="Origin" id="Origin">
@@ -375,6 +382,28 @@
                                                 <option value="{{$editProduct['HsDescription']}}" selected>{{$editProduct['HsDescription']}}</option>
                                             </select>
                                         </div>
+                                        @elseif($product_type=='non_gs1')
+                                        <div class="col-12">
+                                            <label for="BrandName" class="form-label">Brand Name EN <font
+                                                    style="color: red;">*</font></label>
+                                            <select class="single-select form-control" name="BrandName" id="BrandName">
+                                                <option disabled selected>-select-</option>
+                                                @foreach($productData['brandsData'] as $brand)
+                                                <option value="{{$brand['name']}}" {{($editProduct['BrandName']==$brand['name'])?'selected':''}}>{{$brand['name']}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label for="unit" class="form-label">Unit Code</label>
+                                            <select class="single-select form-control" name="unit" id="unit">
+                                                <option disabled selected>-select-</option>
+                                                @foreach($productData['unitsData'] as $unit)
+                                                <option value="{{$unit['name']}}" {{($editProduct['unit']==$unit['name'])?'selected':''}}>{{$unit['name']}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
                                         @endif
 
                                         <div class="col-12">
