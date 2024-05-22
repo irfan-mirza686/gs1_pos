@@ -87,8 +87,9 @@
                 </div>
             </div>
             <form action="{{route('product.store')}}" method="post" enctype="multipart/form-data">@csrf
+            <input type="hidden" name="product_type" value="{{$product_type}}">
                 <div class="card-body p-4">
-                    <h5 class="card-title">Add New Product</h5>
+                    <h5 class="card-title">Add New ({{strtoupper($product_type)}}) Product</h5>
                     <hr />
                     <div class="form-body mt-4">
                         <div class="row">
@@ -99,10 +100,10 @@
                                         <div class="mb-3 col-md-12">
                                             <label for="ProductNameE" class="form-label">Product Type <font
                                                     style="color: red;">*</font></label>
-                                            <select class="single-select form-control" name="product_type" id="product_type">
+                                            <select class="single-select form-control" id="product_type" disabled>
                                                 <option disabled selected>Choose...</option>
-                                                <option value="gs1">GS1</option>
-                                                <option value="non_gs1">Non GS1</option>
+                                                <option value="gs1" {{($product_type=='gs1')?'selected':''}}>GS1</option>
+                                                <option value="non_gs1" {{($product_type=='non_gs1')?'selected':''}}>Non GS1</option>
                                             </select>
 
                                         </div>
@@ -115,7 +116,8 @@
                                                 value="{{old('productnameenglish')}}">
 
                                         </div>
-                                        <div class="mb-3 col-md-6 gs1" style="display:none;">
+                                        @if($product_type=='gs1')
+                                        <div class="mb-3 col-md-6">
                                             <label for="productnamearabic" class="form-label">Product Name AR <font
                                                     style="color: red;">*</font></label>
                                             <input type="text" class="form-control" id="productnamearabic"
@@ -123,19 +125,22 @@
                                                 value="{{old('productnamearabic')}}">
 
                                         </div>
-                                        <div class="mb-3 col-md-6 gs1" style="display:none;">
+                                        @endif
+                                        <div class="mb-3 col-md-6">
                                             <label for="size" class="form-label">Size <font style="color: red;">*</font>
                                             </label>
                                             <input type="text" class="form-control" id="size" name="size"
                                                 placeholder="size" value="{{old('size')}}">
 
                                         </div>
-                                        <div class="mb-3 col-md-6 gs1" style="display:none;">
+                                        @if($product_type=='gs1')
+                                        <div class="mb-3 col-md-6">
                                             <label for="producturl" class="form-label">Product URL <font
                                                     style="color: red;">*</font></label>
                                             <input type="text" class="form-control" id="producturl" name="product_url"
                                                 placeholder="Product URL" value="{{old('BrandName')}}">
                                         </div>
+                                        @endif
                                         <div class="mb-3 col-md-6">
                                             <label for="purchase_price" class="form-label">Purchase Price <font
                                                     style="color: red;">*</font>
@@ -172,7 +177,7 @@
                                                 rows="3"></textarea>
                                         </div>
 
-                                        <div class="form-row p-2 gs1 mb-3 col-md-6" style="display: none;">
+                                        <div class="form-row p-2 gs1 mb-3 col-md-6">
                                             <div class="form-group">
 
                                                 <div class="image-box" id="front_image_box">
@@ -187,7 +192,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-row p-2 gs1 mb-3 col-md-6" style="display: none;">
+                                        <div class="form-row p-2 gs1 mb-3 col-md-6">
                                             <div class="form-group   justify-content-end d-flex">
                                                 <div class="image-box" id="back_image_box">
                                                     <label for="back_image">Back Image</label>
@@ -201,8 +206,8 @@
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <div class="form-row p-2 gs1 mb-3 col-md-4" style="display: none;">
+                                        @if($product_type=='gs1')
+                                        <div class="form-row p-2 gs1 mb-3 col-md-4">
                                             <div class="form-group">
 
                                                 <div class="image-box" id="option1_image_box">
@@ -217,7 +222,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-row p-2 gs1 mb-3 col-md-4" style="display: none;">
+                                        <div class="form-row p-2 gs1 mb-3 col-md-4">
 
                                             <div class="form-group col-md-4">
 
@@ -233,7 +238,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-row p-2 gs1 mb-3 col-md-4" style="display: none;">
+                                        <div class="form-row p-2 gs1 mb-3 col-md-4">
                                             <div class="form-group col-md-4">
 
                                                 <div class="image-box" id="option3_image_box">
@@ -248,24 +253,25 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-4">
                                 <div class="border border-3 p-4 rounded">
                                     <div class="row g-3">
-
-                                        <div class="col-12 gs1" style="display: none;">
+                                    @if($product_type=='gs1')
+                                        <div class="col-12">
                                             <label for="BrandName" class="form-label">Brand Name EN <font
                                                     style="color: red;">*</font></label>
                                             <select class="single-select form-control" name="BrandName" id="BrandName">
                                                 <option disabled selected>-select-</option>
                                                 @foreach($productData['brandsData'] as $brand)
-                                                <option value="{{$brand['name_ar']}}">{{$brand['name_ar']}}</option>
+                                                <option value="{{$brand['name']}}">{{$brand['name']}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="col-12 gs1" style="display: none;">
+                                        <div class="col-12">
                                             <label for="BrandNameAr" class="form-label">Brand Name AR </label>
                                             <select class="single-select form-control" name="BrandNameAr" id="BrandNameAr">
                                                 <option disabled selected>-select-</option>
@@ -274,6 +280,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
+
                                         <div class="col-12">
                                             <label for="unit" class="form-label">Unit Code</label>
                                             <select class="single-select form-control" name="unit" id="unit">
@@ -283,7 +290,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="col-12 gs1" style="display: none;">
+                                        <div class="col-12">
                                             <label for="Origin" class="form-label">Origin</label>
                                             <select class="single-select form-control" name="Origin" id="Origin">
                                                 <option disabled selected>-select-</option>
@@ -292,7 +299,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="col-12 gs1" style="display: none;">
+                                        <div class="col-12">
                                             <label for="countrySale" class="form-label">Country Of Sale <font
                                                     style="color: red;">*</font>
                                             </label>
@@ -303,7 +310,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="col-12 gs1" style="display: none;">
+                                        <div class="col-12">
                                             <label for="prod_lang" class="form-label">Product Description Language <font
                                                     style="color: red;">*
                                                 </font></label>
@@ -315,7 +322,7 @@
                                             </select>
                                         </div>
 
-                                        <div class="col-12 gs1" style="display: none;">
+                                        <div class="col-12">
                                             <label for="gtin_type" class="form-label">GTIN Type <font
                                                     style="color: red;">*</font>
                                             </label>
@@ -327,7 +334,7 @@
                                             </select>
                                         </div>
 
-                                        <div class="col-12 gs1" style="display: none;">
+                                        <div class="col-12">
                                             <label for="PackagingType" class="form-label">Package Type <font
                                                     style="color: red;">*</font>
                                             </label>
@@ -339,7 +346,7 @@
                                             </select>
                                         </div>
 
-                                        <div class="col-12 gs1" style="display: none;">
+                                        <div class="col-12">
                                             <label for="gpc" class="form-label">GPC <font style="color: red;">*</font>
                                             </label>
                                             <select class="single-select form-control appendGpc" name="gpc" id="appendGpc">
@@ -348,7 +355,7 @@
                                             </select>
                                         </div>
 
-                                        <div class="col-12 gs1" style="display: none;">
+                                        <div class="col-12">
                                             <label for="hscode" class="form-label">HSCode <font style="color: red;">*
                                                 </font>
                                             </label>
@@ -358,7 +365,28 @@
 
                                             </select>
                                         </div>
+                                        @elseif($product_type=='non_gs1')
+                                        <div class="col-12">
+                                            <label for="BrandName" class="form-label">Brand Name EN <font
+                                                    style="color: red;">*</font></label>
+                                            <select class="single-select form-control" name="BrandName" id="BrandName">
+                                                <option disabled selected>-select-</option>
+                                                @foreach($productData['brandsData'] as $brand)
+                                                <option value="{{$brand['name']}}">{{$brand['name']}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
 
+                                        <div class="col-12">
+                                            <label for="unit" class="form-label">Unit Code</label>
+                                            <select class="single-select form-control" name="unit" id="unit">
+                                                <option disabled selected>-select-</option>
+                                                @foreach($productData['unitsData'] as $unit)
+                                                <option value="{{$unit['name']}}">{{$unit['name']}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        @endif
                                         <div class="col-12">
                                             <div class="d-grid">
                                                 <button type="submit" class="btn btn-primary">Save Product</button>

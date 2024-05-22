@@ -26,29 +26,35 @@ class ProductRequest extends FormRequest
      */
     public function rules()
     {
+        // dd($this->id);
         return [
-            'name' => ['required',Rule::unique('products')->ignore($this->id)],
-            'brand' => 'required',
-            'unit_id' => 'required',
-            'status' => 'required'
+            'productnameenglish' => ['required', Rule::unique('products')->ignore($this->id)],
+            'BrandName' => 'required',
+            'unit' => 'required',
+            'size' => 'required',
+            'purchase_price' => 'required_if:type,non_gs1',
+            'selling_price' => 'required_if:type,non_gs1'
         ];
     }
 
     public function messages()
     {
         return [
-            'name.required' => 'Product Name is Required.',
-            'name.unique' => 'Product Name Must Be Unique.',
-            'brand.required' => 'Brand is Required.',
-            'unit_id.required' => 'Unit is Required.',
-            'status.required' => 'Status is Required.'
+            'productnameenglish.required' => 'Product Name is Required.',
+            'productnameenglish.unique' => 'Product Name Must Be Unique.',
+            'BrandName.required' => 'Brand is Required.',
+            'unit.required' => 'Unit is Required.',
+            'size.required' => 'Size is Required.',
+            'purchase_price.required_if' => 'Purchase Price is required if Product Type is Non GS1',
+            'selling_price.required_if' => 'Selling Price is required if Product Type is Non GS1'
         ];
     }
     public function failedValidation(Validator $validator)
     {
-       throw new HttpResponseException(response()->json([
-         'status'   => 400,
-         'errors'      => $validator->errors()
-     ]));
-   }
+
+            throw new HttpResponseException(response()->json([
+                'errors' => $validator->errors()
+            ], 422));
+
+    }
 }

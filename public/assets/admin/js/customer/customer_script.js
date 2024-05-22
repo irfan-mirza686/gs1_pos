@@ -27,12 +27,23 @@ $(document).ready(function () {
                 { data: 'DT_RowIndex', name: 'DT_RowIndex' },
                 { data: 'name', name: 'name' },
                 { data: 'mobile', name: 'mobile' },
+                { data: 'vat', name: 'vat' },
                 { data: 'address', name: 'address' },
                 { data: 'status', name: 'status' },
                 { data: 'action', name: 'action', orderable: false, searchable: false },
             ]
         });
     }  /// END FUNCTION....
+
+    $(document).on('click', '#addNewCustomer', function (e) {
+        e.preventDefault();
+
+        const modal = $('#createCustomerModal');
+        // $(modal).modal({
+        //     backdrop: 'static'
+        // });
+        $(modal).modal('show');
+    })
 
     $(document).on('submit', '#registerCustomerForm', function (e) {
         e.preventDefault();
@@ -56,6 +67,7 @@ $(document).ready(function () {
                 $("#createCustomerModal").modal('hide');
                 removeContent(btn, btnVal);
                 if (resp.status === 200) {
+                    showCustomersList();
                     $(".delivery").html("");
                     // console.log(resp.customer)
                     $("#registerCustomerForm")[0].reset();
@@ -65,15 +77,15 @@ $(document).ready(function () {
                     $("#mobile").val(resp.customer.mobile);
                     $("#vat_no").val(resp.customer.vat);
                     // const addresses = JSON.parse(resp.customer.address);
-                $(".delivery").append('<option value="">Choose...</option>');
-                // console.log(resp.customer)
-                        $.each(resp.customer.customer_address, function (i, val) {
-                            // console.log(val)
+                    $(".delivery").append('<option value="">Choose...</option>');
+                    // console.log(resp.customer)
+                    $.each(resp.customer.customer_address, function (i, val) {
+                        // console.log(val)
 
 
-                            $(".delivery").append('<option value="' + val.address + '">&nbsp;&nbsp;&nbsp;' + val.address + '</option>');
+                        $(".delivery").append('<option value="' + val.address + '">&nbsp;&nbsp;&nbsp;' + val.address + '</option>');
 
-                        });
+                    });
 
                     let msgType = 'success';
                     let msgClass = 'bx bx-check-circle';
@@ -100,6 +112,114 @@ $(document).ready(function () {
             }
         });
     });
+
+    // $(document).on('click','.viewCustomerAddresses',function(e){
+    //     e.preventDefault();
+    //     var address = $(this).attr('data-address');
+    //     console.log(address)
+    //     $("#viewCustomerAddressModal").modal('show')
+    // })
+
+    $(document).on('click', '.viewCustomerAddresses', function (e) {
+        e.preventDefault();
+        $("#customerAddressTbody").html("");
+        $("#customerName").text('');
+        // Retrieve the `data-address` attribute of the clicked element
+        var addressData = $(this).attr('data-address');
+        var customerName = $(this).attr('data-customerName');
+
+        try {
+            $("#customerName").text(customerName);
+            // Parse the JSON string
+            var address = JSON.parse(addressData);
+            var counter = 0;
+            $.each(address, function (i, res) {
+                counter = counter + 1;
+                $("#customerAddressTbody").append('<tr>\
+                    <td>'+ counter + '</td>\
+                    <td>'+ res.address + '</td>\
+                </tr>');
+
+            });
+            $("#viewCustomerAddressModal").modal('show');
+        } catch (error) {
+            console.error("Failed to parse address data: ", error);
+        }
+    });
+
+    $(document).on('click', '#importCustomers', function (e) {
+        e.preventDefault();
+        $("#importNewCustomersModal").modal('show');
+    })
+
+    /// SUbmit Import Customer Form ....
+    $(document).on('submit', '#importCustomerForm', function (e) {
+        e.preventDefault();
+
+        let formData = new FormData($('#importCustomerForm')[0]);
+        let btn = $('.importBtn');
+        let btnVal = $('.importBtn').text();
+        let url = $("#importCustomerForm").attr('action');
+        let creating = ' Processing...';
+
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        })
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: formData,
+            contentType: false,
+            processData: false,
+            beforeSend: function () {
+
+                addContent(btn, creating);
+            }, success: function (resp) {
+                $("#importNewCustomersModal").modal('hide');
+                removeContent(btn, btnVal);
+                if (resp.status === 200) {
+                    swalWithBootstrapButtons.fire(
+                        'Done!',
+                        resp.message,
+                        'success'
+                    )
+                    showCustomersList();
+                } else if (resp.status === 400) {
+
+                    $.each(resp.errors, function (key, value) {
+                        $.notify(value, { globalPosition: 'top right', className: 'error' });
+                    });
+                } else if (resp.status === 422) {
+                    console.log(resp)
+                    swalWithBootstrapButtons.fire(
+                        'Warning!',
+                        resp.message,
+                        'warning'
+                    )
+                } else if (resp.status === 'incorrect_columns') {
+                    $.each(resp.errors, function (key, value) {
+                        $.notify('Incorrect Column ' + value, { globalPosition: 'top right', className: 'error' });
+                    });
+                }
+            }, error: function (xhr, textStatus, errorThrown) {
+                console.log(xhr)
+                removeContent(btn, btnVal)
+                swalWithBootstrapButtons.fire(
+                    'ERROR!',
+                    // xhr.responseJSON.errors.file[0],
+                    xhr.responseText,
+                    'error'
+                )
+                return false;
+            }
+        });
+    });
+
 
 
     ///############## Display Messages ################/////////

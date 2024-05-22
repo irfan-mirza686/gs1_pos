@@ -3,12 +3,11 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Request;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\Rule;
 
-class UnitRequest extends FormRequest
+class BrandRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,19 +24,23 @@ class UnitRequest extends FormRequest
      *
      * @return array
      */
-    public function rules(Request $request)
+    public function rules()
     {
+
         return [
-            'name' => ['required', Rule::unique('units')->ignore($request->unit_id)],
-            'status' => 'required'
+            'name' => ['required', Rule::unique('brands')->ignore($this->id)],
+            'status' => 'required|string'
         ];
     }
 
     public function messages()
     {
         return [
-            'name.required' => 'Please Enter Unit Name',
-            'status.required' => 'Please Select Status'
+            'name.required' => 'Brand Name is Required',
+            'name.string' => 'Brand Name Must be Valid',
+            'name.unique' => 'Brand Name is Duplicate',
+            'status.required' => 'Status is Required',
+            'status.string' => 'Status Must be Valid'
         ];
     }
 
@@ -53,6 +56,5 @@ class UnitRequest extends FormRequest
                 'errors' => $validator->errors()
             ], 422));
         }
-
     }
 }

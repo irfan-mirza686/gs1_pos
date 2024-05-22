@@ -26,10 +26,11 @@ class CustomerRequest extends FormRequest
      */
     public function rules()
     {
+
         return [
             'name' => ['required', Rule::unique('customers')->ignore($this->id)],
             'mobile' => ['required', Rule::unique('customers')->ignore($this->id)],
-            'cnic' => Rule::unique('customers')->ignore($this->id)
+            'vat' => Rule::unique('customers')->ignore($this->id)
         ];
     }
 
@@ -40,14 +41,20 @@ class CustomerRequest extends FormRequest
             'name.unique' => 'Customer Name Must Be Unique.',
             'mobile.required' => 'Mobile Number is Required.',
             'mobile.unique' => 'Mobile Number Must Be Unique.',
-            'cnic.unique' => 'CNIC Must be Unique'
+            'vat.unique' => 'Vat Must be Unique'
         ];
     }
     public function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException(response()->json([
-            'status' => 400,
-            'errors' => $validator->errors()
-        ]));
+        if ($this->ajax()) {
+            throw new HttpResponseException(response()->json([
+                'status' => 400,
+                'errors' => $validator->errors()
+            ]));
+        } else {
+            throw new HttpResponseException(response()->json([
+                'errors' => $validator->errors()
+            ], 422));
+        }
     }
 }

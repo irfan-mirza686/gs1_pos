@@ -46,61 +46,13 @@ class ProductController extends Controller
     {
         if ($request->ajax()) {
             $user_info = session('user_info');
-            // echo "<pre>"; print_r($user_info); exit;
-            $apiProducts = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $user_info['token'],
-            ])->get('https://gs1ksa.org:3093/api/products', [
-                        'user_id' => $user_info['memberData']['id'],
-                    ]);
 
+            $token = $user_info['token'];
+            $gs1MemberID = $user_info['memberData']['id'];
+            $products = $this->productService->getAllProducts($token,$gs1MemberID);
+            // echo "<pre>"; print_r($products); exit;
 
-            $apiProductsBody = $apiProducts->getBody();
-            $apiProductssData = json_decode($apiProductsBody, true);
-            // echo "<pre>"; print_r($apiProductssData); exit;
-
-            $apiArrayData = [];
-            if ($apiProductssData) {
-                foreach ($apiProductssData as $key => $apiP) {
-                    $url = 'https://gs1ksa.org:3093/';
-                    $image = ($apiP['front_image'])?$url . $apiP['front_image']:asset('assets/uploads/no-image.png');
-                    $apiArrayData[] = array(
-                        'id' => $apiP['id'],
-                        'user_id' => $apiP['user_id'],
-                        'image' => $image,
-                        'productnameenglish' => $apiP['productnameenglish'],
-                        'productnamearabic' => $apiP['productnamearabic'],
-                        'BrandName' => $apiP['BrandName'],
-                        'barcode' => $apiP['barcode'],
-                        'type' => 'gs1_product',
-                    );
-                }
-            }
-
-
-
-            $localProducts = Product::get();
-
-            $localArrayData = [];
-            if ($localProducts) {
-                foreach ($localProducts as $key => $local) {
-                    $image = ($local['front_image'])?$local['front_image']:asset('assets/uploads/no-image.png');
-                    $localArrayData[] = array(
-                        'id' => $local['id'],
-                        'user_id' => $local['user_id'],
-                        'image' => $image,
-                        'productnameenglish' => $local['name'],
-                        'productnamearabic' => '',
-                        'BrandName' => '',
-                        'barcode' => $local['barcode'],
-                        'type' => 'non_gs1',
-                    );
-                }
-            }
-
-            $mergeProducts = array_merge($apiArrayData, $localArrayData);
-            // echo "<pre>"; print_r($mergeProducts); exit;
-            // $data = $this->productService->getAllProducts();
-            return Datatables::of($mergeProducts)
+            return Datatables::of($products)
                 ->addIndexColumn()
                 ->editColumn('image', function ($row) {
 
@@ -168,19 +120,26 @@ class ProductController extends Controller
         }
     }
     /**********************************************************************/
-    public function create()
+    public function create(Request $request)
     {
         $pageTitle = "Product Create";
         $user_info = session('user_info');
         try {
+            $data = $request->all();
+            $product_type = $data['product_type'];
+            if ($product_type==='gs1') {
+                $productData = $this->productService->productData();
+            }else{
+                $productData = $this->productService->localProductData();
+            }
 
-            $productData = $this->productService->productData();
-
-            // echo "<pre>"; print_r($productData); exit;
 
 
+
+
+// echo "<pre>"; print_r($productData); exit;
             $title = "Create Product";
-            return view('user.product.create', compact('pageTitle', 'productData', 'user_info'));
+            return view('user.product.create', compact('pageTitle', 'productData', 'user_info','product_type'));
         } catch (RequestException $e) {
             if ($e->hasResponse()) {
                 // Extract the error message from the response body
@@ -214,7 +173,7 @@ class ProductController extends Controller
             $data = $request->all();
 
             $user_info = session('user_info');
-            // echo "<pre>"; print_r(base64_encode(file_get_contents($data['front_image']))); exit;
+            // echo "<pre>"; print_r($data); exit;
             if ($data['product_type'] == 'gs1') {
                 try {
                     $user_info = session('user_info');

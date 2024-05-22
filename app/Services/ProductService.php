@@ -4,15 +4,70 @@ namespace App\Services;
 use App\Models\{
     Product,
 };
+use App\Models\Brand;
+use App\Models\Unit;
 use Illuminate\Support\Facades\Http;
 
 class ProductService
 {
     /********************************************************************/
-    public function getAllProducts()
+    public function getAllProducts($token, $gs1MemberID)
     {
 
-        return Product::with(['user', 'items'])->get();
+        $apiProducts = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->get('https://gs1ksa.org:3093/api/products', [
+                    'user_id' => $gs1MemberID,
+                ]);
+
+
+        $apiProductsBody = $apiProducts->getBody();
+        $apiProductssData = json_decode($apiProductsBody, true);
+        // echo "<pre>"; print_r($apiProductssData); exit;
+        if (isset($apiProductssData['error']) && !empty($apiProductssData['error'])) {
+            return ['error' => $apiProductssData['error']];
+        }
+        $apiArrayData = [];
+        if ($apiProductssData) {
+            foreach ($apiProductssData as $key => $apiP) {
+                $url = 'https://gs1ksa.org:3093/';
+                $image = ($apiP['front_image']) ? $url . $apiP['front_image'] : asset('assets/uploads/no-image.png');
+                $apiArrayData[] = array(
+                    'id' => $apiP['id'],
+                    'user_id' => $apiP['user_id'],
+                    'image' => $image,
+                    'productnameenglish' => $apiP['productnameenglish'],
+                    'productnamearabic' => $apiP['productnamearabic'],
+                    'BrandName' => $apiP['BrandName'],
+                    'barcode' => $apiP['barcode'],
+                    'type' => 'gs1_product',
+                );
+            }
+        }
+
+
+
+        $localProducts = Product::get();
+
+        $localArrayData = [];
+        if ($localProducts) {
+            foreach ($localProducts as $key => $local) {
+                $image = ($local['front_image']) ? getFile('products',$local['front_image']) : asset('assets/uploads/no-image.png');
+                $localArrayData[] = array(
+                    'id' => $local['id'],
+                    'user_id' => $local['user_id'],
+                    'image' => $image,
+                    'productnameenglish' => $local['productnameenglish'],
+                    'productnamearabic' => '',
+                    'BrandName' => $local['BrandName'],
+                    'barcode' => $local['barcode'],
+                    'type' => 'non_gs1',
+                );
+            }
+        }
+
+        $mergeProducts = array_merge($apiArrayData, $localArrayData);
+        return $mergeProducts;
     }
     /********************************************************************/
     public function storeProduct($data, $id = null)
@@ -22,9 +77,19 @@ class ProductService
         } else if ($id != null) {
             $addProduct = Product::find($id);
         }
-        $addProduct->name = $data['productnameenglish'];
+
+        if (isset($data['front_image']) && !empty($data['front_image'])) {
+            $filename = uploadImage($data['front_image'], filePath('products'), $addProduct->front_image);
+            $addProduct->front_image = $filename;
+        }
+        if (isset($data['back_image']) && !empty($data['back_image'])) {
+            $filename = uploadImage($data['back_image'], filePath('products'), $addProduct->back_image);
+            $addProduct->back_image = $filename;
+        }
+
+        $addProduct->productnameenglish = $data['productnameenglish'];
         $addProduct->slug = \Str::slug($data['productnameenglish']);
-        // $addProduct->brand = $data['brand'];
+        $addProduct->BrandName = $data['BrandName'];
         $addProduct->size = $data['size'];
         $addProduct->barcode = $data['product_code'];
         $addProduct->unit = $data['unit'];
@@ -52,6 +117,16 @@ class ProductService
             }
             return $productAuto;
         }
+    }
+    /*******************************************************************/
+    public function localProductData()
+    {
+        $unitsData = Unit::get();
+        $brandsData = Brand::get();
+        return  [
+            'brandsData' => $brandsData,
+            'unitsData' => $unitsData,
+        ];
     }
     /*******************************************************************/
     public function productData()

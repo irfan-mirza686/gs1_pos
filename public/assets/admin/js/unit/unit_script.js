@@ -17,10 +17,10 @@ $(document).ready(function () {
         modal.find('.modal-title').text("Create Unit")
         modal.find('input[name=name]').val('')
         modal.find('select[name=status]').val('')
-        
+
         modal.find('form').attr('action', url)
         modal.find('.saveUnitBtn').text('Create Unit');
-        
+
         $("#unitModal").modal('show');
     });
 
@@ -35,10 +35,10 @@ $(document).ready(function () {
         let unitID = $(this).attr('data-id');
         let name = $(this).attr('data-name');
         let status = $(this).attr('data-status');
-      
+
 
         // let url = "/admin/country/update/" + countryID;
-       
+
         modal.find('.modal-title').text("Update Unit")
         modal.find('input[name=unit_id]').val(unitID)
         modal.find('input[name=name]').val(name)
@@ -151,7 +151,7 @@ $(document).ready(function () {
                 $.ajax({
                     method: 'delete',
                     url: url,
-                  
+
                     success: function (response) {
                         if (response.status == 200) {
                             showUnitsList();
@@ -166,10 +166,10 @@ $(document).ready(function () {
                                 response.message,
                                 'error'
                             )
-                        } 
+                        }
                     },
                     error: function () {
-                        
+
                     }
                 });
             } else if (
@@ -183,7 +183,7 @@ $(document).ready(function () {
                 )
             }
         })
-        
+
     });
 
 

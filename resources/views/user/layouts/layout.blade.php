@@ -37,6 +37,12 @@
     <link rel="stylesheet" href="{{asset('assets/admin/css/jquery-ui.css')}}">
 
     <title>{{@$pageTitle}}</title>
+    <style>
+    .notifyjs-corner {
+      z-index: 10000 !important;
+    }
+
+    </style>
 </head>
 
 <body>
@@ -52,6 +58,26 @@
         <!--end navigation-->
         <!--start page wrapper -->
         @yield("content")
+        @if(session()->has('notify_success'))
+        <script type="text/javascript">
+          $(function() {
+            $.notify("{{session()->get('notify_success')}}", {
+              globalPosition: 'top right',
+              className: 'notify_success'
+            });
+          });
+        </script>
+        @endif
+        @if(session()->has('notify_error'))
+        <script type="text/javascript">
+          $(function() {
+            $.notify("{{session()->get('notify_error')}}", {
+              globalPosition: 'top right',
+              className: 'notify_error'
+            });
+          });
+        </script>
+        @endif
         <!--end page wrapper -->
         <!--start overlay-->
         <div class="overlay toggle-icon"></div>
@@ -79,7 +105,7 @@
 
     <script src="{{asset('assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js')}}"></script>
 
-
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"></script>
     <!--app JS-->
     <script src="{{asset('assets/js/app.js')}}"></script>
     <script src="{{asset('assets/plugins/select2/js/select2.min.js')}}"></script>

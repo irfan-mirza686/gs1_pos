@@ -29,6 +29,7 @@
 <div class="page-wrapper">
     <div class="overlay"></div>
     @include('user.product.includes.create_product_modal')
+    @include('user.product.includes.select_prod_type_modal')
 
     <div class="page-content">
         @include('user.show_flash_msgs')
@@ -54,7 +55,7 @@
             <div class="card-body">
                 <div class="d-lg-flex align-items-center mb-4 gap-3">
 
-                    <div class="ms-auto"><a href="{{route('product.create')}}"
+                    <div class="ms-auto"><a href="javascript:void(0);" data-URL="{{route('product.create')}}" id="addNewProductBtn"
                             class="btn btn-primary radius-30 mt-2 mt-lg-0 add"><i class="bx bxs-plus-square"></i>Add
                             New</a>
                     </div>

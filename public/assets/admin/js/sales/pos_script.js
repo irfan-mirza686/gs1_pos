@@ -117,7 +117,7 @@ $(document).ready(function () {
                             if (count > 0) {
                                 $("#invoiceSubmitBtn").removeClass("disabled");
                             }
-                            // console.log(resp.product)
+                            // console.log(resp.prodArray)
                             // amount = resp.product.price;
                             amount = resp.prodArray.price;
 

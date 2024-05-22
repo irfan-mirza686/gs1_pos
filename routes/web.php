@@ -109,6 +109,7 @@ Route::
     Route::post('customer/update/{id}', [CustomerController::class, 'update'])->name('customer.update');
     Route::delete('customer/delete/{id}', [CustomerController::class, 'delete'])->name('customer.delete');
     Route::get('autocomplete/customer', [CustomerController::class, 'autocompleteCustomer']);
+    Route::post('import/customers', [CustomerController::class, 'importCustomers'])->name('import.customers');
     /* Customers Routes Ends Here */
 
      /* Brands Routes Start Here */
@@ -135,7 +136,7 @@ Route::
     Route::get('products', [ProductController::class, 'index'])->name('products');
     Route::post('product/list', [ProductController::class, 'List'])->name('product.list');
     Route::get('load/units', [ProductController::class, 'loadUnits']);
-    Route::get('product/create', [ProductController::class, 'create'])->name('product.create');
+    Route::post('product/create', [ProductController::class, 'create'])->name('product.create');
     Route::post('product/store', [ProductController::class, 'store'])->name('product.store');
     // Route::get('product/edit/{id}', [ProductController::class, 'edit'])->name('product.edit');
     Route::get('product/view/{slug?}', [ProductController::class, 'view'])->name('product.view');

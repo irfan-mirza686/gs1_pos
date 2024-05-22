@@ -42,6 +42,21 @@ $(document).ready(function () {
         }
     });
 
+    // select product type before adding the product ...
+    $(document).on('click','#addNewProductBtn',function(e){
+        e.preventDefault();
+       var modal = $("#createProductModal");
+        var url = $(this).attr('data-URL');
+
+        $(modal).modal({
+            backdrop: 'static'
+        });
+        modal.find('.modal-title').text("Create Product")
+
+        modal.find('form').attr('action', url)
+        $(modal).modal('show');
+    })
+
      ///############## Display Messages ################/////////
 
      function addContent(btn, creating) {
