@@ -131,11 +131,12 @@ tbody#otherProductsBody tr {
                         <!------Left Side End ------------->
                     </td>
                     <td colspan="2">
+
                         </tb>
 
                     <td colspan="9">
                         <!-- Right Side -->
-                        <table width="100%" id="calculationTable">
+                        <table width="100%" id="calculationTable" style="margin-left: 294px;">
                             <tbody style="display:table; width:100%;">
                                 <!-- Row 1 -->
                                 <tr>
