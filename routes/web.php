@@ -51,7 +51,7 @@ use App\Http\Controllers\BrandController;
 require __DIR__ . '/auth.php';
 
 
-// Route::get('/',[HomeController::class,'index'])->name('index');
+Route::get('/',[HomeController::class,'index'])->name('index');
 
 Route::
         namespace('Auth')->middleware('guest')->group(function () {
