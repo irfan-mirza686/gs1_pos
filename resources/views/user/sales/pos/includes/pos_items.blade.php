@@ -136,7 +136,7 @@ tbody#otherProductsBody tr {
 
                     <td colspan="9">
                         <!-- Right Side -->
-                        <table width="100%" id="calculationTable" style="margin-left: 294px;">
+                        <table width="100%" id="calculationTable" style="margin-left: 219px;">
                             <tbody style="display:table; width:100%;">
                                 <!-- Row 1 -->
                                 <tr>
