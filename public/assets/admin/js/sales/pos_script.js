@@ -395,6 +395,9 @@ console.log("total vat: " + total_vat)
         // let balance = $("#balance").val();
         $("#totalAmount").val(totalAmount);
         $("#cashAmount").val(0);
+        $("#spanAmount").val(0);
+        $("#tenderAmount").val(0);
+        $("#showChange").val(0);
         // $("#cashAmount").val(cashAmount);
         // $("#showChange").val(balance);
         $("#cashTenderModal").modal('show');

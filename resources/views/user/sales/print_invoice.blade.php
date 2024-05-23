@@ -137,12 +137,12 @@ $counter = $counter+1;
 
 
 
- <tr>
+ <!-- <tr>
   <td colspan="3"><strong>Gross:</strong></td>
   <td><strong>المجموع (ريال)</strong></td>
   <?php $withoutVatTotal = $getInvoiceData->total - $totalVat; ?>
   <td class="grandtotalFont"style="text-align: right;"><strong>{{number_format(@$withoutVatTotal)}}</strong></td>
-</tr>
+</tr> -->
 
 <tr>
   <td colspan="3"><strong>Vat (15%):</strong></td>
@@ -159,7 +159,7 @@ $counter = $counter+1;
 <tr>
   <td colspan="3"><strong>Paid Amount:</strong></td>
   <td><strong>المدفوع</strong></td>
-  <td class="grandtotalFont"style="text-align: right;"><strong>{{number_format(@$getInvoiceData->cashAmount)}}</strong></td>
+  <td class="grandtotalFont"style="text-align: right;"><strong>{{number_format(@$getInvoiceData->tender_amount)}}</strong></td>
 </tr>
 
 <tr>

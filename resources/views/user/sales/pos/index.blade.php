@@ -55,22 +55,33 @@
 <script src="{{asset('assets/admin/js/sales/sales.js')}}"></script>
 <script src="{{asset('assets/admin/js/sales/pos_script.js')}}"></script>
 <script src="{{asset('assets/admin/js/customer/customer_script.js')}}"></script>
-
 <script>
     function display_ct6() {
-        var x = new Date()
-        var ampm = x.getHours() >= 12 ? ' PM' : ' AM';
-        hours = x.getHours() % 12;
-        hours = hours ? hours : 12;
-        var x1 = x.getMonth() + 1 + "/" + x.getDate() + "/" + x.getFullYear();
-        x1 = x1 + " - " + hours + ":" + x.getMinutes() + ":" + x.getSeconds() + ":" + ampm;
+        var x = new Date();
+        // Convert to UTC
+        var utc = x.getTime() + (x.getTimezoneOffset() * 60000);
+        // Create new Date object for Saudi time (UTC + 3)
+        var saudiTime = new Date(utc + (3600000 * 3));
+
+        var ampm = saudiTime.getHours() >= 12 ? ' PM' : ' AM';
+        var hours = saudiTime.getHours() % 12;
+        hours = hours ? hours : 12; // Adjust hours for 12-hour format
+        var minutes = saudiTime.getMinutes();
+        var seconds = saudiTime.getSeconds();
+
+        // Format minutes and seconds to always show two digits
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        seconds = seconds < 10 ? '0' + seconds : seconds;
+
+        var x1 = (saudiTime.getMonth() + 1) + "/" + saudiTime.getDate() + "/" + saudiTime.getFullYear();
+        x1 = x1 + " - " + hours + ":" + minutes + ":" + seconds + ampm;
         document.getElementById('ct6').innerHTML = x1;
         display_c6();
     }
 
     function display_c6() {
-        var refresh = 1000; // Refresh rate in milli seconds
-        mytime = setTimeout('display_ct6()', refresh)
+        var refresh = 1000; // Refresh rate in milliseconds
+        mytime = setTimeout(display_ct6, refresh);
     }
     display_c6();
 </script>
