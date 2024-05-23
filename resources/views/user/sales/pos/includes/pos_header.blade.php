@@ -18,6 +18,9 @@
             width: 100%;
         }
     }
+    .col-form-label{
+        font-size: 11px;
+    }
 </style>
 
 <div class="card-body" style="background-color: #F0F0F0;">
