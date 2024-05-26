@@ -31,7 +31,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('/csrf-token', function () {
     return response()->json(['csrfToken' => csrf_token()]);
-})->middleware(['web']);
+})->middleware(['web','cors']);
 
 Route::post('login',[LoginController::class,'index']);
 Route::get('brands',[BrandController::class,'index']);
