@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Exception\RequestException;
 use Session;
+use Illuminate\Support\Facades\Crypt;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -21,7 +22,13 @@ class AuthenticatedSessionController extends Controller
     public function create(Request $request)
     {
 
-        // echo "<pre>"; print_r($request->all()); exit;
+
+        $string = '123456';
+        $encryptedString = Crypt::encrypt($string);
+
+        $decryptedString = Crypt::decrypt($encryptedString);
+    // echo $decryptedString;
+        echo "<pre>"; print_r($decryptedString); exit;
 
         if ($request->isMethod('post')) {
             echo "<pre>";
