@@ -24,7 +24,7 @@ class HomeController extends Controller
         $pageTitle = "Dashboard";
 
         $user_info = session('user_info');
-
+        echo "<pre>"; print_r($user_info); exit;
         $sales = Sale::get();
         $total_sales = $sales->count();
         $total_sales_amount = $sales->sum('total');

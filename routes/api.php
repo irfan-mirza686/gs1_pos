@@ -29,7 +29,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 // });
 
-Route::post('login',[LoginController::class,'index'])->middleware('cors');
+Route::get('/csrf-token', function () {
+    return response()->json(['csrfToken' => csrf_token()]);
+})->middleware(['web']);
+
+Route::post('login',[LoginController::class,'index']);
 Route::get('brands',[BrandController::class,'index']);
 Route::post('brand/create',[BrandController::class,'store']);
 Route::get('brand/{id}',[BrandController::class,'edit']);
