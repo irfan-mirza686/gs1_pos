@@ -42,6 +42,10 @@ class AuthenticatedSessionController extends Controller
             if ($data) {
                 return redirect(route('dashboard'));
             }
+
+            if (@$data['error']) {
+                return redirect()->back()->with('flash_message_warning', @$responseSaleData['error']);
+            }
         // }
         return view('user.auth.login');
     }
