@@ -39,7 +39,7 @@ class AuthenticatedSessionController extends Controller
             $data = json_decode($body, true);
             // echo "<pre>"; print_r($data); exit;
             Session::put('user_info', $data);
-            if (@$data['error']) {
+            if (isset($data['error']) && empty($data['error'])) {
                 return redirect()->route('login');
             }
 
