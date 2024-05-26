@@ -29,23 +29,26 @@ class AuthenticatedSessionController extends Controller
             // echo "<pre>";
             // print_r($request->all());
             // exit;
-            $response = Http::post('https://gs1ksa.org:3093/api/users/memberLogin', [
-                'email' => $request->Gtrack_Email,
-                'password' => $request->Gtrack_password,
-                'activity' => $request->Gtrack_activity
-            ]);
+            if ($request->Gtrack_Email) {
+                $response = Http::post('https://gs1ksa.org:3093/api/users/memberLogin', [
+                    'email' => $request->Gtrack_Email,
+                    'password' => $request->Gtrack_password,
+                    'activity' => $request->Gtrack_activity
+                ]);
 
-            $body = $response->getBody();
-            $data = json_decode($body, true);
-            // echo "<pre>"; print_r($data); exit;
-            Session::put('user_info', $data);
-            if (isset($data['error']) && empty($data['error'])) {
-                return redirect()->route('login');
+                $body = $response->getBody();
+                $data = json_decode($body, true);
+                // echo "<pre>"; print_r($data); exit;
+                Session::put('user_info', $data);
+                if (isset($data['error']) && empty($data['error'])) {
+                    return redirect()->route('login');
+                }
+
+                if ($data) {
+                    return redirect()->route('dashboard');
+                }
             }
 
-            if ($data) {
-                return redirect()->route('dashboard');
-            }
 
         // }
         return view('user.auth.login');
