@@ -59,7 +59,7 @@ Route::
         namespace('Auth')->middleware('guest')->group(function () {
 
 
-            Route::get('/', [AuthenticatedSessionController::class, 'create'])->name('login');
+            Route::match(['get','post'],'/', [AuthenticatedSessionController::class, 'create'])->name('login');
             Route::post('/', [AuthenticatedSessionController::class, 'store'])->name('userlogin');
             Route::post('/check/email', [AuthenticatedSessionController::class, 'checkEmail'])->name('check.email');
             Route::get('/member/activity', [AuthenticatedSessionController::class, 'memberActivity'])->name('member.activity');
