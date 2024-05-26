@@ -23,7 +23,7 @@ class AuthenticatedSessionController extends Controller
         // if ($request->isMethod('post')) {
         //     echo "<pre>"; print_r($request->all()); exit;
         // }
-
+        
         return view('user.auth.login');
     }
 
