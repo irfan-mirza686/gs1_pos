@@ -21,9 +21,13 @@ class AuthenticatedSessionController extends Controller
     public function create(Request $request)
     {
 
-            // echo "<pre>"; print_r($request->all()); exit;
+        // echo "<pre>"; print_r($request->all()); exit;
 
-
+        if ($request->isMethod('post')) {
+            echo "<pre>";
+            print_r($request->all());
+            exit;
+        }
         return view('user.auth.login');
     }
 
@@ -71,7 +75,7 @@ class AuthenticatedSessionController extends Controller
                     return response()->json(['status' => 404, 'error' => @$data['error']]);
                 }
                 if ($data) {
-                    Session::put(['activtyData'=>$data,'email'=>$request->email]);
+                    Session::put(['activtyData' => $data, 'email' => $request->email]);
                     return response()->json(['status' => 200, 'data' => $data]);
                 }
 
@@ -109,7 +113,7 @@ class AuthenticatedSessionController extends Controller
         $pageTitle = "Member Activity";
         $activtyData = session('activtyData');
         $email = session('email');
-        return view('user.auth.activity',compact('activtyData','email'));
+        return view('user.auth.activity', compact('activtyData', 'email'));
     }
     /************************************************************************/
     public function loginMember(Request $request)
