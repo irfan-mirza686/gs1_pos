@@ -26,9 +26,9 @@ class AuthenticatedSessionController extends Controller
 
 
         // if ($request->isMethod('post')) {
-            echo "<pre>";
-            print_r($request->all());
-            exit;
+            // echo "<pre>";
+            // print_r($request->all());
+            // exit;
             $response = Http::post('https://gs1ksa.org:3093/api/users/memberLogin', [
                 'email' => $request->Gtrack_Email,
                 'password' => $request->Gtrack_password,
@@ -39,13 +39,14 @@ class AuthenticatedSessionController extends Controller
             $data = json_decode($body, true);
             // echo "<pre>"; print_r($data); exit;
             Session::put('user_info', $data);
-            if ($data) {
-                return redirect(route('dashboard'));
+            if (@$data['error']) {
+                return redirect()->route('login');
             }
 
-            if (@$data['error']) {
-                return redirect()->back()->with('flash_message_warning', @$responseSaleData['error']);
+            if ($data) {
+                return redirect()->route('dashboard');
             }
+
         // }
         return view('user.auth.login');
     }
