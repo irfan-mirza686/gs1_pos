@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.3|^8.0",
         "fideloper/proxy": "^4.2",
+        "fruitcake/laravel-cors": "^3.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "intervention/image": "^2.7",
         "laravel/framework": "^8.0",
@@ -20,9 +21,9 @@
         "milon/barcode": "^10.0",
         "phpmailer/phpmailer": "^6.5",
         "prgayman/laravel-zatca": "^1.0",
+        "stevebauman/location": "^6.4",
         "yajra/laravel-datatables-buttons": "^4.13",
-        "yajra/laravel-datatables-oracle": "^9.21",
-        "stevebauman/location": "^6.4"
+        "yajra/laravel-datatables-oracle": "^9.21"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",

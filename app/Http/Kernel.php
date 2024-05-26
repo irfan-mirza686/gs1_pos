@@ -65,5 +65,6 @@ class Kernel extends HttpKernel
         'checkMemberExpiry' => \App\Http\Middleware\CheckMemberExpiry::class,
         'vendor' => \App\Http\Middleware\Vendor\VendorMiddleware::class,
         'wholesaler' => \App\Http\Middleware\WholeSaler::class,
+        'cors' => \Fruitcake\Cors\HandleCors::class,
     ];
 }
