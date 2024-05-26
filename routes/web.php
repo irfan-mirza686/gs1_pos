@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ManageStockController;
+use App\Http\Controllers\StockTransferController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -171,6 +173,17 @@ Route::
     Route::delete('sale/delete/{id}', [SaleController::class, 'delete'])->name('sale.delete');
 
     /* Sales Routes Ends Here */
+
+
+    /* Manage Stock Routes Start */
+    Route::get('manage/stock', [ManageStockController::class, 'index'])->name('stock');
+    Route::post('stock/list', [ManageStockController::class, 'List'])->name('stock.list');
+    /* Manage Stock Routes Ends  */
+
+       /* Stock Transfer Routes Start */
+       Route::get('stock/transfer/requests', [StockTransferController::class, 'index'])->name('stock.transfer.requests');
+       Route::post('stock/transfer/list', [StockTransferController::class, 'List'])->name('stock.transfers.request.list');
+       /* Stock Transfer Routes Ends  */
 
 
 

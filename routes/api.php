@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\CustomerController;
+use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\SaleController;
 use App\Http\Controllers\Api\UnitController;
@@ -28,6 +29,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 // });
 
+Route::post('login',[LoginController::class,'index']);
 Route::get('brands',[BrandController::class,'index']);
 Route::post('brand/create',[BrandController::class,'store']);
 Route::get('brand/{id}',[BrandController::class,'edit']);

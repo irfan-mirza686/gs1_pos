@@ -18,8 +18,12 @@ class AuthenticatedSessionController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function create()
+    public function create(Request $request)
     {
+        // if ($request->isMethod('post')) {
+        //     echo "<pre>"; print_r($request->all()); exit;
+        // }
+
         return view('user.auth.login');
     }
 

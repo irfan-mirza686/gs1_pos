@@ -87,11 +87,11 @@
                 <div class="menu-title">Stock</div>
             </a>
             <ul>
-                <li> <a href="#"><i class="bx bx-right-arrow-alt"></i>Manage Stock</a>
+                <li> <a href="{{route('stock')}}"><i class="bx bx-right-arrow-alt"></i>Manage Stock</a>
                 </li>
                 <li> <a href="#"><i class="bx bx-right-arrow-alt"></i>Stock Adjustment</a>
                 </li>
-                <li> <a href="#"><i class="bx bx-right-arrow-alt"></i>Stock Transfer</a>
+                <li> <a href="{{route('stock.transfer.requests')}}"><i class="bx bx-right-arrow-alt"></i>Stock Transfer</a>
                 </li>
 
             </ul>
