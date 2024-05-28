@@ -13,7 +13,7 @@ class SaleService
 {
     public function findProductData($token, $barcode)
     {
-        $product = Product::where('barcode', 'LIKE', "%" . $barcode . "%")->first();
+        $product = Product::where('barcode', 'LIKE', "%" . $barcode . "%")->orWhere('productnameenglish', 'LIKE', "%" . $barcode . "%")->first();
 
         $searchAPiProduct = Http::withHeaders([
             'Authorization' => 'Bearer ' . $token,
@@ -91,7 +91,7 @@ class SaleService
         $create->customer_id = $data['customer_id'];
         $create->total = $data['totalAmount'];
         $create->date = date('Y-m-d');
-        $create->time = date('h:i:s A', strtotime($currentDate));
+        $create->time = date('h:i A', strtotime($currentDate));
         $create->net_with_vat = $data['net_with_vat'];
         $create->cashAmount = $data['cashAmount'];
         $create->tender_amount = $data['tender_amount'];

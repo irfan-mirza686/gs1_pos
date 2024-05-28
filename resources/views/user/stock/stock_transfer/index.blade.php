@@ -52,8 +52,8 @@
             <div class="card-body">
                 <div class="d-lg-flex align-items-center mb-4 gap-3">
 
-                    <div class="ms-auto"><a href="javascript:void(0);" data-URL="{{route('product.create')}}" id="addNewProductBtn"
-                            class="btn btn-primary radius-30 mt-2 mt-lg-0 add"><i class="bx bxs-plus-square"></i>Add
+                    <div class="ms-auto"><a href="javascript:void(0);" data-URL="{{route('save.stock.transfer.req')}}" id="addEditStockTransfer"
+                            class="btn btn-primary radius-30 mt-2 mt-lg-0 addEditStockTransfer"><i class="bx bxs-plus-square"></i>Add
                             New</a>
                     </div>
                 </div>
@@ -99,7 +99,7 @@
 
     </div>
 </div>
-@include('user.product.includes.update_itemPrice_modal')
+@include('user.stock.stock_transfer.includes.create_modal')
 <!--end page wrapper -->
 @endsection
 
