@@ -20,6 +20,7 @@ class CreateStockTransfersTable extends Migration
             $table->string('gln_to');
             $table->date('date');
             $table->string('time');
+            $table->text('note')->nullable();
             $table->integer('user_id')->default(0);
             $table->string('status')->default('pending');
             $table->json('items')->comment('items detail');
