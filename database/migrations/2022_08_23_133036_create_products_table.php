@@ -18,7 +18,7 @@ class CreateProductsTable extends Migration
             $table->string('productnameenglish')->unique();
             $table->string('slug')->unique();
             $table->string('BrandName')->nullable();
-            $table->integer('unit')->nullable();
+            $table->string('unit')->nullable();
             $table->float('purchase_price')->default(0);
             $table->float('selling_price')->default(0);
             $table->text('details_page')->nullable();
