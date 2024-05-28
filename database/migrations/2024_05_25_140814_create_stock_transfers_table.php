@@ -16,7 +16,7 @@ class CreateStockTransfersTable extends Migration
         Schema::create('stock_transfers', function (Blueprint $table) {
             $table->id();
             $table->string('request_no');
-            $table->string('gln_form');
+            $table->string('gln_from');
             $table->string('gln_to');
             $table->date('date');
             $table->string('time');
