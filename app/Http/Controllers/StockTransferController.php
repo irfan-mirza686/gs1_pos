@@ -117,7 +117,17 @@ class StockTransferController extends Controller
         foreach ($stock_transfer->items as $key => $value) {
             $product = Product::find($value['product_id']);
             if ($product) {
-                $productInfo[] = $product->toArray();
+                $productInfo[] = array(
+                    'productnameenglish' => $product->productnameenglish,
+                    'BrandName' => $product->BrandName,
+                    'unit' => $product->unit,
+                    'purchase_price' => $product->purchase_price,
+                    'selling_price' => $product->selling_price,
+                    'details_page' => $product->details_page,
+                    'quantity' => $value->qty,
+                    'size' => $product->size,
+                    'barcode' => $product->barcode,
+                );
             }
 
         }
