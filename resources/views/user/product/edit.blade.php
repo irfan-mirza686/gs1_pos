@@ -164,6 +164,14 @@
                                         </div>
 
                                         <div class="mb-3 col-md-6">
+                                            <label for="quantity" class="form-label">Quantity <font
+                                                    style="color: red;">*</font></label>
+                                            <input type="text" class="form-control" id="quantity"
+                                                name="quantity" placeholder="Product Code"
+                                                value="{{ $editProduct['quantity'] ?? old('quantity')}}">
+                                        </div>
+
+                                        <div class="mb-3 col-md-6">
                                             <label for="barcode" class="form-label">Barcode <font
                                                     style="color: red;">*</font></label>
                                             <input type="text" class="form-control" id="barcode"

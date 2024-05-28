@@ -165,6 +165,13 @@
                                                 name="product_code" placeholder="Product Code"
                                                 value="{{old('product_code')}}">
                                         </div>
+                                        <div class="mb-3 col-md-6">
+                                            <label for="quantity" class="form-label">Quantity <font
+                                                    style="color: red;">*</font></label>
+                                            <input type="text" class="form-control" id="quantity"
+                                                name="quantity" placeholder="Product Code"
+                                                value="{{old('quantity')}}">
+                                        </div>
 
                                         <div class="mb-3">
                                             <label for="descriptionen" class="form-label">Description EN</label>

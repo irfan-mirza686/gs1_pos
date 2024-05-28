@@ -93,6 +93,7 @@ class ProductService
         $addProduct->size = $data['size'];
         $addProduct->barcode = $data['product_code'];
         $addProduct->unit = $data['unit'];
+        $addProduct->quantity = $data['quantity'];
         $addProduct->purchase_price = $data['purchase_price'];
         $addProduct->selling_price = $data['selling_price'];
         $addProduct->details_page = isset($data['details_page']) ? $data['details_page'] : null;
