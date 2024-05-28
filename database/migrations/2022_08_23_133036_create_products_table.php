@@ -25,6 +25,8 @@ class CreateProductsTable extends Migration
             $table->string('barcode')->nullable();
             $table->string('size')->nullable();
             $table->string('quantity')->nullable();
+            $table->string('front_image')->nullable();
+            $table->string('back_image')->nullable();
             $table->integer('user_id')->comment('Users')->default(0);
             $table->string('status')->default('inactive');
             $table->softDeletes();
