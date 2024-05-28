@@ -128,8 +128,8 @@ class StockTransferController extends Controller
                     'quantity' => $value['qty'],
                     'size' => $product->size,
                     'barcode' => $product->barcode,
-                    'front_image' => ($product->front_image) ? getFile('products', $product->front_image) : asset('assets/uploads/no-image.png'),
-                    'back_image' => ($product->back_image) ? getFile('products', $product->back_image) : asset('assets/uploads/no-image.png'),
+                    'front_image' => ($product->front_image) ? $product->front_image : asset('assets/uploads/no-image.png'),
+                    'back_image' => ($product->back_image) ? $product->back_image : asset('assets/uploads/no-image.png'),
                 );
             }
 
