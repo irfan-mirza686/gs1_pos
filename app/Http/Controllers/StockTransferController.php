@@ -96,7 +96,7 @@ class StockTransferController extends Controller
         if ($products) {
             foreach ($products as $key => $value) {
                 $productsData[] = array(
-                    'productID' => $value['id'],
+                    'id' => $value['id'],
                     'product_type' => 'non_gs1',
                     'productnameenglish' => $value['productnameenglish'],
                     'barcode' => $value['barcode'],

@@ -53,8 +53,7 @@
                 <div class="d-lg-flex align-items-center mb-4 gap-3">
 
                     <div class="ms-auto"><a href="javascript:void(0);" data-URL="{{route('save.stock.transfer.req')}}" id="addEditStockTransfer"
-                            class="btn btn-primary radius-30 mt-2 mt-lg-0 addEditStockTransfer"><i class="bx bxs-plus-square"></i>Add
-                            New</a>
+                            class="btn btn-primary radius-30 mt-2 mt-lg-0 addEditStockTransfer"><i class="bx bxs-plus-square"></i>Create Stock Request</a>
                     </div>
                 </div>
                 <div class="table-responsive">

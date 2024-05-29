@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Sale;
 use App\Services\SaleService;
 use Illuminate\Http\Request;
 use App\ZatcaWrapper\ZatcaWrapper;
@@ -73,6 +74,15 @@ class SaleController extends Controller
                 return response()->json(['message' => 'Data has not been saved'], 401);
             }
 
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()], 500);
+        }
+    }
+    public function allInvoices(Request $request)
+    {
+        try {
+            $invoices = Sale::all();
+            return response()->json(['invoices' => $invoices], 200);
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage()], 500);
         }
