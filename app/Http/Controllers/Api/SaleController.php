@@ -91,7 +91,12 @@ class SaleController extends Controller
     {
         try {
             $invoices = Sale::find($id);
-            return response()->json(['invoices' => $invoices], 200);
+            if ($invoices) {
+                return response()->json(['invoices' => $invoices], 200);
+            }else{
+                return response()->json(['message' => 'No Record Found'], 404);
+            }
+
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage()], 500);
         }
