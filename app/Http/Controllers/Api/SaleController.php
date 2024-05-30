@@ -82,7 +82,7 @@ class SaleController extends Controller
     {
         try {
             $invoices = Sale::select('id','order_no')->get();
-            return response()->json(['invoices' => $invoices], 200);
+            return response()->json(['invoice' => $invoices], 200);
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage()], 500);
         }
