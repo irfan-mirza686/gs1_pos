@@ -62,6 +62,7 @@ Route::delete('product/delete/{id}',[ProductController::class,'delete']);
 Route::get('find/product',[SaleController::class,'findProduct']);
 Route::post('save/sale',[SaleController::class,'saveSale']);
 Route::get('all/invoices',[SaleController::class,'allInvoices']);
+Route::get('single/invoice/{id}',[SaleController::class,'singleInvoice']);
 
 
 Route::post('post/zatca',[ZatcaController::class,'postZatcaData']);

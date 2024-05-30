@@ -81,7 +81,16 @@ class SaleController extends Controller
     public function allInvoices(Request $request)
     {
         try {
-            $invoices = Sale::all();
+            $invoices = Sale::select('id','order_no')->get();
+            return response()->json(['invoices' => $invoices], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()], 500);
+        }
+    }
+    public function singleInvoice(Request $request,$id=null)
+    {
+        try {
+            $invoices = Sale::find($id);
             return response()->json(['invoices' => $invoices], 200);
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage()], 500);
