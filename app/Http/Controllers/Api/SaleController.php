@@ -8,6 +8,7 @@ use App\Models\Sale;
 use App\Services\SaleService;
 use Illuminate\Http\Request;
 use App\ZatcaWrapper\ZatcaWrapper;
+use PDF; // Correct alias
 
 class SaleController extends Controller
 {
@@ -32,7 +33,7 @@ class SaleController extends Controller
     /********************************************************************/
     public function saveSale(Request $request)
     {
-        try {
+        // try {
             $data = $request->all();
 
             $items = $this->saleService->makeItemsArr($data);
@@ -44,7 +45,7 @@ class SaleController extends Controller
             // print_r($pos);
             // exit();
             $totalVat = 0;
-            // echo "<pre>"; print_r($getInvoiceData->items); exit;
+            // echo "<pre>"; print_r($pos->items); exit;
             // Loop through each object in the array
             foreach ($pos->items as $product) {
                 // Add vat_total of each product to the totalVat
@@ -68,15 +69,21 @@ class SaleController extends Controller
                     ->csrIndustryBusinessCategory('Manufacturing')
                     ->toBase64();
                 \LogActivity::addToLog(strtoupper($data['company_name_eng']) . ' Add a new Sale Order (' . $data['order_no'] . ')', route('sale.view', $pos->order_no));
+                $getInvoiceData = Sale::with('customer')->find($pos->id);
+                // echo "<pre>"; print_r($getInvoiceData->toArray()); exit;
+                $apiInvoice = "true";
+                $pdf = PDF::loadView('user.sales.print_invoice', ['getInvoiceData'=>$getInvoiceData,'totalVat'=>$totalVat,'apiInvoice'=>$apiInvoice,'base64'=>$base64]);
                 \DB::commit();
-                return response()->json(['message' => 'Data has been saved successfully', 'invoice_no' => time(), 'qr_code' => $base64], 200);
+        return $pdf->download('demo.pdf');
+
+                // return response()->json(['message' => 'Data has been saved successfully', 'invoice_no' => time(), 'qr_code' => $base64], 200);
             } else {
                 return response()->json(['message' => 'Data has not been saved'], 401);
             }
 
-        } catch (\Throwable $th) {
-            return response()->json(['message' => $th->getMessage()], 500);
-        }
+        // } catch (\Throwable $th) {
+        //     return response()->json(['message' => $th->getMessage()], 500);
+        // }
     }
     public function allInvoices(Request $request)
     {
@@ -100,5 +107,18 @@ class SaleController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage()], 500);
         }
+    }
+
+    public function show($id)
+    {
+        // Fetch the invoice by ID
+        $invoice = Sale::with(['customer'])->find($id);
+
+        if (!$invoice) {
+            return response()->json(['message' => 'Invoice not found'], 404);
+        }
+
+        // Pass the invoice data to the view
+        return view('user.sales.test_api_invoice.invoice', compact('invoice'));
     }
 }

@@ -88,6 +88,12 @@ class StockTransferController extends Controller
                 ->make(true);
         }
     }
+    public function create()
+    {
+        $pageTitle = "Manage Stock";
+        $user_info = session('user_info');
+        return view('user.stock.stock_transfer.create', compact('pageTitle', 'user_info'));
+    }
     public function searchProducts(Request $request)
     {
         $query = $request->input('query');
@@ -101,6 +107,8 @@ class StockTransferController extends Controller
                     'productnameenglish' => $value['productnameenglish'],
                     'barcode' => $value['barcode'],
                     'quantity' => $value['quantity'],
+                    'description' => $value['details_page'],
+                    'price' => $value['selling_price'],
                     'image' => ($value['front_image']) ? getFile('products', $value['front_image']) : asset('assets/uploads/no-image.png'),
                 );
             }
@@ -159,5 +167,11 @@ class StockTransferController extends Controller
             }
 
         }
+    }
+
+    public function show($id)
+    {
+        $product = Product::findOrFail($id);
+        return response()->json(['product' => $product]);
     }
 }

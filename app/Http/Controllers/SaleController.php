@@ -197,6 +197,7 @@ class SaleController extends Controller
             ->toBase64();
         // echo "<pre>"; print_r($base64); exit();
         // echo "<pre>"; print_r($getInvoiceData->toArray()); exit();
-        return view('user.sales.print_invoice', compact('getInvoiceData', 'base64', 'totalVat'));
+        $apiInvoice = "flase";
+        return view('user.sales.print_invoice', compact('getInvoiceData', 'base64', 'totalVat','apiInvoice'));
     }
 }

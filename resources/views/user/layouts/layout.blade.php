@@ -114,7 +114,7 @@
     <script src="{{asset('assets/plugins/notifications/js/notifications.min.js')}}"></script>
     <script src="{{asset('assets/plugins/notifications/js/notification-custom-script.js')}}"></script>
     <!-- <script src="{{asset('assets/js/subscriber.js')}}"></script> -->
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
     <script src="{{asset('assets/plugins/datatable/js/jquery.dataTables.min.js')}}"></script>
     <script src="{{asset('assets/plugins/datatable/js/dataTables.bootstrap5.min.js')}}"></script>
 
@@ -139,6 +139,8 @@
 
     <!-- <script src="https://unpkg.com/feather-icons"></script> -->
     <script src="{{asset('assets/admin/js/feather.min.js')}}"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script>
         feather.replace()
     </script>

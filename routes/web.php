@@ -183,9 +183,11 @@ Route::
        /* Stock Transfer Routes Start */
        Route::get('stock/transfer/requests', [StockTransferController::class, 'index'])->name('stock.transfer.requests');
        Route::post('stock/transfer/list', [StockTransferController::class, 'List'])->name('stock.transfers.request.list');
+       Route::get('stock/transfer/create', [StockTransferController::class, 'create'])->name('stock.transfers.request.create');
        Route::get('search/products', [StockTransferController::class, 'searchProducts'])->name('search.products');
        Route::get('view/stock/request/{id}', [StockTransferController::class, 'viewStockRequest'])->name('view.stock.request');
        Route::post('save/stock/transfer/request', [StockTransferController::class, 'saveStockTransferReq'])->name('save.stock.transfer.req');
+       Route::get('/products/{id}', [StockTransferController::class, 'show']);
        /* Stock Transfer Routes Ends  */
 
 
