@@ -10,7 +10,7 @@ $(document).ready(function() {
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">${product.productnameenglish}</h5>
                         <p class="card-text">${product.description}</p>
-                        <p class="mt-auto">AED ${product.price}</p>
+                        <p class="mt-auto">SR ${product.price}</p>
                         <button class="btn btn-primary mt-2 add-to-cart" data-id="${product.id}" data-name="${product.productnameenglish}" data-description="${product.description}" data-price="${product.price}" data-type="${product.product_type}" data-barcode="${product.barcode}">Add to Cart</button>
                     </div>
                 </div>
@@ -26,7 +26,7 @@ $(document).ready(function() {
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">${product.name}</h5>
                         <p class="card-text">${product.description}</p>
-                        <p class="mt-auto">AED ${product.price}</p>
+                        <p class="mt-auto">SR ${product.price}</p>
                         <div class="d-flex justify-content-between mt-2">
                             <button class="btn btn-secondary decrease-qty">-</button>
                             <span class="qty">${product.qty}</span>

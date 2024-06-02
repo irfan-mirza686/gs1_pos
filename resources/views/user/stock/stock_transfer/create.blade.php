@@ -120,7 +120,7 @@
         </div>
         <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active step-container" id="step1" role="tabpanel" aria-labelledby="step1-tab">
-                <h3>Step 1: Search Products</h3>
+                <!-- <h3>Step 1: Search Products</h3> -->
                 <input type="text" id="search" placeholder="Search Product" class="form-control mb-3">
                 <div id="product-list" class="row">
                     <!-- Product cards will be appended here dynamically -->
@@ -128,7 +128,7 @@
                 <button class="btn btn-primary btn-next" id="go-to-step2">Next</button>
             </div>
             <div class="tab-pane fade step-container" id="step2" role="tabpanel" aria-labelledby="step2-tab">
-                <h3>Step 2: Selected Products</h3>
+                <!-- <h3>Step 2: Selected Products</h3> -->
                 <div id="selected-products" class="row">
                     <!-- Selected products will be displayed here -->
                 </div>
@@ -136,27 +136,28 @@
                 <button class="btn btn-primary btn-next" id="go-to-step3">Next</button>
             </div>
             <div class="tab-pane fade step-container" id="step3" role="tabpanel" aria-labelledby="step3-tab">
-                <h3>Step 3: Order Information</h3>
+                <!-- <h3>Step 3: Order Information</h3> -->
                 <form id="order-form">
                     <div class="mb-3">
-                        <label for="orderNo" class="form-label">Order No</label>
-                        <input type="text" class="form-control" id="orderNo" name="request_no" required>
+                        <label for="request_no" class="form-label">Request #</label>
+                        <input type="text" class="form-control" id="request_no" name="request_no" required>
                     </div>
                     <div class="mb-3">
-                        <label for="orderType" class="form-label">Order Type</label>
-                        <select class="form-select" id="orderType" name="gln_from" required>
-                            <option value="">Select Order Type</option>
-                            <option value="pickup">Pickup</option>
-                            <option value="delivery">Delivery</option>
+                        <label for="gln_from" class="form-label">GLN From</label>
+                        <select class="form-select" id="gln_from" name="gln_from" required>
+                            <option value="">-select-</option>
+                            @foreach($glnName as $gln)
+                            <option value="{{$gln}}">{{$gln}}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="paymentMethod" class="form-label">Payment Method</label>
-                        <select class="form-select" id="paymentMethod" name="gln_to" required>
-                            <option value="">Select Payment Method</option>
-                            <option value="credit_card">Credit Card</option>
-                            <option value="cash">Cash</option>
-                            <option value="online">Online Payment</option>
+                        <label for="gln_to" class="form-label">GLN To</label>
+                        <select class="form-select" id="gln_to" name="gln_to" required>
+                            <option value="">-select-</option>
+                            @foreach($glnName as $gln)
+                            <option value="{{$gln}}">{{$gln}}</option>
+                            @endforeach
                         </select>
                     </div>
                     <button type="submit" class="btn btn-success">Submit</button>

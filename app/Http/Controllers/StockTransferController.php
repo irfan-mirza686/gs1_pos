@@ -92,7 +92,20 @@ class StockTransferController extends Controller
     {
         $pageTitle = "Manage Stock";
         $user_info = session('user_info');
-        return view('user.stock.stock_transfer.create', compact('pageTitle', 'user_info'));
+        $gln = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $user_info['token'],
+        ])->get('https://gs1ksa.org:3093/api/gln', [
+                    'user_id' => $user_info['memberData']['id'],
+                ]);
+        $glnBody = $gln->getBody();
+        $glnData = json_decode($glnBody, true);
+        $glnBarcode = [];
+        $glnName = [];
+        foreach ($glnData as $key => $value) {
+            $glnBarcode[] = $value['GLNBarcodeNumber'];
+            $glnName[] = $value['locationNameEn'];
+        }
+        return view('user.stock.stock_transfer.create', compact('pageTitle', 'user_info','glnName'));
     }
     public function searchProducts(Request $request)
     {
