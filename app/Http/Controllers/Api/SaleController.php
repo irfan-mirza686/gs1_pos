@@ -33,7 +33,7 @@ class SaleController extends Controller
     /********************************************************************/
     public function saveSale(Request $request)
     {
-        // try {
+        try {
             $data = $request->all();
 
             $items = $this->saleService->makeItemsArr($data);
@@ -41,14 +41,10 @@ class SaleController extends Controller
             \DB::beginTransaction();
 
             $pos->items = $items;
-            // echo "<pre>";
-            // print_r($pos);
-            // exit();
+
             $totalVat = 0;
-            // echo "<pre>"; print_r($pos->items); exit;
-            // Loop through each object in the array
+
             foreach ($pos->items as $product) {
-                // Add vat_total of each product to the totalVat
                 $totalVat += $product['vat_total'];
             }
             if ($pos->save()) {
@@ -70,37 +66,44 @@ class SaleController extends Controller
                     ->toBase64();
                 \LogActivity::addToLog(strtoupper($data['company_name_eng']) . ' Add a new Sale Order (' . $data['order_no'] . ')', route('sale.view', $pos->order_no));
                 $getInvoiceData = Sale::with('customer')->find($pos->id);
-                // echo "<pre>"; print_r($getInvoiceData->toArray()); exit;
+
                 $apiInvoice = "true";
-                $pdf = PDF::loadView('user.sales.print_invoice', ['getInvoiceData'=>$getInvoiceData,'totalVat'=>$totalVat,'apiInvoice'=>$apiInvoice,'base64'=>$base64]);
+                $pdf = PDF::loadView('user.sales.print_invoice', ['getInvoiceData' => $getInvoiceData, 'totalVat' => $totalVat, 'apiInvoice' => $apiInvoice, 'base64' => $base64]);
                 \DB::commit();
-        return $pdf->download('demo.pdf');
+                $pdfFullPath = public_path('assets/uploads/invoices/' . $pos->order_no . '.pdf');
+                $pdf->save($pdfFullPath);
+                if (file_exists($pdfFullPath)) {
+                    return \Response::download($pdfFullPath);
+                }
+
+                // return $pdf->download('demo.pdf');
 
                 // return response()->json(['message' => 'Data has been saved successfully', 'invoice_no' => time(), 'qr_code' => $base64], 200);
             } else {
                 return response()->json(['message' => 'Data has not been saved'], 401);
             }
 
-        // } catch (\Throwable $th) {
-        //     return response()->json(['message' => $th->getMessage()], 500);
-        // }
+        } catch (\Throwable $th) {
+            \DB::rollBack();
+            return response()->json(['message' => $th->getMessage()], 500);
+        }
     }
     public function allInvoices(Request $request)
     {
         try {
-            $invoices = Sale::select('id','order_no','total','date','time')->get();
+            $invoices = Sale::select('id', 'order_no', 'total', 'date', 'time')->get();
             return response()->json(['invoice' => $invoices], 200);
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage()], 500);
         }
     }
-    public function singleInvoice(Request $request,$id=null)
+    public function singleInvoice(Request $request, $id = null)
     {
         try {
             $invoices = Sale::find($id);
             if ($invoices) {
                 return response()->json(['invoices' => $invoices], 200);
-            }else{
+            } else {
                 return response()->json(['message' => 'No Record Found'], 404);
             }
 
