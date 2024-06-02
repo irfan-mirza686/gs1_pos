@@ -11,7 +11,7 @@ $(document).ready(function() {
                         <h5 class="card-title">${product.productnameenglish}</h5>
                         <p class="card-text">${product.description}</p>
                         <p class="mt-auto">AED ${product.price}</p>
-                        <button class="btn btn-primary mt-2 add-to-cart">Add to Cart</button>
+                        <button class="btn btn-primary mt-2 add-to-cart" data-id="${product.id}" data-name="${product.productnameenglish}" data-description="${product.description}" data-price="${product.price}" data-type="${product.product_type}" data-barcode="${product.barcode}">Add to Cart</button>
                     </div>
                 </div>
             </div>
@@ -22,9 +22,9 @@ $(document).ready(function() {
         return `
             <div class="col-md-4 mb-4">
                 <div class="card" data-id="${product.id}">
-                    <img src="${product.image}" class="card-img-top" alt="${product.productnameenglish}">
+                    <img src="${product.image}" class="card-img-top" alt="${product.name}">
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">${product.productnameenglish}</h5>
+                        <h5 class="card-title">${product.name}</h5>
                         <p class="card-text">${product.description}</p>
                         <p class="mt-auto">AED ${product.price}</p>
                         <div class="d-flex justify-content-between mt-2">
@@ -73,8 +73,8 @@ $(document).ready(function() {
     });
 
     $('#product-list').on('click', '.add-to-cart', function() {
-        const card = $(this).closest('.card');
-        const productId = parseInt(card.data('id'));
+        const button = $(this);
+        const productId = parseInt(button.data('id'));
         const existingProduct = selectedProducts.find(p => p.id === productId);
 
         if (existingProduct) {
@@ -83,16 +83,25 @@ $(document).ready(function() {
         } else {
             const newProduct = {
                 id: productId,
-                productnameenglish: card.find('.card-title').text(),
-                description: card.find('.card-text').text(),
-                price: card.find('.mt-auto').text().replace('AED ', ''),
-                image: card.find('.card-img-top').attr('src'),
+                name: button.data('name'),
+                description: button.data('description'),
+                price: button.data('price'),
+                type: button.data('type'),
+                barcode: button.data('barcode'),
+                image: button.closest('.card').find('.card-img-top').attr('src'),
                 qty: 1
             };
             selectedProducts.push(newProduct);
             toastr.success('Product added to cart!');
         }
         updateSelectedProducts();
+
+        // Add hidden fields to the form
+        const hiddenFieldsContainer = $('#hidden-fields');
+        hiddenFieldsContainer.append(`
+            <input type="hidden" name="product_type_${productId}" value="${button.data('type')}">
+            <input type="hidden" name="barcode_${productId}" value="${button.data('barcode')}">
+        `);
     });
 
     $('#selected-products').on('click', '.increase-qty', function() {
@@ -121,6 +130,10 @@ $(document).ready(function() {
         selectedProducts = selectedProducts.filter(p => p.id !== productId);
         card.remove();
         toastr.success('Product removed from cart!');
+
+        // Remove hidden fields from the form
+        $(`input[name="product_type_${productId}"]`).remove();
+        $(`input[name="barcode_${productId}"]`).remove();
     });
 
     $('#selected-products').on('click', '.view-details', function() {
@@ -182,7 +195,7 @@ $(document).ready(function() {
         const formData = $(this).serializeArray();
         const selectedProductsData = selectedProducts.map(product => {
             console.log(product)
-            return { product_id: product.id, productName:product.productnameenglish, qty: product.qty, product_type: product.product_type, barcode: product.barcode };
+            return { product_id: product.id, productName: product.name, qty: product.qty, product_type: product.type, barcode: product.barcode };
         });
 
         formData.push({ name: 'selectedProducts', value: JSON.stringify(selectedProductsData) });

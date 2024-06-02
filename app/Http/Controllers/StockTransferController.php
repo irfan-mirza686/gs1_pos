@@ -151,8 +151,11 @@ class StockTransferController extends Controller
         if ($request->ajax()) {
             try {
                 $data = $request->all();
-                echo "<pre>"; print_r($data); exit;
-                $items = $this->stockTransferService->makeArr($data);
+                $selectProduct = json_decode($data['selectedProducts']);
+                // $items = $this->stockTransferService->makeArr($data);
+                $items = $this->stockTransferService->makeSelecteProductsArr($selectProduct);
+                // echo "<pre>"; print_r($items); exit;
+
                 $save = $this->stockTransferService->store($data, $id = null);
                 $save->items = $items;
                 if ($save->save()) {

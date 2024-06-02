@@ -140,11 +140,11 @@
                 <form id="order-form">
                     <div class="mb-3">
                         <label for="orderNo" class="form-label">Order No</label>
-                        <input type="text" class="form-control" id="orderNo" name="orderNo" required>
+                        <input type="text" class="form-control" id="orderNo" name="request_no" required>
                     </div>
                     <div class="mb-3">
                         <label for="orderType" class="form-label">Order Type</label>
-                        <select class="form-select" id="orderType" name="orderType" required>
+                        <select class="form-select" id="orderType" name="gln_from" required>
                             <option value="">Select Order Type</option>
                             <option value="pickup">Pickup</option>
                             <option value="delivery">Delivery</option>
@@ -152,7 +152,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="paymentMethod" class="form-label">Payment Method</label>
-                        <select class="form-select" id="paymentMethod" name="paymentMethod" required>
+                        <select class="form-select" id="paymentMethod" name="gln_to" required>
                             <option value="">Select Payment Method</option>
                             <option value="credit_card">Credit Card</option>
                             <option value="cash">Cash</option>
