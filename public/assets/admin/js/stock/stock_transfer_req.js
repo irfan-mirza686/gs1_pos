@@ -181,13 +181,14 @@ $(document).ready(function() {
 
         const formData = $(this).serializeArray();
         const selectedProductsData = selectedProducts.map(product => {
-            return { id: product.id, qty: product.qty };
+            console.log(product)
+            return { product_id: product.id, productName:product.productnameenglish, qty: product.qty, product_type: product.product_type, barcode: product.barcode };
         });
 
         formData.push({ name: 'selectedProducts', value: JSON.stringify(selectedProductsData) });
 
         $.ajax({
-            url: '/submit-order',
+            url: '/save/stock/transfer/request',
             method: 'POST',
             data: formData,
             success: function(response) {

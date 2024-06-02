@@ -146,11 +146,12 @@ class StockTransferController extends Controller
         return view('user.stock.stock_transfer.view_products', compact('pageTitle', 'user_info', 'stock_transfer', 'productInfo'));
     }
 
-    public function saveStockTransferReq(StockTransferRequest $request)
+    public function saveStockTransferReq(Request $request)
     {
         if ($request->ajax()) {
             try {
                 $data = $request->all();
+                echo "<pre>"; print_r($data); exit;
                 $items = $this->stockTransferService->makeArr($data);
                 $save = $this->stockTransferService->store($data, $id = null);
                 $save->items = $items;

@@ -76,7 +76,7 @@ class SaleController extends Controller
                     return \Response::download($pdfFullPath);
                 }
 
-                // return $pdf->download('demo.pdf');
+                return $pdf->download('demo.pdf');
 
                 // return response()->json(['message' => 'Data has been saved successfully', 'invoice_no' => time(), 'qr_code' => $base64], 200);
             } else {
