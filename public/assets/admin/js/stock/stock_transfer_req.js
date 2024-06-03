@@ -12,7 +12,8 @@ $(document).ready(function() {
                         <p class="card-text">${product.description}</p>
                         <p class="mt-auto">SR ${product.price}</p>
                         <button class="btn btn-primary mt-2 add-to-cart" data-id="${product.id}" data-name="${product.productnameenglish}" data-description="${product.description}" data-price="${product.price}" data-type="${product.product_type}" data-barcode="${product.barcode}">Add to Cart</button>
-                    </div>
+                        <button class="btn btn-info mt-2 view-details">View Details</button>
+                        </div>
                 </div>
             </div>
         `;
@@ -136,7 +137,7 @@ $(document).ready(function() {
         $(`input[name="barcode_${productId}"]`).remove();
     });
 
-    $('#selected-products').on('click', '.view-details', function() {
+    $('#selected-products,#product-list').on('click', '.view-details', function() {
         const card = $(this).closest('.card');
         const productId = parseInt(card.data('id'));
         selectedProductId = productId;
