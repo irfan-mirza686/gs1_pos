@@ -100,6 +100,8 @@
         .modal-body .row.mb-4 .col {
             text-align: center;
         }
+
+
     </style>
 </head>
 <body>
@@ -179,7 +181,7 @@
             <div class="modal-body">
                 <div class="row text-center mb-4">
                     <div class="col-md-2 d-flex flex-column align-items-center">
-                        <button class="btn btn-icon" data-category="safety_info"><img src="{{ asset('assets/uploads/digital_links/safetyinformation.png') }}" alt="Safety Information"></button>
+                        <button class="btn btn-icon" data-category="Safety Information"><img src="{{ asset('assets/uploads/digital_links/safetyinformation.png') }}" alt="Safety Information"></button>
                         <div class="icon-title">Safety Information</div>
                     </div>
                     <div class="col-md-2 d-flex flex-column align-items-center">
@@ -187,29 +189,29 @@
                         <div class="icon-title">Saudi Electricity Company</div>
                     </div>
                     <div class="col-md-2 d-flex flex-column align-items-center">
-                        <button class="btn btn-icon" data-category="product_contents"><img src="{{ asset('assets/uploads/digital_links/productcontents.png') }}" alt="Product Contents"></button>
+                        <button class="btn btn-icon" data-category="Product Contents"><img src="{{ asset('assets/uploads/digital_links/productcontents.png') }}" alt="Product Contents"></button>
                         <div class="icon-title">Product Contents</div>
                     </div>
                     <div class="col-md-2 d-flex flex-column align-items-center">
-                        <button class="btn btn-icon" data-category="controlled_serials"><img src="{{ asset('assets/uploads/digital_links/productlocation.png') }}" alt="Controlled Serials"></button>
+                        <button class="btn btn-icon" data-category="Controlled Serials"><img src="{{ asset('assets/uploads/digital_links/productlocation.png') }}" alt="Controlled Serials"></button>
                         <div class="icon-title">Controlled Serials</div>
                     </div>
                 </div>
                 <div class="row text-center mb-4">
                     <div class="col-md-2 d-flex flex-column align-items-center">
-                        <button class="btn btn-icon" data-category="product_recall"><img src="{{ asset('assets/uploads/digital_links/productrecall.png') }}" alt="Product Recall"></button>
+                        <button class="btn btn-icon" data-category="Product Recall"><img src="{{ asset('assets/uploads/digital_links/productrecall.png') }}" alt="Product Recall"></button>
                         <div class="icon-title">Product Recall</div>
                     </div>
                     <div class="col-md-2 d-flex flex-column align-items-center">
-                        <button class="btn btn-icon" data-category="recipe"><img src="{{ asset('assets/uploads/digital_links/recipe.png') }}" alt="Recipe"></button>
+                        <button class="btn btn-icon" data-category="Recipe"><img src="{{ asset('assets/uploads/digital_links/recipe.png') }}" alt="Recipe"></button>
                         <div class="icon-title">Recipe</div>
                     </div>
                     <div class="col-md-2 d-flex flex-column align-items-center">
-                        <button class="btn btn-icon" data-category="packaging"><img src="{{ asset('assets/uploads/digital_links/packaging.png') }}" alt="Packaging"></button>
+                        <button class="btn btn-icon" data-category="Packaging Composition"><img src="{{ asset('assets/uploads/digital_links/packaging.png') }}" alt="Packaging"></button>
                         <div class="icon-title">Packaging</div>
                     </div>
                     <div class="col-md-2 d-flex flex-column align-items-center">
-                        <button class="btn btn-icon" data-category="electronic_leaflets"><img src="{{ asset('assets/uploads/digital_links/electronicleaflets.png') }}" alt="Electronic Leaflets"></button>
+                        <button class="btn btn-icon" data-category="Electronic Leaflets"><img src="{{ asset('assets/uploads/digital_links/electronicleaflets.png') }}" alt="Electronic Leaflets"></button>
                         <div class="icon-title">Electronic Leaflets</div>
                     </div>
                 </div>

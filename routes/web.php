@@ -188,6 +188,7 @@ Route::
        Route::get('view/stock/request/{id}', [StockTransferController::class, 'viewStockRequest'])->name('view.stock.request');
        Route::post('save/stock/transfer/request', [StockTransferController::class, 'saveStockTransferReq'])->name('save.stock.transfer.req');
        Route::get('/products/{id}', [StockTransferController::class, 'show']);
+       Route::post('/products/data', [StockTransferController::class, 'productsData']);
        /* Stock Transfer Routes Ends  */
 
 

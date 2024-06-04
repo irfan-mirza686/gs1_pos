@@ -105,7 +105,7 @@ class StockTransferController extends Controller
             $glnBarcode[] = $value['GLNBarcodeNumber'];
             $glnName[] = $value['locationNameEn'];
         }
-        return view('user.stock.stock_transfer.create', compact('pageTitle', 'user_info','glnName'));
+        return view('user.stock.stock_transfer.create', compact('pageTitle', 'user_info', 'glnName'));
     }
     public function searchProducts(Request $request)
     {
@@ -188,7 +188,82 @@ class StockTransferController extends Controller
 
     public function show($id)
     {
+
         $product = Product::findOrFail($id);
         return response()->json(['product' => $product]);
+    }
+    public function productsData(Request $request)
+    {
+        if ($request->ajax()) {
+            // echo "<pre>"; print_r($request->all()); exit;
+            $user_info = session('user_info');
+            $product = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $user_info['token'],
+            ])->get('https://gs1ksa.org:3093/api/getAlldigital_linkBYfield', [
+                        'digital_info_type' => $request->category,
+                        // 'user_id' => $user_info['memberData']['companyID']
+                        'user_id' => '10105'
+                    ]);
+            $productBody = $product->getBody();
+            $productData = json_decode($productBody, true);
+            // echo "<pre>"; print_r($productData); exit;
+
+            return Datatables::of($productData)
+                ->addIndexColumn()
+
+                ->editColumn('target_url', function ($row) {
+                    return $row['target_url'];
+                })
+                ->editColumn('digital_info_type', function ($row) {
+                    return $row['digital_info_type'];
+                })
+                ->editColumn('gtin', function ($row) {
+                    return $row['GTIN'];
+                })
+
+                ->addColumn('action', function ($row) {
+
+                    $btn = '<ul class="navbar-nav ml-auto">
+
+                          <li class="nav-item dropdown">
+                            <a class="btn btn-primary btn-sm btn-o dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                              Action <span class="caret"></span>
+                          </a>
+                          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+
+                            <a class="dropdown-item" target="_blank" href="javascript:void(0);">
+
+                                <i class="fas fa-pen" style="color: blue;"></i>
+                                View
+                            </a>
+
+
+
+
+                        </div>
+                    </li>
+                </ul>';
+
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+
+            // $printData = [];
+            // $counter = 0;
+            // foreach ($productData as $key => $value) {
+            //     $counter = $counter+1;
+            //     $printData[] = array(
+            //         'id' => $counter,
+            //         'actions' => 'View',
+            //         'target_url' => $value['target_url'],
+            //         'digital_info_type' => $request->category,
+            //         'gtin' => $value['GTIN']
+            //     );
+            // }
+
+
+            // return response()->json(['data' => $printData]);
+        }
     }
 }

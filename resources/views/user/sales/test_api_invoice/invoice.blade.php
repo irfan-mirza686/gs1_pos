@@ -190,6 +190,11 @@
                 <td><strong>المتبقي</strong></td>
                 <td class="grandtotalFont" style="text-align: right;"><strong>{{ number_format(@$getInvoiceData->change_amount) }}</strong></td>
             </tr>
+            <tr>
+                <td colspan="5" align="center">
+                    <strong>{!! DNS2D::getBarcodeHTML(@$base64, 'QRCODE', 3, 3) !!}</strong><br>
+                </td>
+            </tr>
         </table>
     </div>
 </div>

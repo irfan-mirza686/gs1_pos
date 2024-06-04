@@ -160,16 +160,51 @@ $(document).ready(function() {
         fetchAndRenderData(category);
     });
 
-    function fetchAndRenderData(category) {
-        $.ajax({
-            url: '/products/data',
-            method: 'GET',
-            data: { id: selectedProductId, category: category },
-            success: function(response) {
-                const table = $('#data-table').DataTable();
-                table.clear().rows.add(response.data).draw();
-            }
+    // function fetchAndRenderData(category) {
+    //     $.ajax({
+    //         url: '/products/data',
+    //         method: 'POST',
+    //         // data: { id: selectedProductId, category: category },
+    //         data: { category: category },
+    //         success: function(response) {
+    //             const table = $('#data-table').DataTable();
+    //             table.clear().rows.add(response.data).draw();
+    //         }
+    //     });
+    // }
+    function fetchAndRenderData(category)
+    {
+        var table = $('#data-table').DataTable({
+            "ajax": {
+                "url": '/products/data',
+                "dataType": "json",
+                "type": "POST",
+                "data": function (d) {
+                    d.category = category;
+                    return JSON.stringify(d);
+                },
+                "contentType": "application/json; charset=utf-8"
+            },
+            processing: true,
+            serverSide: true,
+            stateSave: true,
+            "bDestroy": true,
+            columns: [
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
+                { data: 'target_url', name: 'target_url' },
+                { data: 'digital_info_type', name: 'digital_info_type' },
+                { data: 'gtin', name: 'gtin' },
+            ],
+            lengthMenu: [[10, 25, 50, 100, 500, -1], [10, 25, 50, 100, 500, "All"]],
+            pageLength: 10,
+            pagingType: 'simple_numbers',
+            'columnDefs': [{
+                'targets': [0, 1], /* column index */
+                'orderable': false, /* true or false */
+            }]
         });
+
     }
 
     $('#data-table').DataTable();

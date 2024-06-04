@@ -104,7 +104,7 @@
                 <td width="50%">
                     <strong>Saudi Leather Industries Factory Company Limited</strong>
                     <br><br>
-                    <strong>شركة المصنع السعودي للصناعات الجلدية المحدودة</strong>
+                    <strong>{{formatArabicText('شركة المصنع السعودي للصناعات الجلدية المحدودة')}}</strong>
                 </td>
             </tr>
         </table>
@@ -120,11 +120,11 @@
                 </tr>
                 <tr>
                     <td colspan="5" class="noborder"><strong>Receipt:</strong> {{ @$getInvoiceData->order_no }}</td>
-                    <td colspan="5" class="noborder" align="right"><strong>:رقم الفاتورة</strong></td>
+                    <td colspan="5" class="noborder" align="right"><strong>:{{formatArabicText('رقم الفاتورة')}}</strong></td>
                 </tr>
                 <tr>
                     <td colspan="3" class="noborder"><strong>Date:</strong> {{ @$getInvoiceData->date }}</td>
-                    <td colspan="9" class="noborder" align="right">{{ date('h:i:s A', strtotime(@$getInvoiceData->time)) }} <strong>:التاریخ</strong></td>
+                    <td colspan="9" class="noborder" align="right">{{ date('h:i:s A', strtotime(@$getInvoiceData->time)) }} <strong>:{{formatArabicText('التاریخ')}}</strong></td>
                 </tr>
             </thead>
         </table>
@@ -132,12 +132,12 @@
             <thead>
                 <tr>
                     <td width="5%"><strong>#</strong></td>
-                    <td width="20%"><strong>بیان</strong></td>
-                    <td width="10%"><strong>الكمية</strong></td>
-                    <td width="10%"><strong>السعر</strong></td>
-                    <td width="10%"><strong>تخفيض</strong></td>
-                    <td width="10%"><strong>ضريبة القيمة المضافة</strong></td>
-                    <td width="35%" style="text-align: right;"><strong>المجموع</strong></td>
+                    <td width="20%"><strong>{{formatArabicText('بیان')}}</strong></td>
+                    <td width="10%"><strong>{{formatArabicText('الكمية')}}</strong></td>
+                    <td width="10%"><strong>{{formatArabicText('السعر')}}</strong></td>
+                    <td width="10%"><strong>{{formatArabicText('تخفيض')}}</strong></td>
+                    <td width="10%"><strong>{{formatArabicText('ضريبة القيمة المضافة')}}</strong></td>
+                    <td width="35%" style="text-align: right;"><strong>{{formatArabicText('المجموع')}}</strong></td>
                 </tr>
                 <tr>
                     <td width="5%"><strong>#</strong></td>
@@ -156,7 +156,7 @@
                     <tr>
                         <td width="5%">{{ $counter }}</td>
                         <td class="kitchen" width="25%">
-                            أحذية السلامة <br>
+                            {{formatArabicText('أحذية السلامة')}} <br>
                             <span style="font-size: 8px;">1 - {{ $print['barcode'] }}</span>
                         </td>
                         <td class="kitchen" width="5%">{{ $print['qty'] }}</td>
@@ -172,22 +172,22 @@
         <table class="tableS kitchen" cellspacing="5">
             <tr>
                 <td colspan="3"><strong>Vat (15%):</strong></td>
-                <td><strong>ضريبة القيمة المضافة</strong></td>
+                <td><strong>{{formatArabicText('ضريبة القيمة المضافة')}}</strong></td>
                 <td class="grandtotalFont" style="text-align: right;"><strong>{{ number_format(@$totalVat) }}</strong></td>
             </tr>
             <tr>
                 <td colspan="3"><strong>Total Amount:</strong></td>
-                <td><strong>ضريبة القيمة المضافة</strong></td>
+                <td><strong>{{formatArabicText('ضريبة القيمة المضافة')}}</strong></td>
                 <td class="grandtotalFont" style="text-align: right;"><strong>{{ number_format(@$getInvoiceData->total) }}</strong></td>
             </tr>
             <tr>
                 <td colspan="3"><strong>Paid Amount:</strong></td>
-                <td><strong>المدفوع</strong></td>
+                <td><strong>{{formatArabicText('المدفوع')}}</strong></td>
                 <td class="grandtotalFont" style="text-align: right;"><strong>{{ number_format(@$getInvoiceData->tender_amount) }}</strong></td>
             </tr>
             <tr>
                 <td colspan="3"><strong>Change Due:</strong></td>
-                <td><strong>المتبقي</strong></td>
+                <td><strong>{{formatArabicText('المتبقي')}}</strong></td>
                 <td class="grandtotalFont" style="text-align: right;"><strong>{{ number_format(@$getInvoiceData->change_amount) }}</strong></td>
             </tr>
             <tr>

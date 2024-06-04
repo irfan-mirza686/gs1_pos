@@ -81,7 +81,7 @@ class SaleController extends Controller
     {
         $pageTitle = "POS";
         $user_info = session('user_info');
-        // echo "<pre>"; print_r($user_info); exit;
+        // echo "<pre>"; print_r($user_info['memberData']['companyID']); exit;
         $printInvoiceNo = time();
         $page_name = "pos";
 
