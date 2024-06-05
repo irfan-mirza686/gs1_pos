@@ -2,6 +2,14 @@ $(document).ready(function() {
     let selectedProducts = [];
     let selectedProductId = null;
 
+    // Generate a 13-digit unique request number
+    function generateUniqueRequestNo() {
+        return Math.floor(1000000000000 + Math.random() * 9000000000000);
+    }
+
+    // Set the initial request number when the page loads
+    $('#request_no').val(generateUniqueRequestNo());
+
     function renderProductCard(product) {
         return `
             <div class="col-md-4 mb-4">

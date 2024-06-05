@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\SaleController;
+use App\Http\Controllers\Api\StockTransferController;
 use App\Http\Controllers\Api\UnitController;
 use App\Http\Controllers\Api\ZatcaController;
 use Illuminate\Http\Request;
@@ -65,6 +66,8 @@ Route::get('all/invoices',[SaleController::class,'allInvoices']);
 Route::get('single/invoice/{id}',[SaleController::class,'singleInvoice']);
 Route::get('get/invoice/{id}', [SaleController::class, 'show']);
 
+Route::post('stock/transfer/list',[StockTransferController::class,'index']);
+Route::post('items/receiving',[StockTransferController::class,'itemsReceiving']);
 
 Route::post('post/zatca',[ZatcaController::class,'postZatcaData']);
 
