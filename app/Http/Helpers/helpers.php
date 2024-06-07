@@ -93,3 +93,23 @@ function getFile($folder_name, $filename)
 
     return asset('assets/uploads/'.$folder_name.'/'.$filename);
 }
+/********************************************************/
+function decodeImage($imgUrl)
+{
+    try {
+        if ($contents = file_get_contents($imgUrl)) {
+            $name = substr($imgUrl, strrpos($imgUrl, '/') + 1);
+
+            // Define the path to the public directory
+            $imgPath = public_path('assets/uploads/products/' . $name);
+
+            // Save the image contents to the public directory
+            file_put_contents($imgPath, $contents);
+
+            return $name;
+        }
+    } catch (\Exception $e) {
+        return "Not Found";
+    }
+}
+

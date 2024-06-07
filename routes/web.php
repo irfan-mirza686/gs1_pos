@@ -152,7 +152,7 @@ Route::
     Route::get('products/stock/list', [ProductController::class, 'productStockList'])->name('products.stock');
     Route::post('product/stock_list', [ProductController::class, 'productStock']);
     Route::post('update/item/selling/price/{itemID}', [ProductController::class, 'updateItemSellingPrice'])->name('update.item.selling.price');
-
+    Route::get('sync/products',[ProductController::class,'syncProducts'])->name('sync.products');
 
     Route::post('get-gpc-based-on-productname',[ProductController::class,'getGpcBasedOnProductName']);
     Route::post('hscodes-based-on-selected-gpc-productname',[ProductController::class,'getHscodesBasedOnGpcProductName']);

@@ -99,7 +99,7 @@
         <table class="tableS" cellspacing="10">
             <tr>
                 <td width="50%">
-                    <img src="{{($apiInvoice=='true')?public_path('assets/uploads/slic-logo.png'):asset('assets/uploads/slic-logo.png')}}" width="120" height="100" alt="">
+                    <img src="{{($apiInvoice=='true')?public_path('assets/uploads/gs_logo.png'):asset('assets/uploads/gs_logo.png')}}" width="120" height="70" alt="">
                 </td>
                 <td width="50%">
                     <strong>Saudi Leather Industries Factory Company Limited</strong>

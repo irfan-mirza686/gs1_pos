@@ -62,7 +62,7 @@ class ProductController extends Controller
                 ->editColumn('type', function ($row) {
                     // return $row['type'];
 
-                    if ($row['type'] == 'gs1_product') {
+                    if ($row['type'] == 'gs1') {
                         return '<span class="badge bg-gradient-quepal text-white shadow-sm w-100">' . strtoupper($row['type']) . '</span>';
                         // return '<span class="badge bg-info" style="width:100px;">' . strtoupper($row['type']) . '</span>';
                     } else {
@@ -84,7 +84,7 @@ class ProductController extends Controller
                 })
 
                 ->addColumn('action', function ($row) {
-                    if ($row['type'] == 'gs1_product') {
+                    if ($row['type'] == 'gs1') {
                         $edit = $row['barcode'];
                         $type = 'gs1';
                     } else {
@@ -118,6 +118,69 @@ class ProductController extends Controller
             $units = Unit::where('status', 'active')->get();
             return response()->json(['units' => $units]);
         }
+    }
+    public function syncProducts(Request $request)
+    {
+        if ($request->ajax()) {
+            $user_info = session('user_info');
+            $url = 'https://gs1ksa.org:3093/uploads/products/memberProductsImages/front_image-1713543232043.jpg';
+            decodeImage($url);
+            $token = $user_info['token'];
+            $gs1MemberID = $user_info['memberData']['id'];
+            $apiProducts = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $token,
+            ])->get('https://gs1ksa.org:3093/api/products', [
+                        'user_id' => $gs1MemberID,
+                    ]);
+
+
+            $apiProductsBody = $apiProducts->getBody();
+            $apiProductssData = json_decode($apiProductsBody, true);
+            //  echo "<pre>"; print_r($apiProductssData); exit;
+            foreach ($apiProductssData as $key => $value) {
+                $product = Product::where('barcode',$value['barcode'])->first();
+                if ($product) {
+                    $product;
+                }else{
+                    $product = new Product;
+                }
+
+                $product->type = 'gs1';
+                $product->gcpGLNID = $value['gcpGLNID'];
+                $product->productnameenglish = $value['productnameenglish'];
+                $product->slug = \Str::slug($value['productnameenglish']);
+                $product->productnamearabic = $value['productnamearabic'];
+                $product->BrandName = $value['BrandName'];
+                $product->ProductType = $value['ProductType'];
+                $product->Origin = $value['Origin'];
+                $product->PackagingType = $value['PackagingType'];
+                $product->MnfCode = $value['MnfCode'];
+                $product->MnfGLN = $value['MnfGLN'];
+                $product->ProvGLN = $value['ProvGLN'];
+                $product->unit = $value['unit'];
+                $product->size = $value['size'];
+                $product->quantity = $value['quantity'];
+                $product->barcode = $value['barcode'];
+                $product->gpc = $value['gpc'];
+                $product->gpc_code = $value['gpc_code'];
+                $product->countrySale = $value['countrySale'];
+                $product->HSCODES = $value['HSCODES'];
+                $product->HsDescription = $value['HsDescription'];
+                $product->gcp_type = $value['gcp_type'];
+                $product->prod_lang = $value['prod_lang'];
+                $product->details_page = $value['details_page'];
+                $product->details_page_ar = $value['details_page_ar'];
+                $product->status = $value['status'];
+                $product->product_url = $value['product_url'];
+                $product->product_type = $value['product_type'];
+                $product->BrandNameAr = $value['BrandNameAr'];
+
+                $product->save();
+            }
+            return response()->json(['status'=>200,'message'=>'Products are syncronized']);
+
+        }
+
     }
     /**********************************************************************/
     public function create(Request $request)

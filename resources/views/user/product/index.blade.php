@@ -58,7 +58,11 @@
                     <div class="ms-auto"><a href="javascript:void(0);" data-URL="{{route('product.create')}}" id="addNewProductBtn"
                             class="btn btn-primary radius-30 mt-2 mt-lg-0 add"><i class="bx bxs-plus-square"></i>Add
                             New</a>
+                            <a href="javascript:void(0);" data-URL="{{route('sync.products')}}" id="syncProductsBtn"
+                            class="btn btn-primary radius-30 mt-2 mt-lg-0 add"><i class="fadeIn animated bx bx-sync"></i>Sync Products</a>
                     </div>
+
+
                 </div>
                 <div class="table-responsive">
 

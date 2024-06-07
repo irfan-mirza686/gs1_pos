@@ -58,16 +58,16 @@ class ProductService
                     'user_id' => $local['user_id'],
                     'image' => $image,
                     'productnameenglish' => $local['productnameenglish'],
-                    'productnamearabic' => '',
+                    'productnamearabic' => $local['productnamearabic'],
                     'BrandName' => $local['BrandName'],
                     'barcode' => $local['barcode'],
-                    'type' => 'non_gs1',
+                    'type' => $local['type'],
                 );
             }
         }
 
         $mergeProducts = array_merge($apiArrayData, $localArrayData);
-        return $mergeProducts;
+        return $localArrayData;
     }
     /********************************************************************/
     public function storeProduct($data, $id = null)

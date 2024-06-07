@@ -215,28 +215,29 @@ $(document).ready(function() {
 
     }
 
-    $('#data-table').DataTable();
+    // $('#data-table').DataTable();
 
-    $('#go-to-step2').on('click', function() {
-        enableTab(2);
-    });
+    // $('#go-to-step2').on('click', function() {
+    //     enableTab(2);
+    // });
 
-    $('#back-to-step1').on('click', function() {
-        enableTab(1);
-    });
+    // $('#back-to-step1').on('click', function() {
+    //     enableTab(1);
+    // });
 
-    $('#go-to-step3').on('click', function() {
-        enableTab(3);
-    });
+    // $('#go-to-step3').on('click', function() {
+    //     enableTab(3);
+    // });
 
-    $('#back-to-step2').on('click', function() {
-        enableTab(2);
-    });
+    // $('#back-to-step2').on('click', function() {
+    //     enableTab(2);
+    // });
 
-    $('#order-form').on('submit', function(event) {
+    $(document).on('submit','#request-form', function(event) {
         event.preventDefault();
-
+console.log("okkk")
         const formData = $(this).serializeArray();
+        console.log(formData)
         const selectedProductsData = selectedProducts.map(product => {
             console.log(product)
             return { product_id: product.id, productName: product.name, qty: product.qty, product_type: product.type, barcode: product.barcode };
@@ -249,15 +250,15 @@ $(document).ready(function() {
             method: 'POST',
             data: formData,
             success: function(response) {
-                toastr.success('Order submitted successfully!');
+                toastr.success('Stock Request submitted successfully!');
                 // Clear the form and selected products
-                $('#order-form')[0].reset();
+                $('#request-form')[0].reset();
                 selectedProducts = [];
                 updateSelectedProducts();
                 enableTab(1);
             },
             error: function() {
-                toastr.error('Failed to submit order.');
+                toastr.error('Failed to submit stock request.');
             }
         });
     });
