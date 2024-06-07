@@ -15,6 +15,7 @@ class CreateProductsTable extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->string('type')->nullable();
             $table->string('gcpGLNID')->nullable();
             $table->string('productnameenglish')->unique();
             $table->string('productnamearabic')->unique();
@@ -33,6 +34,9 @@ class CreateProductsTable extends Migration
             $table->string('HsDescription')->nullable();
             $table->string('gcp_type')->nullable();
             $table->string('prod_lang')->nullable();
+            $table->string('MnfCode')->nullable();
+            $table->string('MnfGLN')->nullable();
+            $table->string('ProvGLN')->nullable();
             $table->text('details_page')->nullable();
             $table->text('details_page_ar')->nullable();
             $table->string('product_url')->nullable();
