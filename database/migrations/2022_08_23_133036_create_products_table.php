@@ -17,9 +17,9 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->string('type')->nullable();
             $table->string('gcpGLNID')->nullable();
-            $table->string('productnameenglish')->unique();
-            $table->string('productnamearabic')->unique();
-            $table->string('slug')->unique();
+            $table->string('productnameenglish')->nullable();
+            $table->string('productnamearabic')->nullable();
+            $table->string('slug')->nullable();
             $table->string('BrandName')->nullable();
             $table->string('BrandNameAr')->nullable();
             $table->string('ProductType')->nullable();
