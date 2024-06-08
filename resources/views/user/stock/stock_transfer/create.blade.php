@@ -164,7 +164,7 @@
             <div class="card-body">
 
                 <div class="bs-stepper-content">
-                    <form onsubmit="return false">
+                    <!-- <form onsubmit="return false"> -->
                         <div id="test-l-1" role="tabpanel" class="bs-stepper-pane active dstepper-block"
                             aria-labelledby="stepper1trigger1">
                             <h5 class="mb-1">Filter Products</h5>
@@ -212,6 +212,7 @@
 
                             <div class="row g-3">
                                 <form id="request-form">
+                                <input type="hidden" id="baseURL" value="{{url('/')}}">
                                     <div class="mb-3">
                                         <label for="request_no" class="form-label">Request #</label>
                                         <input type="text" class="form-control" id="request_no" name="request_no"
@@ -267,7 +268,7 @@
 
 
                         </div> -->
-                    </form>
+                    <!-- </form> -->
                 </div>
 
             </div>

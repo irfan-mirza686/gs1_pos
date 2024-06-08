@@ -93,18 +93,23 @@ class SaleController extends Controller
         $glnBody = $gln->getBody();
         $glnData = json_decode($glnBody, true);
         // echo "<pre>"; print_r($glnData); exit;
-        $glnBarcode = [];
-        $glnName = [];
+        // $glnBarcode = [];
+        // $glnName = [];
+        $glns = [];
         foreach ($glnData as $key => $value) {
-            $glnBarcode[] = $value['GLNBarcodeNumber'];
-            $glnName[] = $value['locationNameEn'];
+            $glns[] = array(
+                'gln' => $value['GLNBarcodeNumber'],
+                'glnName' => $value['locationNameEn']
+            );
+            // $glnBarcode[] = $value['GLNBarcodeNumber'];
+            // $glnName[] = $value['locationNameEn'];
         }
         $clientIP = '103.239.147.187';
         // $clientIP = $request->ip();
         $userLocation = Location::get($clientIP);
         // echo "<pre>"; print_r($userLocation); exit;
 
-        return view('user.sales.pos.index', compact('pageTitle', 'printInvoiceNo', 'page_name', 'user_info', 'glnBarcode', 'userLocation', 'glnName'));
+        return view('user.sales.pos.index', compact('pageTitle', 'printInvoiceNo', 'page_name', 'user_info', 'userLocation', 'glns'));
     }
     /********************************************************************/
     public function findProduct(Request $request)
@@ -119,7 +124,7 @@ class SaleController extends Controller
                 if ($product['status'] === 404) {
                     return response()->json(['status' => 404, 'message' => $product['message']]);
                 } else {
-                    return response()->json(['status'=>200,'prodArray' => $product['prodArray']]);
+                    return response()->json(['status' => 200, 'prodArray' => $product['prodArray']]);
                 }
             } catch (\Throwable $th) {
                 return response()->json(['status' => 422, 'message' => $th->getMessage()]);
@@ -133,17 +138,18 @@ class SaleController extends Controller
         if ($request->ajax()) {
             try {
                 $data = $request->all();
+
+                $user_info = session('user_info');
+                $items = $this->saleService->makeItemsArr($data);
                 // echo "<pre>";
                 // print_r($data);
                 // exit();
-                $user_info = session('user_info');
-                $items = $this->saleService->makeItemsArr($data);
                 $pos = $this->saleService->saveSale($data, $id = "");
                 \DB::beginTransaction();
 
                 $pos->items = $items;
                 if ($pos->save()) {
-
+                    $this->saleService->itmesLog($user_info, $items, $data);
                     // $base64 = \Prgayman\Zatca\Facades\Zatca::sellerName('Zatca')
                     //     ->vatRegistrationNumber("300456416500003")
                     //     ->timestamp("2021-12-01T14:00:09Z")
@@ -198,6 +204,6 @@ class SaleController extends Controller
         // echo "<pre>"; print_r($base64); exit();
         // echo "<pre>"; print_r($getInvoiceData->toArray()); exit();
         $apiInvoice = "flase";
-        return view('user.sales.print_invoice', compact('getInvoiceData', 'base64', 'totalVat','apiInvoice'));
+        return view('user.sales.print_invoice', compact('getInvoiceData', 'base64', 'totalVat', 'apiInvoice'));
     }
 }

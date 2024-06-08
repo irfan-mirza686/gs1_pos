@@ -9,6 +9,25 @@ $(document).ready(function () {
         var audio = new Audio('/sounds/failed.mp3');
         audio.play();
     }
+    $('#barcode').prop('disabled', true);
+    function toggleBarcodeInput() {
+        const salesLocationValue = $('#salesLocation').val();
+        const deliveryValue = $('#delivery').val();
+        // console.log(salesLocationValue)
+        // console.log(deliveryValue)
+
+        if (salesLocationValue && deliveryValue) {
+            $('#barcode').prop('disabled', false);
+        } else {
+            $('#barcode').prop('disabled', true);
+        }
+    }
+
+    // Check the dropdown values on change
+    $('#salesLocation, #delivery').change(function() {
+        toggleBarcodeInput();
+    });
+
     // function playNotFoundSound() {
     //     var audio = new Audio('/sound/not_found.mp3');
     //     audio.play();

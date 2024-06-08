@@ -53,9 +53,9 @@
         <label for="salesLocation" class="col-sm-1 col-form-label">Sales Locations <font style="color: red;">*</font></label>
         <div class="col-sm-2">
             <select class="single-select appendHscodes form-control rounded-0" name="salesLocation" id="salesLocation">
-                <option disabled selected>Choose...</option>
-                @foreach($glnName as $gln)
-                <option value="{{$gln}}">{{$gln}}</option>
+                <option disabled selected value="">Choose...</option>
+                @foreach($glns as $gln)
+                <option value="{{$gln['gln']}}">{{$gln['glnName']}}</option>
                 @endforeach
             </select>
         </div>
@@ -80,7 +80,7 @@
         <label for="delivery" class="col-sm-1 col-form-label">Delivery <font style="color: red;">*</font></label>
         <div class="col-sm-2">
         <select class="single-select form-control rounded-0 delivery" name="delivery" id="delivery">
-                <option selected>Choose...</option>
+                <option selected value="">Choose...</option>
 
             </select>
         </div>

@@ -178,7 +178,7 @@
                                             <textarea class="form-control" name="details_page" id="descriptionen"
                                                 rows="3"></textarea>
                                         </div>
-                                        <div class="mb-3 gs1" style="display:none;">
+                                        <div class="mb-3 gs1">
                                             <label for="details_page_ar" class="form-label">Description AR</label>
                                             <textarea class="form-control" name="details_page_ar" id="details_page_ar"
                                                 rows="3"></textarea>

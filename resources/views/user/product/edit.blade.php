@@ -311,7 +311,7 @@
                                             <select class="single-select form-control" name="unit" id="unit">
                                                 <option disabled selected>-select-</option>
                                                 @foreach($productData['unitsData'] as $unit)
-                                                <option value="{{$unit['unit_code']}}" {{($editProduct['unit']==$unit['unit_code'])?'selected':''}}>{{$unit['unit_name']}}</option>
+                                                <option value="{{$unit['unit_code']}}" {{($editProduct['unit']==$unit['unit_name'])?'selected':''}}>{{$unit['unit_name']}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -320,7 +320,7 @@
                                             <select class="single-select form-control" name="Origin" id="Origin">
                                                 <option disabled selected>-select-</option>
                                                 @foreach($productData['countryOfSaleData'] as $country)
-                                                <option value="{{$country['country_name']}}" {{($editProduct['countrySale']==$country['country_name'])?'selected':''}}>{{$country['country_name']}}</option>
+                                                <option value="{{$country['country_name']}}" {{($editProduct['countrySale']==$country['Alpha3'])?'selected':''}}>{{$country['country_name']}}</option>
                                                 @endforeach
                                             </select>
                                         </div>

@@ -52,7 +52,7 @@ class ProductService
         $localArrayData = [];
         if ($localProducts) {
             foreach ($localProducts as $key => $local) {
-                $image = ($local['front_image']) ? getFile('products',$local['front_image']) : asset('assets/uploads/no-image.png');
+                $image = ($local['front_image']) ? getFile('products', $local['front_image']) : asset('assets/uploads/no-image.png');
                 $localArrayData[] = array(
                     'id' => $local['id'],
                     'user_id' => $local['user_id'],
@@ -70,7 +70,7 @@ class ProductService
         return $localArrayData;
     }
     /********************************************************************/
-    public function storeProduct($data, $id = null)
+    public function storeProduct($data, $id = null, $gcpGLNID, $barcode)
     {
         if ($id == null) {
             $addProduct = new Product;
@@ -87,16 +87,46 @@ class ProductService
             $addProduct->back_image = $filename;
         }
 
+        if (isset($data['image_1']) && !empty($data['image_1'])) {
+            $filename = uploadImage($data['image_1'], filePath('products'), $addProduct->image_1);
+            $addProduct->image_1 = $filename;
+        }
+        if (isset($data['image_2']) && !empty($data['image_2'])) {
+            $filename = uploadImage($data['image_2'], filePath('products'), $addProduct->image_2);
+            $addProduct->image_2 = $filename;
+        }
+        if (isset($data['image_3']) && !empty($data['image_3'])) {
+            $filename = uploadImage($data['image_3'], filePath('products'), $addProduct->image_3);
+            $addProduct->image_3 = $filename;
+        }
+
+        $addProduct->gcpGLNID = $gcpGLNID;
+        $addProduct->type = $data['product_type'];
         $addProduct->productnameenglish = $data['productnameenglish'];
+        $addProduct->productnamearabic = isset($data['productnamearabic']) ? $data['productnamearabic'] : '';
         $addProduct->slug = \Str::slug($data['productnameenglish']);
         $addProduct->BrandName = $data['BrandName'];
-        $addProduct->size = $data['size'];
-        $addProduct->barcode = $data['product_code'];
+        $addProduct->BrandNameAr = isset($data['BrandNameAr']) ? $data['BrandNameAr'] : '';
+        $addProduct->ProductType = isset($data['ProductType']) ? $data['ProductType'] : '';
+        $addProduct->Origin = isset($data['Origin']) ? $data['Origin'] : '';
+        $addProduct->PackagingType = isset($data['PackagingType']) ? $data['PackagingType'] : '';
         $addProduct->unit = $data['unit'];
+        $addProduct->size = $data['size'];
+        $addProduct->gpc = isset($data['gpc']) ? $data['gpc'] : '';
+        $addProduct->gpc_code = isset($data['gpc_code']) ? $data['gpc_code'] : '';
+        $addProduct->countrySale = isset($data['countrySale']) ? $data['countrySale'] : '';
+        $addProduct->HSCODES = '1234.56.78';
+        $addProduct->HsDescription = isset($data['HsDescription']) ? $data['HsDescription'] : '';
+        $addProduct->gcp_type = 1;
+        $addProduct->prod_lang = isset($data['prod_lang']) ? $data['prod_lang'] : '';
+        $addProduct->barcode = $barcode;
+
         $addProduct->quantity = $data['quantity'];
         $addProduct->purchase_price = $data['purchase_price'];
         $addProduct->selling_price = $data['selling_price'];
         $addProduct->details_page = isset($data['details_page']) ? $data['details_page'] : null;
+        $addProduct->details_page_ar = isset($data['details_page_ar']) ? $data['details_page_ar'] : null;
+        $addProduct->product_url = isset($data['product_url']) ? $data['product_url'] : null;
         $addProduct->status = 'active';
         return $addProduct;
     }
@@ -124,7 +154,7 @@ class ProductService
     {
         $unitsData = Unit::get();
         $brandsData = Brand::get();
-        return  [
+        return [
             'brandsData' => $brandsData,
             'unitsData' => $unitsData,
         ];

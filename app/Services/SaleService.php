@@ -123,6 +123,23 @@ class SaleService
         return $purchaseItems;
     }
     /********************************************************************/
+    public function itmesLog($user_info,$items,$data)
+    {
+        foreach ($items as $key => $value) {
+            $itemsLogs = Http::post('http://gs1ksa.org:7000/api/insertGtrackEPCISLog', [
+                        'gs1UserId' => $user_info['memberData']['id'],
+                        'TransactionType' => 'receiving',
+                        'GTIN' => $value['barcode'],
+                        'GLNFrom' => $data['salesLocation'],
+                        'GLNTo' => $data['salesLocation'],
+                        'IndustryType' => 'retail',
+                    ]);
+            $itemsLogsBody = $itemsLogs->getBody();
+            $itemsLogsApi = json_decode($itemsLogsBody, true);
+            // echo "<pre>"; print_r($itemsLogsApi); exit;
+        }
+    }
+    /********************************************************************/
     public function updateStock($items)
     {
 
