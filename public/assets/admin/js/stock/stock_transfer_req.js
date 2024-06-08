@@ -212,7 +212,7 @@ $(document).ready(function () {
                 updateSelectedProducts();
                 enableTab(1);
                 $('#request_no').val(generateUniqueRequestNo());
-                window.location = 'http://localhost:8000/stock/transfer/requests'
+                window.location = 'https://pos.gs1ksa.org/stock/transfer/requests'
             },
             error: function () {
                 toastr.error('Failed to submit stock request.');

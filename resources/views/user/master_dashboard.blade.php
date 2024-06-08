@@ -36,7 +36,7 @@
                         <div class="d-flex align-items-center">
                             <div class="me-auto">
                                 <p class="mb-0 text-white">Total Sales</p>
-                                <h4 class="my-1 text-white">{{@$total_sales}}</h4>
+                                <h4 class="my-1 text-white">{{number_format(@$total_sales)}}</h4>
                                 <!-- <p class="mb-0 font-13 text-white">+2.5% from last week</p> -->
                             </div>
                             <!-- <div id="chart1x"><canvas width="81" height="35"
@@ -52,7 +52,7 @@
                         <div class="d-flex align-items-center">
                             <div class="me-auto">
                                 <p class="mb-0 text-white">Total Sales Amount</p>
-                                <h4 class="my-1 text-white">{{@$total_sales_amount}}</h4>
+                                <h4 class="my-1 text-white">{{number_format(@$total_sales_amount)}}</h4>
                                 <!-- <p class="mb-0 font-13 text-white">+5.4% from last week</p> -->
                             </div>
                             <!-- <div id="chart2x"><canvas width="80" height="40"
@@ -68,7 +68,7 @@
                         <div class="d-flex align-items-center">
                             <div class="me-auto">
                                 <p class="mb-0 text-white">Total Tax Amount</p>
-                                <h4 class="my-1 text-white">{{@$totalVat}}</h4>
+                                <h4 class="my-1 text-white">{{number_format(@$totalVat)}}</h4>
                                 <!-- <p class="mb-0 font-13 text-white">-4.5% from last week</p> -->
                             </div>
                             <!-- <div id="chart3x"><canvas width="75" height="40"
@@ -84,7 +84,7 @@
                         <div class="d-flex align-items-center">
                             <div class="me-auto">
                                 <p class="mb-0 text-dark">Total Products</p>
-                                <h4 class="my-1 text-dark">{{$total_products}}</h4>
+                                <h4 class="my-1 text-dark">{{number_format($total_products)}}</h4>
                                 <!-- <p class="mb-0 font-13 text-dark">+8.4% from last week</p> -->
                             </div>
                             <!-- <div id="chart4x"><canvas width="100" height="25"
