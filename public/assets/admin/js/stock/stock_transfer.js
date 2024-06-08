@@ -25,6 +25,7 @@ $(document).ready(function () {
                 { data: 'DT_RowIndex', name: 'DT_RowIndex' },
                 { data: 'request_no', name: 'request_no' },
                 { data: 'gln_from', name: 'gln_from' },
+                { data: 'gln_to', name: 'gln_to' },
                 { data: 'date_time', name: 'date_time' },
                 { data: 'status', name: 'status' },
                 { data: 'action', name: 'action', orderable: false, searchable: false }

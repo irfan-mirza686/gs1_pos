@@ -222,8 +222,8 @@
                                         <label for="gln_from" class="form-label">GLN From</label>
                                         <select class="form-select" id="gln_from" name="gln_from">
                                             <option value="">-select-</option>
-                                            @foreach($glnName as $gln)
-                                            <option value="{{$gln}}">{{$gln}}</option>
+                                            @foreach($glns as $gln)
+                                            <option value="{{$gln['gln']}}">{{$gln['glnName']}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -231,8 +231,8 @@
                                         <label for="gln_to" class="form-label">GLN To</label>
                                         <select class="form-select" id="gln_to" name="gln_to">
                                             <option value="">-select-</option>
-                                            @foreach($glnName as $gln)
-                                            <option value="{{$gln}}">{{$gln}}</option>
+                                            @foreach($glns as $gln)
+                                            <option value="{{$gln['gln']}}">{{$gln['glnName']}}</option>
                                             @endforeach
                                         </select>
                                     </div>

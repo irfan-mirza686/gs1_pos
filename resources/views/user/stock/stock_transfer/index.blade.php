@@ -63,7 +63,8 @@
                             <tr>
                                 <th>#</th>
                                 <th>Request #</th>
-                                <th>GLN</th>
+                                <th>GLN From</th>
+                                <th>GLN To</th>
                                 <th>DateTIme</th>
                                 <th>Status</th>
                                 <th class="text-center">Action</th>
@@ -77,6 +78,8 @@
                                         data-column="1" placeholder="Search by Request #" /></th>
                                 <!-- <th></th> -->
                                 <th><input type="text" class="form-control form-control-sm column-search rounded-0"
+                                        data-column="2" placeholder="Search by GLN" /></th>
+                                        <th><input type="text" class="form-control form-control-sm column-search rounded-0"
                                         data-column="2" placeholder="Search by GLN" /></th>
                                 <!-- Add more input fields for additional columns -->
                                 <th></th>

@@ -100,12 +100,14 @@ class StockTransferController extends Controller
         $glnBody = $gln->getBody();
         $glnData = json_decode($glnBody, true);
         $glnBarcode = [];
-        $glnName = [];
+        $glns = [];
         foreach ($glnData as $key => $value) {
-            $glnBarcode[] = $value['GLNBarcodeNumber'];
-            $glnName[] = $value['locationNameEn'];
+            $glns[] = array(
+                'gln' => $value['GLNBarcodeNumber'],
+                'glnName' => $value['locationNameEn']
+            );
         }
-        return view('user.stock.stock_transfer.create', compact('pageTitle', 'user_info', 'glnName'));
+        return view('user.stock.stock_transfer.create', compact('pageTitle', 'user_info', 'glns'));
     }
     public function searchProducts(Request $request)
     {
