@@ -11,40 +11,58 @@ $(document).ready(function () {
     $('#request_no').val(generateUniqueRequestNo());
 
     function renderProductCard(product) {
-        // console.log(product)
         return `
             <div class="col-md-4 mb-4">
-                <div class="card" data-id="${product.id}" data-type="${product.product_type}">
-                    <img src="${product.image}" class="card-img-top" alt="${product.productnameenglish}">
+                <div class="card" data-id="${product.id}" data-type="${product.product_type}" data-barcode="${product.barcode}">
+                    <div class="product-images">
+                        <div class="image-thumbnails">
+                            <img src="${product.back_image}" alt="Back Image">
+                            <img src="${product.image_1}" alt="Image 1">
+                            <img src="${product.image_2}" alt="Image 2">
+                            <img src="${product.image_3}" alt="Image 3">
+                        </div>
+                        <img src="${product.front_image}" class="card-img-top product-main-image" alt="${product.productnameenglish}">
+                    </div>
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">${product.productnameenglish}</h5>
                         <p class="card-text">${product.description}</p>
-                        <p class="mt-auto">SR ${product.price}</p>
-                        <button class="btn btn-primary mt-2 add-to-cart" data-id="${product.id}" data-name="${product.productnameenglish}" data-description="${product.description}" data-price="${product.price}" data-type="${product.product_type}" data-barcode="${product.barcode}">Add to Cart</button>
-                        <button class="btn btn-info mt-2 view-details">View Details</button>
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <p class="mb-0">SAR ${product.price}</p>
+                            <button class="btn btn-primary mt-2 add-to-cart">Add to Cart</button>
                         </div>
+                    </div>
                 </div>
             </div>
         `;
     }
 
     function renderSelectedProductCard(product) {
-
         return `
             <div class="col-md-4 mb-4">
-                <div class="card" data-id="${product.id}" data-type="${product.type}">
-                    <img src="${product.image}" class="card-img-top" alt="${product.name}">
+                <div class="card" data-id="${product.id}">
+                    <div class="product-images">
+                        <div class="image-thumbnails">
+                            <img src="${product.back_image}" alt="Back Image">
+                            <img src="${product.image_1}" alt="Image 1">
+                            <img src="${product.image_2}" alt="Image 2">
+                            <img src="${product.image_3}" alt="Image 3">
+                        </div>
+                        <img src="${product.front_image}" class="card-img-top product-main-image" alt="${product.name}">
+                    </div>
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">${product.name}</h5>
                         <p class="card-text">${product.description}</p>
-                        <p class="mt-auto">SR ${product.price}</p>
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <p class="mb-0">SAR ${product.price}</p>
+                        </div>
                         <div class="d-flex justify-content-between mt-2">
                             <button class="btn btn-secondary decrease-qty">-</button>
                             <span class="qty">${product.qty}</span>
                             <button class="btn btn-secondary increase-qty">+</button>
                         </div>
                         <button class="btn btn-danger mt-2 remove-from-cart">Remove</button>
-                        <button class="btn btn-info mt-2 view-details">View Details</button>
+                        <input type="hidden" name="product_type[]" value="${product.type}">
+                        <input type="hidden" name="barcode[]" value="${product.barcode}">
                     </div>
                 </div>
             </div>
@@ -84,8 +102,10 @@ $(document).ready(function () {
     });
 
     $('#product-list').on('click', '.add-to-cart', function () {
-        const button = $(this);
-        const productId = parseInt(button.data('id'));
+        const card = $(this).closest('.card');
+        const productId = parseInt(card.data('id'));
+        const productType = card.data('type');
+        const productBarcode = card.data('barcode');
         const existingProduct = selectedProducts.find(p => p.id === productId);
 
         if (existingProduct) {
@@ -94,26 +114,55 @@ $(document).ready(function () {
         } else {
             const newProduct = {
                 id: productId,
-                name: button.data('name'),
-                description: button.data('description'),
-                price: button.data('price'),
-                type: button.data('type'),
-                barcode: button.data('barcode'),
-                image: button.closest('.card').find('.card-img-top').attr('src'),
-                qty: 1
+                name: card.find('.card-title').text(),
+                description: card.find('.card-text').text(),
+                price: card.find('.mb-0').text().replace('SAR ', ''),
+                front_image: card.find('.product-main-image').attr('src'),
+                back_image: card.find('.image-thumbnails img:nth-child(1)').attr('src'),
+                image_1: card.find('.image-thumbnails img:nth-child(2)').attr('src'),
+                image_2: card.find('.image-thumbnails img:nth-child(3)').attr('src'),
+                image_3: card.find('.image-thumbnails img:nth-child(4)').attr('src'),
+                qty: 1,
+                type: productType,
+                barcode: productBarcode
             };
             selectedProducts.push(newProduct);
             toastr.success('Product added to cart!');
         }
         updateSelectedProducts();
-
-        // Add hidden fields to the form
-        const hiddenFieldsContainer = $('#hidden-fields');
-        hiddenFieldsContainer.append(`
-            <input type="hidden" name="product_type_${productId}" value="${button.data('type')}">
-            <input type="hidden" name="barcode_${productId}" value="${button.data('barcode')}">
-        `);
     });
+
+    // $('#product-list').on('click', '.add-to-cart', function () {
+    //     const button = $(this);
+    //     const productId = parseInt(button.data('id'));
+    //     const existingProduct = selectedProducts.find(p => p.id === productId);
+
+    //     if (existingProduct) {
+    //         existingProduct.qty += 1;
+    //         toastr.success('Product quantity increased!');
+    //     } else {
+    //         const newProduct = {
+    //             id: productId,
+    //             name: button.data('name'),
+    //             description: button.data('description'),
+    //             price: button.data('price'),
+    //             type: button.data('type'),
+    //             barcode: button.data('barcode'),
+    //             image: button.closest('.card').find('.card-img-top').attr('src'),
+    //             qty: 1
+    //         };
+    //         selectedProducts.push(newProduct);
+    //         toastr.success('Product added to cart!');
+    //     }
+    //     updateSelectedProducts();
+
+    //     // Add hidden fields to the form
+    //     const hiddenFieldsContainer = $('#hidden-fields');
+    //     hiddenFieldsContainer.append(`
+    //         <input type="hidden" name="product_type_${productId}" value="${button.data('type')}">
+    //         <input type="hidden" name="barcode_${productId}" value="${button.data('barcode')}">
+    //     `);
+    // });
 
     $('#selected-products').on('click', '.increase-qty', function () {
         const card = $(this).closest('.card');
@@ -218,6 +267,18 @@ $(document).ready(function () {
                 toastr.error('Failed to submit stock request.');
             }
         });
+    });
+
+    // $('#product-list, #selected-products').on('click', '.image-thumbnails img', function() {
+    //     const mainImage = $(this).closest('.card').find('.product-main-image');
+    //     mainImage.attr('src', $(this).attr('src'));
+    // });
+
+    $('#product-list, #selected-products').on('click', '.image-thumbnails img', function() {
+        const mainImage = $(this).closest('.card').find('.product-main-image');
+        const currentMainImageSrc = mainImage.attr('src');
+        mainImage.attr('src', $(this).attr('src'));
+        $(this).attr('src', currentMainImageSrc);
     });
 
     function fetchAndRenderData(category) {

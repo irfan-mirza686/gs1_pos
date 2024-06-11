@@ -56,6 +56,8 @@
             height: 100%;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
+            position: relative;
         }
         .card-body {
             flex: 1;
@@ -75,6 +77,10 @@
         }
         .card-text {
             flex: 1;
+            text-align: left;
+        }
+        .card-title {
+            text-align: left;
         }
         .btn-icon {
             display: inline-block;
@@ -105,8 +111,31 @@
         .modal-body .row.mb-4 .col {
             text-align: center;
         }
-
-
+        .product-images {
+            display: flex;
+        }
+        .product-main-image {
+            margin-left: 10px;
+            flex: 1;
+            height: 200px;
+            object-fit: cover;
+        }
+        .image-thumbnails {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .image-thumbnails img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .image-thumbnails img:hover {
+            border-color: #007bff;
+        }
     </style>
 
 <div class="container mt-5">

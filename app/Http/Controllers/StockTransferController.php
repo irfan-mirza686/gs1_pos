@@ -23,6 +23,7 @@ class StockTransferController extends Controller
     {
         $pageTitle = "Manage Stock";
         $user_info = session('user_info');
+        // echo "<pre>"; print_r($user_info); exit;
         $gln = Http::withHeaders([
             'Authorization' => 'Bearer ' . $user_info['token'],
         ])->get('https://gs1ksa.org:3093/api/gln', [
@@ -124,7 +125,11 @@ class StockTransferController extends Controller
                     'quantity' => $value['quantity'],
                     'description' => $value['details_page'],
                     'price' => $value['selling_price'],
-                    'image' => ($value['front_image']) ? getFile('products', $value['front_image']) : asset('assets/uploads/no-image.png'),
+                    'front_image' => ($value['front_image']) ? getFile('products', $value['front_image']) : asset('assets/uploads/no-image.png'),
+                    'back_image' => ($value['back_image']) ? getFile('products', $value['back_image']) : asset('assets/uploads/no-image.png'),
+                    'image_1' => ($value['image_1']) ? getFile('products', $value['image_1']) : asset('assets/uploads/no-image.png'),
+                    'image_2' => ($value['image_2']) ? getFile('products', $value['image_2']) : asset('assets/uploads/no-image.png'),
+                    'image_3' => ($value['image_3']) ? getFile('products', $value['image_3']) : asset('assets/uploads/no-image.png'),
                 );
             }
 

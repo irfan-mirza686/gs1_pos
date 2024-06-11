@@ -294,6 +294,10 @@ class ProductController extends Controller
                     }
                     $create = $this->productService->storeProduct($data, $id = null, $gcpGLNID, $barcode);
                     $create->save();
+                    $gtinData = checkGtinData($create->barcode);
+                    if ($gtinData != true) {
+                        // Post to GEPIR...
+                    }
                     \LogActivity::addToLog(strtoupper($user_info['memberData']['company_name_eng']) . ' Added a gs1 product (' . $data['productnameenglish'] . ')', null);
                     return redirect(route('products'))->with('flash_message_success', 'Product successfully Added!');
                 } catch (RequestException $e) {
@@ -454,9 +458,10 @@ class ProductController extends Controller
                 return redirect()->back()->with('flash_message_warning', @$responseSaleData['error']);
             }
             $update = $this->productService->storeProduct($data, $id, $gcpGLNID);
-            // echo "<pre>";
-            // print_r($responseSaleData);
-            // exit;
+            $gtinData = checkGtinData($update->barcode);
+                    if ($gtinData != true) {
+                        // Post to GEPIR...
+                    }
             \LogActivity::addToLog(strtoupper($user_info['memberData']['company_name_eng']) . ' Updated a gs1 product (' . $data['productnameenglish'] . ')', null);
             return redirect(route('products'))->with('flash_message_success', 'Product successfully Updated!');
             // } catch (RequestException $e) {
@@ -487,6 +492,10 @@ class ProductController extends Controller
             $update->user_id = (Auth::user()) ? Auth::user()->id : 0;
             \DB::beginTransaction();
             if ($update->save()) {
+                $gtinData = checkGtinData($update->barcode);
+                    if ($gtinData != true) {
+                        // Post to GEPIR...
+                    }
                 \LogActivity::addToLog(strtoupper($user_info['memberData']['company_name_eng']) . ' Updated a non gs1 product (' . $data['productnameenglish'] . ')', \Config::get('app.url') . '/product' . '/' . $update->slug);
                 \DB::commit();
                 return redirect(route('products'))->with('flash_message_success', 'Product successfully updated!');

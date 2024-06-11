@@ -1,4 +1,5 @@
 <?php
+use App\Models\Product;
 
 
 if (!function_exists('formatArabicText')) {
@@ -110,6 +111,27 @@ function decodeImage($imgUrl)
         }
     } catch (\Exception $e) {
         return "Not Found";
+    }
+}
+/*****************************************************/
+function checkGtinData($barcode)
+{
+    $columns = ['front_image', 'back_image', 'BrandName', 'BrandNameAr', 'size', 'Origin', 'countrySale', 'ProductType', 'gpc_code', 'details_page', 'details_page_ar'];
+
+    // Get the first record that has an empty column
+    $record = Product::where('barcode', $barcode)
+        ->where(function ($query) use ($columns) {
+            foreach ($columns as $column) {
+                $query->orWhereNull($column)
+                    ->orWhereRaw("{$column} = ''"); // Check for empty string in the column
+            }
+        })
+        ->first();
+
+    if ($record) {
+        return true;
+    } else {
+        return false;
     }
 }
 
