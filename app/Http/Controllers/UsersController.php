@@ -20,11 +20,24 @@ class UsersController extends Controller
     {
         $this->userService = $userService;
     }
+    /********************************************************************/
+    public function authenticateRole($module_page = null)
+    {
+        $permissionCheck = checkRolePermission($module_page);
+        if ($permissionCheck->access == 0) {
+            Session::flash('flash_message_warning', 'You have no permission');
+            return redirect(route('dashboard'))->send();
+        }
+    }
     /******************************************************/
     public function index()
     {
+        $this->authenticateRole("user_management");
+        $this->authenticateRole("users");
+
         $pageTitle = "Users";
-        return view('user.staff.index', compact('pageTitle'));
+        $user_info = session('user_info');
+        return view('user.staff.index', compact('pageTitle', 'user_info'));
     }
     /******************************************************/
     public function List(Request $request)
@@ -41,7 +54,7 @@ class UsersController extends Controller
                         $image = asset('assets/uploads/no-image.png');
                     }
 
-                    return '<img src="' . $image . '" border="0" 
+                    return '<img src="' . $image . '" border="0"
                     width="50" class="img-rounded" align="center" style="border-radius:10%;"/>';
                 })
                 ->editColumn('group_id', function ($row) {
@@ -68,7 +81,7 @@ class UsersController extends Controller
                             </li>
                             <li><a class="dropdown-item del" href="' . route('user.delete', $row->id) . '"><i class="lni lni-trash" style="color: red;"></i> Delete</a>
                             </li>
-                            
+
                         </ul>
                     </div>
                 </div>';
@@ -92,7 +105,7 @@ class UsersController extends Controller
         if ($request->ajax()) {
             try {
                 $data = $request->all();
-                $validator = Validator::make($request->all(),[
+                $validator = Validator::make($request->all(), [
                     'current_pass' => 'required',
                     'new_pass' => 'min:6|required_with:confirm_password|same:confirm_password',
                     'confirm_password' => 'min:6'
@@ -105,17 +118,17 @@ class UsersController extends Controller
                     ]);
                 }
                 // echo "<pre>"; print_r($request->all()); exit;
-                if(Hash::check($data['current_pass'], Auth::user()->password)){
+                if (Hash::check($data['current_pass'], Auth::user()->password)) {
 
-                    User::find(Auth::user()->id)->update(['password' => bcrypt($data['new_pass']),'code'=>$data['new_pass']]);
+                    User::find(Auth::user()->id)->update(['password' => bcrypt($data['new_pass']), 'code' => $data['new_pass']]);
                     return response()->json(['status' => 200, 'message' => 'Password updated']);
-                }else{
+                } else {
                     return response()->json(['status' => 422, 'message' => 'Current Password is incorrect']);
                 }
             } catch (\Throwable $th) {
                 return response()->json(['status' => 200, 'message' => $th->getMessage()]);
             }
-            
+
         }
     }
     /******************************************************/
@@ -136,8 +149,12 @@ class UsersController extends Controller
     /******************************************************/
     public function create()
     {
+        $this->authenticateRole("user_management");
+        $this->authenticateRole("users");
+
         $pageTitle = "Create User";
-        return view('user.staff.create', compact('pageTitle'));
+        $user_info = session('user_info');
+        return view('user.staff.create', compact('pageTitle', 'user_info'));
     }
     /******************************************************/
     public function store(CreateUserRequest $request)
@@ -168,10 +185,14 @@ class UsersController extends Controller
     public function edit($id = null)
     {
         try {
+            $this->authenticateRole("user_management");
+            $this->authenticateRole("users");
+
+            $user_info = session('user_info');
             $pageTitle = "Update User";
             $user = User::find($id);
             // echo "<pre>"; print_r($user); exit;
-            return view('user.staff.edit', compact('pageTitle', 'user'));
+            return view('user.staff.edit', compact('pageTitle', 'user', 'user_info'));
         } catch (\Throwable $th) {
             Session::flash('flash_message_error', $th->getMessage());
             return redirect()->back();

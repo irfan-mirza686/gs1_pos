@@ -124,6 +124,7 @@ $(document).ready(function () {
 
             }, error: function (xhr, textStatus, errorThrown) {
 
+                $(btn).text("");
                 $(btn).text(btnVal);
                 $(btn).find(".fa-spinner").remove();
                 $(btn).removeAttr("disabled");

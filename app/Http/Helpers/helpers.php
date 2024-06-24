@@ -1,4 +1,5 @@
 <?php
+use App\Models\GroupPermission;
 use App\Models\Product;
 
 
@@ -95,11 +96,19 @@ function getFile($folder_name, $filename)
     return asset('assets/uploads/'.$folder_name.'/'.$filename);
 }
 /********************************************************/
+function correctUrl($url)
+{
+    // Replace backslashes with forward slashes
+    $correctedUrl = str_replace('\\', '/', $url);
+
+    return $correctedUrl;
+}
 function decodeImage($imgUrl)
 {
     try {
-        if ($contents = file_get_contents($imgUrl)) {
-            $name = substr($imgUrl, strrpos($imgUrl, '/') + 1);
+        $correctedUrl = correctUrl($imgUrl);
+        if ($contents = file_get_contents($correctedUrl)) {
+            $name = substr($correctedUrl, strrpos($correctedUrl, '/') + 1);
 
             // Define the path to the public directory
             $imgPath = public_path('assets/uploads/products/' . $name);
@@ -133,5 +142,15 @@ function checkGtinData($barcode)
     } else {
         return false;
     }
+}
+/***************** User Roles Permissions ****************************/
+function checkRolePermission($module_page)
+{
+    $_SESSION["group_id"] = Auth::guard('web')->user()->group_id;
+
+    $group_id = $_SESSION["group_id"];
+    return GroupPermission::where(['group_id' => $group_id])->where('module_page', $module_page)->first();
+
+
 }
 

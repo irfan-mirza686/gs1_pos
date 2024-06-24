@@ -123,8 +123,8 @@ class ProductController extends Controller
     {
         if ($request->ajax()) {
             $user_info = session('user_info');
-            $url = 'https://gs1ksa.org:3093/uploads/products/memberProductsImages/front_image-1713543232043.jpg';
-            decodeImage($url);
+            // $url = 'https://gs1ksa.org:3093/uploads/products/memberProductsImages/front_image-1717839864972.jpg';
+
             $token = $user_info['token'];
             $gs1MemberID = $user_info['memberData']['id'];
             $apiProducts = Http::withHeaders([
@@ -137,45 +137,80 @@ class ProductController extends Controller
             $apiProductsBody = $apiProducts->getBody();
             $apiProductssData = json_decode($apiProductsBody, true);
             //  echo "<pre>"; print_r($apiProductssData); exit;
-            foreach ($apiProductssData as $key => $value) {
-                $product = Product::where('barcode', $value['barcode'])->first();
-                if ($product) {
-                    $product;
-                } else {
-                    $product = new Product;
+            $baseURL = "https://gs1ksa.org:3093/";
+            $chunkSize = 100;
+            // Process data in chunks
+            foreach (array_chunk($apiProductssData, $chunkSize) as $chunk) {
+                foreach ($chunk as $key => $value) {
+                    // $baseURL = "https://gs1ksa.org:3093/";
+
+                    $front_imageURL = $baseURL . $value['front_image'];
+                    $back_imageURL = $baseURL . $value['back_image'];
+                    $image_1URL = $baseURL . $value['image_1'];
+                    $image_2URL = $baseURL . $value['image_2'];
+                    $image_3URL = $baseURL . $value['image_3'];
+
+                    // Decode images (assuming decodeImage is a defined function)
+                    $front_imageD = decodeImage($front_imageURL);
+                    $back_imageD = decodeImage($back_imageURL);
+                    $image_1D = decodeImage($image_1URL);
+                    $image_2D = decodeImage($image_2URL);
+                    $image_3D = decodeImage($image_3URL);
+
+                    $front_image = ($front_imageD !== 'Not Found') ? $front_imageD : '';
+                    $back_image = ($back_imageD !== 'Not Found') ? $back_imageD : '';
+                    $image_1 = ($image_1D !== 'Not Found') ? $image_1D : '';
+                    $image_2 = ($image_2D !== 'Not Found') ? $image_2D : '';
+                    $image_3 = ($image_3D !== 'Not Found') ? $image_3D : '';
+
+                    // Find or create the product
+                    $product = Product::where('barcode', $value['barcode'])->first();
+                    if (!$product) {
+                        $product = new Product;
+                    }
+
+                    // Update product details
+                    $product->type = 'gs1';
+                    $product->v2_productID = $value['id'];
+                    $product->gcpGLNID = $value['gcpGLNID'];
+                    $product->productnameenglish = $value['productnameenglish'];
+                    $product->slug = \Str::slug($value['productnameenglish']);
+                    $product->productnamearabic = $value['productnamearabic'];
+                    $product->BrandName = $value['BrandName'];
+                    $product->ProductType = $value['ProductType'];
+                    $product->Origin = $value['Origin'];
+                    $product->PackagingType = $value['PackagingType'];
+                    $product->MnfCode = $value['MnfCode'];
+                    $product->MnfGLN = $value['MnfGLN'];
+                    $product->ProvGLN = $value['ProvGLN'];
+                    $product->unit = $value['unit'];
+                    $product->size = $value['size'];
+                    $product->quantity = $value['quantity'];
+                    $product->barcode = $value['barcode'];
+                    $product->gpc = $value['gpc'];
+                    $product->gpc_code = $value['gpc_code'];
+                    $product->countrySale = $value['countrySale'];
+                    $product->HSCODES = $value['HSCODES'];
+                    $product->HsDescription = $value['HsDescription'];
+                    $product->gcp_type = $value['gcp_type'];
+                    $product->prod_lang = $value['prod_lang'];
+                    $product->details_page = $value['details_page'];
+                    $product->details_page_ar = $value['details_page_ar'];
+                    $product->status = $value['status'];
+                    $product->product_url = $value['product_url'];
+                    $product->product_type = $value['product_type'];
+                    $product->BrandNameAr = $value['BrandNameAr'];
+                    $product->front_image = $front_image;
+                    $product->back_image = $back_image;
+                    $product->image_1 = $image_1;
+                    $product->image_2 = $image_2;
+                    $product->image_3 = $image_3;
+
+                    $product->save();
                 }
 
-                $product->type = 'gs1';
-                $product->gcpGLNID = $value['gcpGLNID'];
-                $product->productnameenglish = $value['productnameenglish'];
-                $product->slug = \Str::slug($value['productnameenglish']);
-                $product->productnamearabic = $value['productnamearabic'];
-                $product->BrandName = $value['BrandName'];
-                $product->ProductType = $value['ProductType'];
-                $product->Origin = $value['Origin'];
-                $product->PackagingType = $value['PackagingType'];
-                $product->MnfCode = $value['MnfCode'];
-                $product->MnfGLN = $value['MnfGLN'];
-                $product->ProvGLN = $value['ProvGLN'];
-                $product->unit = $value['unit'];
-                $product->size = $value['size'];
-                $product->quantity = $value['quantity'];
-                $product->barcode = $value['barcode'];
-                $product->gpc = $value['gpc'];
-                $product->gpc_code = $value['gpc_code'];
-                $product->countrySale = $value['countrySale'];
-                $product->HSCODES = $value['HSCODES'];
-                $product->HsDescription = $value['HsDescription'];
-                $product->gcp_type = $value['gcp_type'];
-                $product->prod_lang = $value['prod_lang'];
-                $product->details_page = $value['details_page'];
-                $product->details_page_ar = $value['details_page_ar'];
-                $product->status = $value['status'];
-                $product->product_url = $value['product_url'];
-                $product->product_type = $value['product_type'];
-                $product->BrandNameAr = $value['BrandNameAr'];
-
-                $product->save();
+                // Optionally, clear memory after each chunk
+                // unset($chunk);
             }
             return response()->json(['status' => 200, 'message' => 'Products are syncronized']);
 
@@ -371,9 +406,11 @@ class ProductController extends Controller
             $product_type = 'gs1';
         } else {
             $productData = $this->productService->localProductData();
+
             // $editProduct = Product::where('barcode', $request->barcode)->first();
             $product_type = 'non_gs1';
         }
+        // echo "<pre>"; print_r($productData['countryOfSaleData']); exit;
         $pageTitle = "Edit Product";
 
         return view('user.product.edit', compact('pageTitle', 'editProduct', 'productData', 'user_info', 'product_type'));
@@ -424,7 +461,7 @@ class ProductController extends Controller
             }
 
             // Make the PUT request
-            $response = $request->put('https://gs1ksa.org:3093/api/products/gtin/' . $id, [
+            $response = $request->put('https://gs1ksa.org:3093/api/products/gtin/' . $data['product_id'], [
                 'user_id' => $user_info['memberData']['id'],
                 'productnameenglish' => $data['productnameenglish'],
                 'productnamearabic' => $data['productnamearabic'],
@@ -446,6 +483,9 @@ class ProductController extends Controller
                 'details_page_ar' => $data['details_page_ar'],
                 'product_url' => $data['product_url'],
             ]);
+            $responseBody = $response->getBody();
+            $responseSaleData = json_decode($responseBody, true);
+            $barcode = isset($responseSaleData['product']) ? $responseSaleData['product']['barcode'] : $data['product_code'];
 
             // $response = Http::withHeaders([
             //     'Authorization' => 'Bearer ' . $user_info['token'],
@@ -457,11 +497,12 @@ class ProductController extends Controller
             if (@$responseSaleData['error']) {
                 return redirect()->back()->with('flash_message_warning', @$responseSaleData['error']);
             }
-            $update = $this->productService->storeProduct($data, $id, $gcpGLNID);
+            $update = $this->productService->storeProduct($data, $id, $gcpGLNID, $barcode);
+            $update->save();
             $gtinData = checkGtinData($update->barcode);
-                    if ($gtinData != true) {
-                        // Post to GEPIR...
-                    }
+            if ($gtinData != true) {
+                // Post to GEPIR...
+            }
             \LogActivity::addToLog(strtoupper($user_info['memberData']['company_name_eng']) . ' Updated a gs1 product (' . $data['productnameenglish'] . ')', null);
             return redirect(route('products'))->with('flash_message_success', 'Product successfully Updated!');
             // } catch (RequestException $e) {
@@ -488,14 +529,15 @@ class ProductController extends Controller
             //     return redirect()->back()->with('flash_message_error', 'An unexpected error occurred. Please try again later.');
             // }
         } else {
-            $update = $this->productService->storeProduct($data, $id, $gcpGLNID);
+            $barcode = $data['product_code'];
+            $update = $this->productService->storeProduct($data, $id, $gcpGLNID, $barcode);
             $update->user_id = (Auth::user()) ? Auth::user()->id : 0;
             \DB::beginTransaction();
             if ($update->save()) {
                 $gtinData = checkGtinData($update->barcode);
-                    if ($gtinData != true) {
-                        // Post to GEPIR...
-                    }
+                if ($gtinData != true) {
+                    // Post to GEPIR...
+                }
                 \LogActivity::addToLog(strtoupper($user_info['memberData']['company_name_eng']) . ' Updated a non gs1 product (' . $data['productnameenglish'] . ')', \Config::get('app.url') . '/product' . '/' . $update->slug);
                 \DB::commit();
                 return redirect(route('products'))->with('flash_message_success', 'Product successfully updated!');

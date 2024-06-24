@@ -9,6 +9,7 @@ use App\Services\StockTransferService;
 use DataTables;
 use Http;
 use Illuminate\Http\Request;
+use Session;
 
 class StockTransferController extends Controller
 {
@@ -19,8 +20,20 @@ class StockTransferController extends Controller
         $this->stockTransferService = $stockTransferService;
     }
     /********************************************************************/
+    public function authenticateRole($module_page = null)
+    {
+        $permissionCheck = checkRolePermission($module_page);
+        if ($permissionCheck->access == 0) {
+            Session::flash('flash_message_warning', 'You have no permission');
+            return redirect(route('dashboard'))->send();
+        }
+    }
+    /********************************************************************/
     public function index()
     {
+        $this->authenticateRole("stock_management");
+        $this->authenticateRole("stock_transfer");
+
         $pageTitle = "Manage Stock";
         $user_info = session('user_info');
         // echo "<pre>"; print_r($user_info); exit;
@@ -91,6 +104,9 @@ class StockTransferController extends Controller
     }
     public function create()
     {
+        $this->authenticateRole("stock_management");
+        $this->authenticateRole("stock_transfer");
+
         $pageTitle = "Manage Stock";
         $user_info = session('user_info');
         $gln = Http::withHeaders([
@@ -138,6 +154,9 @@ class StockTransferController extends Controller
     }
     public function viewStockRequest($id = null)
     {
+        $this->authenticateRole("stock_management");
+        $this->authenticateRole("stock_transfer");
+
         $pageTitle = "View Stock Request";
         $user_info = session('user_info');
         $stock_transfer = StockTransfer::find($id);

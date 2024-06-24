@@ -27,8 +27,20 @@ class SaleController extends Controller
         $this->saleService = $saleService;
     }
     /********************************************************************/
+    public function authenticateRole($module_page = null)
+    {
+        $permissionCheck = checkRolePermission($module_page);
+        if ($permissionCheck->access == 0) {
+            Session::flash('flash_message_warning', 'You have no permission');
+            return redirect(route('dashboard'))->send();
+        }
+    }
+    /********************************************************************/
     public function index()
     {
+        $this->authenticateRole("sales_management");
+        $this->authenticateRole("sales");
+
         $pageTitle = "Sales";
         $user_info = session('user_info');
         return view('user.sales.index', compact('pageTitle', 'user_info'));
@@ -79,6 +91,9 @@ class SaleController extends Controller
     /********************************************************************/
     public function pos(Request $request)
     {
+        $this->authenticateRole("sales_management");
+        $this->authenticateRole("sales");
+
         $pageTitle = "POS";
         $user_info = session('user_info');
         // echo "<pre>"; print_r($user_info['memberData']['companyID']); exit;

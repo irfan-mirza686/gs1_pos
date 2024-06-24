@@ -22,10 +22,22 @@ class GroupController extends Controller
         $this->groupService = $groupService;
     }
     /********************************************************************/
+    public function authenticateRole($module_page = null)
+    {
+        $permissionCheck = checkRolePermission($module_page);
+        if ($permissionCheck->access == 0) {
+            Session::flash('flash_message_warning', 'You have no permission');
+            return redirect(route('dashboard'))->send();
+        }
+    }
+    /********************************************************************/
     public function index()
     {
+        $this->authenticateRole("user_management");
+        $this->authenticateRole("roles");
         $pageTitle = "Roles";
-        return view('roles.index', compact('pageTitle'));
+        $user_info = session('user_info');
+        return view('roles.index', compact('pageTitle','user_info'));
     }
     /********************************************************************/
     public function List(Request $request)
@@ -78,8 +90,9 @@ class GroupController extends Controller
     public function create()
     {
         $pageTitle = "Create Role";
+        $user_info = session('user_info');
         $groupModule = $this->groupService->groupModules();
-        return view('roles.create', compact('pageTitle', 'groupModule'));
+        return view('roles.create', compact('pageTitle', 'groupModule','user_info'));
     }
     /********************************************************************/
     public function store(Request $request)
@@ -101,12 +114,15 @@ class GroupController extends Controller
     public function edit($id = null)
     {
         try {
+            $this->authenticateRole("user_management");
+            $this->authenticateRole("roles");
+            $user_info = session('user_info');
             $pageTitle = "Edit Role";
             $groupModule = GroupModule::get()->toArray();
             $editGroup = Group::where(['id' => $id])->first();
             $data['editPermission'] = GroupPermission::select('module_page')->where(['group_id' => $id])->where('access', 1)->get()->toArray();
             $mergeArr = array_column($data['editPermission'], 'module_page');
-            return view('roles.edit', compact('pageTitle', 'editGroup', 'groupModule', 'mergeArr'));
+            return view('roles.edit', compact('pageTitle', 'editGroup', 'groupModule', 'mergeArr','user_info'));
         } catch (\Throwable $th) {
             Session::flash('flash_message_error', $th->getMessage());
             return redirect()->back();
