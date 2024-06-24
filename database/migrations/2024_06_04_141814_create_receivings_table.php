@@ -15,6 +15,7 @@ class CreateReceivingsTable extends Migration
     {
         Schema::create('receivings', function (Blueprint $table) {
             $table->id();
+            $table->string('request_no')->nullable();
             $table->string('productnameenglish');
             $table->string('gln');
             $table->float('quantity');
