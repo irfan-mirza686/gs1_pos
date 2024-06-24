@@ -6,6 +6,8 @@ use App\Models\{
 };
 use App\Models\Brand;
 use App\Models\Unit;
+use App\Models\User;
+use Auth;
 use Illuminate\Support\Facades\Http;
 
 class ProductService
@@ -217,5 +219,87 @@ class ProductService
             'prodTypesData' => $prodTypesData,
             'pkgTypesData' => $pkgTypesData
         ];
+    }
+    /********************************************************************/
+    public function sendProdutsToGepir($data)
+    {
+        date_default_timezone_set((config('app.timezone')));
+        $currentDate = date('Y-m-d h:i:s');
+
+        /*** Get the Local saved products and Make an array for Bulk API */
+        $user = checkMemberID(Auth::user()->id);
+
+        $user = User::select('id', 'gcpGLNID', 'gcp_type')->where('id', $user->id)->first();
+
+
+        $gtinStatus = 'ACTIVE';
+
+        $gtins = '0' . $data['barcode'];
+        $gpcCategoryCode = $data['gpc_code'];
+        $licenceKey = $user->gcpGLNID;
+        $licenceType = $user->gcp_type;
+        $language = $data['prod_lang'];
+        $valuesProduct = $data['productnameenglish'];
+        $valuesName = $data['BrandName'];
+        $valuesImage = getFile('products', $data['front_image']);
+        $unitCode = $data['unit'];
+        $countryOfSaleCode = $data['countrySale'];
+        $size = $data['size'];
+
+        $body = [
+
+
+            'gtin' => $gtins,
+            'gtinStatus' => $gtinStatus,
+            'gpcCategoryCode' => $gpcCategoryCode,
+            'licenceKey' => $licenceKey,
+            'licenceType' => $licenceType ?? 'GCP',
+
+
+
+
+            'brandName' => [
+                [
+                    'language' => $language,
+                    'value' => $valuesName,
+                ]
+            ],
+            'productDescription' => [
+                [
+                    'language' => $language,
+                    'value' => $valuesProduct,
+                ]
+            ],
+            'productImageUrl' => [
+                [
+                    'language' => $language,
+                    'value' => $valuesImage
+                ]
+            ],
+            'netContent' => [
+                [
+                    'unitCode' => $unitCode,
+                    'value' => $size,
+                ]
+            ],
+            'countryOfSaleCode' => [$countryOfSaleCode],
+
+
+        ];
+
+
+        $response = Http::withHeaders([
+            'APIKey' => 'e2a3e8fe582a447784c4f831ca4bc287'
+        ])->post('https://grp.gs1.org/grp-st/v3/gtins', [$body]);
+        $globalGepir = $response->json();
+
+        $feedback = Http::withHeaders([
+            'APIKey' => 'e2a3e8fe582a447784c4f831ca4bc287'
+        ])->get('https://grp.gs1.org/grp-st/v3/feedback/' . $globalGepir);
+        $feedbackGepir = $feedback->json();
+        if (@$feedbackGepir[0]['validationErrors']) {
+            return @$feedbackGepir[0];
+        }
+
     }
 }

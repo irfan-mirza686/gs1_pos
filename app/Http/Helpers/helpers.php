@@ -1,7 +1,21 @@
 <?php
 use App\Models\GroupPermission;
 use App\Models\Product;
+use App\Models\User;
 
+
+function checkMemberID($userID)
+{
+
+    $getMainMember = User::where('id', $userID)->first();
+    $user = '';
+    if ($getMainMember->parent_memberID == 0) {
+        $user = $getMainMember;
+    } else {
+        $user = User::where('id', $getMainMember->parent_memberID)->first();
+    }
+    return $user;
+}
 
 if (!function_exists('formatArabicText')) {
     function formatArabicText($text)
