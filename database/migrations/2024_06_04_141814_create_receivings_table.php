@@ -16,7 +16,10 @@ class CreateReceivingsTable extends Migration
         Schema::create('receivings', function (Blueprint $table) {
             $table->id();
             $table->string('request_no')->nullable();
+            $table->integer('product_id');
             $table->string('productnameenglish');
+            $table->string('sku');
+            $table->string('barcode');
             $table->string('gln');
             $table->float('req_quantity');
             $table->float('receive_quantity');
