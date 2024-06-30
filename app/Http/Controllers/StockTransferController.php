@@ -177,7 +177,7 @@ class StockTransferController extends Controller
                     'selling_price' => $product->selling_price,
                     'details_page' => $product->details_page,
                     'quantity' => $product->quantity,
-                    'req_quantity' => $receiving['req_quantity'] ?? 0,
+                    'req_quantity' => $value['qty'] ?? 0,
                     'receive_quantity' => $receiving['receive_quantity'] ?? 0,
                     'size' => $product->size,
                     'barcode' => $product->barcode,
