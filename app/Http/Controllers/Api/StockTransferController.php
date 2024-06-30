@@ -108,7 +108,7 @@ class StockTransferController extends Controller
             $receiving->gln = $data['gln'];
             $receiving->req_quantity = $value['req_quantity'];
             $receiving->receive_quantity = $value['receive_quantity'];
-            $receiving->sku = $value['sku'];
+            $receiving->sku = \Str::slug($value['productnameenglish']);
             $receiving->barcode = $value['gtin'];
             $receiving->date = date('Y-m-d', strtotime($currentDate));
             $receiving->time = $time;
