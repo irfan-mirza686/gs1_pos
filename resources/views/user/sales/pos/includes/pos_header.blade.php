@@ -61,7 +61,7 @@
         </div>
         <label for="vat" class="col-sm-1 col-form-label">VAT # <font style="color: red;">*</font></label>
         <div class="col-sm-2">
-            <input type="text" class="form-control" value="{{$customer->vat}}" name="vat_no" id="vat_no" placeholder="VAT #" readonly style="background-color: #D8FDBA">
+            <input type="text" class="form-control" value="{{@$customer->vat}}" name="vat_no" id="vat_no" placeholder="VAT #" readonly style="background-color: #D8FDBA">
         </div>
         <label for="invoice_no" class="col-sm-1 col-form-label">Invoice # <font style="color: red;">*</font></label>
         <div class="col-sm-2">
@@ -75,7 +75,7 @@
         <label for="searchCustomer" class="col-sm-1 col-form-label">Search Customer <font style="color: red;">*</font></label>
         <div class="col-sm-2">
         <input type="text" class="form-control rounded-0" id="searchCustomer" name="mobileNumber"
-                placeholder="Search Customer by Mobile & Name ..." value="{{$customer->mobile}}" style="background-color: #FFF372">
+                placeholder="Search Customer by Mobile & Name ..." value="{{@$customer->mobile}}" style="background-color: #FFF372">
         </div>
         <label for="delivery" class="col-sm-1 col-form-label">Delivery</label>
         <div class="col-sm-2">
@@ -89,13 +89,13 @@
         <label for="customerName" class="col-sm-1 col-form-label">Customer Name <font style="color: red;">*</font></label>
         <div class="col-sm-2">
         <input type="text" class="form-control rounded-0" id="customerName" name="customerName"
-                placeholder="Customer Name" value="{{$customer->name}}" readonly style="background-color: #D8FDBA">
-            <input type="hidden" name="customer_id" value="{{$customer->id}}" id="customerID">
+                placeholder="Customer Name" value="{{@$customer->name}}" readonly style="background-color: #D8FDBA">
+            <input type="hidden" name="customer_id" value="{{@$customer->id}}" id="customerID">
         </div>
         <label for="mobile" class="col-sm-1 col-form-label">Mobile # <font style="color: red;">*</font></label>
         <div class="col-sm-2">
         <input type="text" class="form-control rounded-0" id="mobile" name="mobile" placeholder="Mobile Number"
-                value="{{$customer->mobile}}" readonly style="background-color: #D8FDBA">
+                value="{{@$customer->mobile}}" readonly style="background-color: #D8FDBA">
         </div>
     </div>
 
