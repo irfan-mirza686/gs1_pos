@@ -17,7 +17,7 @@ class StockTransferController extends Controller
             $data = StockTransfer::where('request_no', $request->request_no)->first();
             if ($data) {
                 $items = $data->items;
-
+// echo "<pre>"; print_r($items); exit;
                 return response()->json(['items' => $items], 200);
             } else {
                 return response()->json(['message' => 'No Data Found'], 200);
@@ -37,13 +37,22 @@ class StockTransferController extends Controller
             foreach ($items as $key => $value) {
 
                 $product = Product::find($value['product_id']);
+                $checkItem = Receiving::where('gln', $data['gln'])
+                ->where(function ($query) use ($value) {
+                    $query->where('sku', $value['sku'])
+                        ->orWhere('barcode', $value['gtin']);
+                })
+                ->first(['id', 'req_quantity','receive_quantity']);
 
-                //  echo "<pre>"; print_r($product->toArray()); exit;
+                //  echo "<pre>"; print_r($checkItem); exit;
+                if (intval(($value['req_quantity']) + intval($checkItem->receive_quantity)) > intval($checkItem->req_quantity)) {
+                    return response()->json(['message' => 'already received '. intval($checkItem->receive_quantity) . ' Qty, cannot received more than ' . $checkItem->req_quantity . ' Qty'], 200);
+                }
                 if ($product) {
-                    $product->quantity = $value['quantity'] + $product->quantity;
+                    $product->quantity = $value['receive_quantity'] + $product->quantity;
                     $product->save();
                     // echo "<pre>"; print_r($product->toArray()); exit;
-                    $this->saveManageStock($data, $product, $value);
+                    $this->saveManageStock($data, $product, $value,$checkItem);
 
                 } else {
                     $newProduct = new Product;
@@ -52,7 +61,7 @@ class StockTransferController extends Controller
                     $newProduct->barcode = $data['product_code'];
 
                     $newProduct->save();
-                    $this->saveManageStock($data, $newProduct, $value);
+                    $this->saveManageStock($data, $newProduct, $value,$checkItem);
                 }
 
             }
@@ -72,7 +81,8 @@ class StockTransferController extends Controller
         for ($i = 0; $i < count($data['product_id']); $i++) {
             $items[] = array(
                 'product_id' => $data['product_id'][$i],
-                'quantity' => $data['quantity'][$i],
+                'req_quantity' => $data['req_quantity'][$i],
+                'receive_quantity' => $data['receive_quantity'][$i],
                 'productnameenglish' => $data['productnameenglish'][$i],
                 'sku' => $data['sku'][$i],
                 'gtin' => $data['gtin'][$i],
@@ -80,27 +90,24 @@ class StockTransferController extends Controller
         }
         return $items;
     }
-    public function saveManageStock($data, $product, $value)
+    public function saveManageStock($data, $product, $value,$checkItem)
     {
-        // dd($value['quantity']);
+        // echo "<pre>"; print_r($value); exit;
         date_default_timezone_set((config('app.timezone')));
         $currentDate = date('Y-m-d h:i A');
         $time = date('h:i A', strtotime($currentDate));
-        $checkItem = Receiving::where('gln', $data['gln'])
-            ->where(function ($query) use ($value) {
-                $query->where('sku', $value['sku'])
-                    ->orWhere('barcode', $value['gtin']);
-            })
-            ->first(['id', 'quantity']);
+
         if ($checkItem) {
-            $checkItem->quantity = $value['quantity'] + $checkItem->quantity;
+            $checkItem->receive_quantity = $value['receive_quantity'] + $checkItem->receive_quantity;
             $checkItem->save();
         } else {
             $receiving = new Receiving;
+            $receiving->request_no = $data['request_no'];
             $receiving->product_id = $value['product_id'];
             $receiving->productnameenglish = $value['productnameenglish'];
             $receiving->gln = $data['gln'];
-            $receiving->quantity = $value['quantity'];
+            $receiving->req_quantity = $value['req_quantity'];
+            $receiving->receive_quantity = $value['receive_quantity'];
             $receiving->sku = $value['sku'];
             $receiving->barcode = $value['gtin'];
             $receiving->date = date('Y-m-d', strtotime($currentDate));

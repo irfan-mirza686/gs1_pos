@@ -8,7 +8,7 @@ $(document).ready(function () {
     }
 
     // Set the initial request number when the page loads
-    $('#request_no').val(generateUniqueRequestNo());
+
 
     function renderProductCard(product) {
         return `
@@ -36,6 +36,17 @@ $(document).ready(function () {
         `;
     }
 
+    var stock_request = JSON.parse(document.querySelector('.productListData').getAttribute('data-stock_request'));
+    if (stock_request=='edit') {
+        selectedProducts = JSON.parse(document.querySelector('.productListData').getAttribute('data-stockRequestData'));
+        var request_no = $(".productListData").attr('data-RequestNo');
+        $('#request_no').val(request_no);
+    }else{
+        $('#request_no').val(generateUniqueRequestNo());
+    }
+
+// console.log(stock_request)
+// console.log(selectedProducts)
     function renderSelectedProductCard(product) {
         return `
             <div class="col-md-4 mb-4">

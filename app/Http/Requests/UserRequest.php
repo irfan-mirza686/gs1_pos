@@ -27,7 +27,7 @@ class UserRequest extends FormRequest
     {
         // dd($request->user_id);
         return [
-            'name' => 'required',
+            'fname' => 'required',
             'email' => ['required', Rule::unique('users')->ignore($request->user_id)],
             'group_id' => 'required',
             'status' => 'required',

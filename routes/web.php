@@ -167,6 +167,7 @@ Route::
     Route::get('pos/print_invoice_pos/{invoice_no}', [SaleController::class, 'view'])->name('sale.view');
     Route::get('pos', [SaleController::class, 'pos'])->name('pos');
     Route::get('find/product/by/barcode', [SaleController::class, 'findProduct']);
+    Route::get('check-prodcut-stock', [SaleController::class, 'checkProductStock']);
     Route::post('sale/store', [SaleController::class, 'store'])->name('sale.store');
     Route::get('sale/edit/{id}', [SaleController::class, 'edit'])->name('sale.edit');
     Route::post('sale/update/{id}', [SaleController::class, 'update'])->name('sale.update');
@@ -189,6 +190,8 @@ Route::
        Route::post('save/stock/transfer/request', [StockTransferController::class, 'saveStockTransferReq'])->name('save.stock.transfer.req');
        Route::get('/products/{id}', [StockTransferController::class, 'show']);
        Route::post('/products/data', [StockTransferController::class, 'productsData']);
+       Route::get('stock/transfer/edit/{id}', [StockTransferController::class, 'edit'])->name('stock.transfers.request.edit');
+       Route::get('stock/transfer/update/{id}', [StockTransferController::class, 'update'])->name('stock.transfers.request.update');
        /* Stock Transfer Routes Ends  */
 
 

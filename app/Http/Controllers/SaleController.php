@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductRequest;
 use App\Http\Requests\SaleRequest;
+use App\Models\Customer;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -122,9 +123,10 @@ class SaleController extends Controller
         $clientIP = '103.239.147.187';
         // $clientIP = $request->ip();
         $userLocation = Location::get($clientIP);
+        $customer = Customer::find(1);
         // echo "<pre>"; print_r($userLocation); exit;
 
-        return view('user.sales.pos.index', compact('pageTitle', 'printInvoiceNo', 'page_name', 'user_info', 'userLocation', 'glns'));
+        return view('user.sales.pos.index', compact('pageTitle', 'printInvoiceNo', 'page_name', 'user_info', 'userLocation', 'glns','customer'));
     }
     /********************************************************************/
     public function findProduct(Request $request)
@@ -135,16 +137,34 @@ class SaleController extends Controller
                 $token = $user_info['token'];
                 $barcode = $request->barcode;
                 $product = $this->saleService->findProductData($token, $barcode);
-
+                // echo "<pre>"; print_r($product['prodArray']['quantity']); exit;
+                if ($product['prodArray']['quantity'] <= 0) {
+                    return response()->json(['status' => 422, 'message' => 'Out of stock! Remaining quantity is ' . $product['prodArray']['quantity']]);
+                }
                 if ($product['status'] === 404) {
                     return response()->json(['status' => 404, 'message' => $product['message']]);
                 } else {
                     return response()->json(['status' => 200, 'prodArray' => $product['prodArray']]);
                 }
             } catch (\Throwable $th) {
-                return response()->json(['status' => 422, 'message' => $th->getMessage()]);
+                return response()->json(['status' => 500, 'message' => $th->getMessage()],500);
             }
 
+        }
+    }
+    /*=======================================================================*/
+    public function checkProductStock(Request $request)
+    {
+        $data = $request->all();
+// echo "<pre>"; print_r($data); exit;
+        $product = Product::where('id', $data['productID'])->first()->toArray();
+        if ($product['quantity'] < $data['quantity']) {
+            return response()->json(
+                [
+                    'error' => true,
+                    'message' => $product['productnameenglish'] . ' Product is ' . $product['quantity'] . ' remaining!'
+                ]
+            );
         }
     }
     /********************************************************************/
@@ -165,6 +185,7 @@ class SaleController extends Controller
                 $pos->items = $items;
                 if ($pos->save()) {
                     $this->saleService->itmesLog($user_info, $items, $data);
+                    $customer = Customer::find(1);
                     // $base64 = \Prgayman\Zatca\Facades\Zatca::sellerName('Zatca')
                     //     ->vatRegistrationNumber("300456416500003")
                     //     ->timestamp("2021-12-01T14:00:09Z")
@@ -177,7 +198,7 @@ class SaleController extends Controller
 
                     \LogActivity::addToLog(strtoupper($user_info['memberData']['company_name_eng']) . ' Add a new Sale Order (' . $data['order_no'] . ')', route('sale.view', $pos->order_no));
                     \DB::commit();
-                    return response()->json(['status' => 200, 'message' => 'Data has been saved successfully', 'invoice_no' => time(), 'print_invoiceNo' => $data['order_no']]);
+                    return response()->json(['status' => 200, 'message' => 'Data has been saved successfully', 'invoice_no' => time(), 'print_invoiceNo' => $data['order_no'],'customer'=>$customer]);
                 } else {
                     return response()->json(['status' => 401, 'message' => 'Data has not been saved']);
                 }

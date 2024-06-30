@@ -331,15 +331,15 @@ class ProductController extends Controller
                     $create->save();
                     $gtinData = checkGtinData($create->barcode);
                     if ($gtinData != true) {
-                        $postProduct = $this->productService->sendProdutsToGepir($data);
-                        // echo "<pre>"; print_r($postProduct); exit();
-                        if ($postProduct['validationErrors']) {
-                            Session::flash('flash_message_error', $postProduct['validationErrors']);
-                            // return response()->json(['status' => 400, 'errors' => $postProduct['validationErrors']]);
-                        } else {
-                            Session::flash('flash_message_success', 'Product Posted to GEPIR');
-                            // return response()->json(['status' => 200, 'errors' => _('notifications.notify.added')]);
-                        }
+                        // $postProduct = $this->productService->sendProdutsToGepir($data);
+                        // // echo "<pre>"; print_r($postProduct); exit();
+                        // if ($postProduct['validationErrors']) {
+                        //     Session::flash('flash_message_error', $postProduct['validationErrors']);
+                        //     // return response()->json(['status' => 400, 'errors' => $postProduct['validationErrors']]);
+                        // } else {
+                        //     Session::flash('flash_message_success', 'Product Posted to GEPIR');
+                        //     // return response()->json(['status' => 200, 'errors' => _('notifications.notify.added')]);
+                        // }
                     }
                     \LogActivity::addToLog(strtoupper($user_info['memberData']['company_name_eng']) . ' Added a gs1 product (' . $data['productnameenglish'] . ')', null);
                     return redirect(route('products'))->with('flash_message_success', 'Product successfully Added!');

@@ -18,7 +18,8 @@ class CreateReceivingsTable extends Migration
             $table->string('request_no')->nullable();
             $table->string('productnameenglish');
             $table->string('gln');
-            $table->float('quantity');
+            $table->float('req_quantity');
+            $table->float('receive_quantity');
             $table->date('date');
             $table->text('time');
             $table->timestamps();

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Group;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Requests\UserRequest;
@@ -44,12 +45,13 @@ class UsersController extends Controller
     {
         if ($request->ajax()) {
             $data = $this->userService->allUsers();
-
+            // echo "<pre>"; print_r($data->toArray()); exit;
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->editColumn('image', function ($row) {
                     if ($row->image) {
-                        $image = \Config::get('app.url') . '/assets/uploads/admins/' . $row->image;
+                        $image = getFile('admins', $row->image);
+                        // $image = \Config::get('app.url') . '/assets/uploads/admins/' . $row->image;
                     } else {
                         $image = asset('assets/uploads/no-image.png');
                     }
@@ -58,7 +60,7 @@ class UsersController extends Controller
                     width="50" class="img-rounded" align="center" style="border-radius:10%;"/>';
                 })
                 ->editColumn('group_id', function ($row) {
-                    return ($row->groups) ? strtoupper($row->groups->name) : "";
+                    return ($row->role) ? strtoupper($row->role->name) : "";
                 })
 
                 ->editColumn('status', function ($row) {
@@ -154,7 +156,8 @@ class UsersController extends Controller
 
         $pageTitle = "Create User";
         $user_info = session('user_info');
-        return view('user.staff.create', compact('pageTitle', 'user_info'));
+        $groups = Group::get();
+        return view('user.staff.create', compact('pageTitle', 'user_info', 'groups'));
     }
     /******************************************************/
     public function store(CreateUserRequest $request)
@@ -190,9 +193,10 @@ class UsersController extends Controller
 
             $user_info = session('user_info');
             $pageTitle = "Update User";
-            $user = User::find($id);
+            $user = User::with('role')->find($id);
+            $groups = Group::get();
             // echo "<pre>"; print_r($user); exit;
-            return view('user.staff.edit', compact('pageTitle', 'user', 'user_info'));
+            return view('user.staff.edit', compact('pageTitle', 'user', 'user_info', 'groups'));
         } catch (\Throwable $th) {
             Session::flash('flash_message_error', $th->getMessage());
             return redirect()->back();
@@ -224,5 +228,20 @@ class UsersController extends Controller
                 return response()->json(['status' => 200, 'message' => $th->getMessage()]);
             }
         }
+    }
+    /********************************************************/
+    public function delete($id = null)
+    {
+        try {
+            $user = User::find($id);
+            if ($user) {
+                @unlink(filePath('admins') . '/' . $user->image);
+                $user->delete();
+                return response()->json(['status' => 200, 'message' => 'User Deleted Successfully']);
+            }
+        } catch (\Throwable $th) {
+            return response()->json(['status' => 500, 'message' => $th->getMessage()], 500);
+        }
+
     }
 }

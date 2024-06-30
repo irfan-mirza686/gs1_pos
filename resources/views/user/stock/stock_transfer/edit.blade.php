@@ -201,9 +201,11 @@
 
                             <div class="row g-3">
                                 <input type="text" id="search" placeholder="Search Product" class="form-control mb-3">
-                                <div id="product-list" class="row productListData" data-stock_request="{{ json_encode(session('stock_request')) }}">
+                                <div id="product-list" class="row productListData" data-RequestNo="{{$stockRequestData->request_no}}" data-stock_request="{{ json_encode(session('stock_request')) }}" data-stockRequestData="{{ json_encode(session('stockRequestData')) }}">
                                     <!-- Product cards will be appended here dynamically -->
+
                                 </div>
+                                <!------ end Product List Div ------------->
                                 <div class="col-12 col-lg-6">
                                     <button class="btn btn-primary px-4" onclick="stepper1.next()">Next<i
                                             class="bx bx-right-arrow-alt ms-2"></i></button>
@@ -252,7 +254,7 @@
                                         <select class="form-select" id="gln_from" name="gln_from">
                                             <option value="">-select-</option>
                                             @foreach($glns as $gln)
-                                            <option value="{{$gln['gln']}}">{{$gln['glnName']}}</option>
+                                            <option value="{{$gln['gln']}}" {{($stockRequestData->gln_from == $gln['gln'])?'selected':''}}>{{$gln['glnName']}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -261,7 +263,7 @@
                                         <select class="form-select" id="gln_to" name="gln_to">
                                             <option value="">-select-</option>
                                             @foreach($glns as $gln)
-                                            <option value="{{$gln['gln']}}">{{$gln['glnName']}}</option>
+                                            <option value="{{$gln['gln']}}" {{($stockRequestData->gln_to == $gln['gln'])?'selected':''}}>{{$gln['glnName']}}</option>
                                             @endforeach
                                         </select>
                                     </div>

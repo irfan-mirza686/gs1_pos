@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StockTransferRequest;
 use App\Models\Product;
+use App\Models\Receiving;
 use App\Models\StockTransfer;
 use App\Services\StockTransferService;
 use DataTables;
@@ -88,7 +89,7 @@ class StockTransferController extends Controller
 
                             <li><a class="dropdown-item" href="' . route('view.stock.request', $row->id) . '"><i class="lni lni-eye" style="color: yelow;"></i> View</a>
                             </li>
-                            <li><a class="dropdown-item edit" href="javascript:void(0);" data-StockDetails="' . $stockDetails . '"><i class="lni lni-pencil-alt" style="color: yelow;"></i> Post to PROUTE</a>
+                            <li><a class="dropdown-item" href="' . route('stock.transfers.request.edit', $row->id) . '" data-StockDetails="' . $stockDetails . '"><i class="lni lni-pencil-alt" style="color: yelow;"></i> Edit</a>
                             </li>
 
 
@@ -124,6 +125,7 @@ class StockTransferController extends Controller
                 'glnName' => $value['locationNameEn']
             );
         }
+        session(['stock_request' => 'create', 'stockRequestData' => array()]);
         return view('user.stock.stock_transfer.create', compact('pageTitle', 'user_info', 'glns'));
     }
     public function searchProducts(Request $request)
@@ -161,7 +163,9 @@ class StockTransferController extends Controller
         $user_info = session('user_info');
         $stock_transfer = StockTransfer::find($id);
         $productInfo = [];
+
         foreach ($stock_transfer->items as $key => $value) {
+            $receiving = Receiving::where('request_no',$stock_transfer->request_no)->where('product_id',$value['product_id'])->first();
             // echo "<pre>"; print_r($value); exit;
             $product = Product::find($value['product_id']);
             if ($product) {
@@ -172,11 +176,13 @@ class StockTransferController extends Controller
                     'purchase_price' => $product->purchase_price,
                     'selling_price' => $product->selling_price,
                     'details_page' => $product->details_page,
-                    'quantity' => $value['qty'],
+                    'quantity' => $product->quantity,
+                    'req_quantity' => $receiving['req_quantity'],
+                    'receive_quantity' => $receiving['receive_quantity'],
                     'size' => $product->size,
                     'barcode' => $product->barcode,
-                    'front_image' => ($product->front_image) ? $product->front_image : asset('assets/uploads/no-image.png'),
-                    'back_image' => ($product->back_image) ? $product->back_image : asset('assets/uploads/no-image.png'),
+                    'front_image' => ($product->front_image) ? getFile('products',$product->front_image) : getFile('','no-image.png'),
+                    'back_image' => ($product->back_image) ? getFile('products',$product->back_image) : getFile('','no-image.png'),
                 );
             }
 
@@ -290,6 +296,81 @@ class StockTransferController extends Controller
 
 
             // return response()->json(['data' => $printData]);
+        }
+    }
+    /***************************************************************/
+    public function edit($id = null)
+    {
+        $this->authenticateRole("stock_management");
+        $this->authenticateRole("stock_transfer");
+
+        $pageTitle = "Manage Stock";
+        $user_info = session('user_info');
+        $gln = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $user_info['token'],
+        ])->get('https://gs1ksa.org:3093/api/gln', [
+                    'user_id' => $user_info['memberData']['id'],
+                ]);
+        $glnBody = $gln->getBody();
+        $glnData = json_decode($glnBody, true);
+        $glnBarcode = [];
+        $glns = [];
+        foreach ($glnData as $key => $value) {
+            $glns[] = array(
+                'gln' => $value['GLNBarcodeNumber'],
+                'glnName' => $value['locationNameEn']
+            );
+        }
+        $stockRequestData = StockTransfer::find($id);
+        $items = $stockRequestData->items;
+        // echo "<pre>"; print_r($items); exit;
+        $itemArr = [];
+        foreach ($items as $key => $item) {
+            $product = Product::find($item['product_id']);
+            $itemArr[] = array(
+                'id' => $product['id'],
+                'type' => $product['type'],
+                'name' => $product['productnameenglish'],
+                'barcode' => $product['barcode'],
+                'qty' => $item['qty'],
+                'description' => $product['details_page'],
+                'price' => $product['selling_price'],
+                'front_image' => ($product['front_image']) ? getFile('products', $product['front_image']) : asset('assets/uploads/no-image.png'),
+                'back_image' => ($product['back_image']) ? getFile('products', $product['back_image']) : asset('assets/uploads/no-image.png'),
+                'image_1' => ($product['image_1']) ? getFile('products', $product['image_1']) : asset('assets/uploads/no-image.png'),
+                'image_2' => ($product['image_2']) ? getFile('products', $product['image_2']) : asset('assets/uploads/no-image.png'),
+                'image_3' => ($product['image_3']) ? getFile('products', $product['image_3']) : asset('assets/uploads/no-image.png'),
+            );
+
+        }
+        session(['stock_request' => 'edit', 'stockRequestData' => $itemArr]);
+        // echo "<pre>"; print_r($stockRequestData->toArray()); exit;
+        return view('user.stock.stock_transfer.edit', compact('pageTitle', 'user_info', 'glns', 'stockRequestData'));
+    }
+    public function update(Request $request,$id=null)
+    {
+        if ($request->ajax()) {
+            try {
+                $data = $request->all();
+                $selectProduct = json_decode($data['selectedProducts']);
+                // $items = $this->stockTransferService->makeArr($data);
+                $items = $this->stockTransferService->makeSelecteProductsArr($selectProduct);
+                // echo "<pre>"; print_r($items); exit;
+
+                $save = $this->stockTransferService->store($data, $id = null);
+                $save->items = $items;
+                if ($save->save()) {
+                    $user_info = session('user_info');
+                    \LogActivity::addToLog(strtoupper($user_info['memberData']['company_name_eng']) . ' Updated a new Transfer Stock Request (' . $data['request_no'] . ')', null);
+                    \DB::commit();
+                    return response()->json(['status' => 200, 'message' => 'Data has been updated successfully']);
+                } else {
+                    return response()->json(['status' => 401, 'message' => 'Data has not been updated']);
+                }
+            } catch (\Throwable $th) {
+                return response()->json(['status' => 500, 'message' => $th->getMessage()], 500);
+            }
+
         }
     }
 }

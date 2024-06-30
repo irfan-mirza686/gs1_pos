@@ -16,7 +16,7 @@ $(document).ready(function () {
         // console.log(salesLocationValue)
         // console.log(deliveryValue)
 
-        if (salesLocationValue && deliveryValue) {
+        if (salesLocationValue) {
             $('#barcode').prop('disabled', false);
         } else {
             $('#barcode').prop('disabled', true);
@@ -24,7 +24,7 @@ $(document).ready(function () {
     }
 
     // Check the dropdown values on change
-    $('#salesLocation, #delivery').change(function() {
+    $('#salesLocation, #delivery').change(function () {
         toggleBarcodeInput();
     });
 
@@ -72,7 +72,7 @@ $(document).ready(function () {
                     },
                     success: function (resp) {
                         // console.log(resp)
-                        if (resp.status == 404) {
+                        if (resp.status == 404 || resp.status == 422) {
                             // playNotFoundSound();
                             $('.barcodeLoader').addClass('d-none');
                             // $('.barcodeLoader').hide();
@@ -97,27 +97,41 @@ $(document).ready(function () {
 
                                 let getExistingQty = $(this).closest("tr").find(
                                     "input.quantity").val();
+
                                 updateQty = parseInt(getExistingQty) + 1;
-                                $(this).closest("tr").find("input.quantity")
-                                    .val(updateQty);
+
+                                if (updateQty > resp.prodArray.quantity) {
+                                    updateQty = $(this).closest("tr").find(
+                                        "input.productQty").val();
+                                    $(".barcodeLoader").hide();
+                                    $("#barcode").val('');
+                                    var msgType = 'error';
+                                    var position = 'bottom left';
+                                    var msgClass = 'bx bx-check-circle';
+                                    var message = resp.prodArray.productName + ' Product is ' + resp.prodArray.quantity + ' remaining!';
+                                    var sound = 'sound5';
+                                    showMsg(msgType, msgClass, message);
+                                } else {
+                                    $(this).closest("tr").find("input.quantity")
+                                        .val(updateQty);
+                                }
                                 // Calculate Price with Updated Qty....
                                 var price = $(this).closest("tr").find(
                                     "input.price").val();
+                                var vat = $(this).closest("tr").find(
+                                    "input.vat").val();
+                                var discount = $(this).closest("tr").find(
+                                    "input.discount").val();
+                                var $row = $(this).closest("tr");
+                                rowCalculation(updateQty, price, discount, vat, $row)
 
 
-                                var total = (updateQty * price);
-
-                                $(this).closest("tr").find("input.single_total")
-                                    .val(total);
-                                $(this).closest("tr").find("input.net_vat").val(
-                                    total);
-                                totalPurchaseAmount();
                                 exist = true;
                             }
                         });
                         if (exist) {
                             // playSound();
-                            console.log("ID exist")
+                            // console.log("ID exist")
                             $(".barcodeLoader").hide();
                             $("#barcode").val('');
                             var msgType = 'warning';
@@ -142,7 +156,7 @@ $(document).ready(function () {
 
                             $('#otherProductsBody').append('<tr class="delete_add_more_item" data-barcode="' + barcode + '" id="delete_add_more_item">\
                                     <td width="15%">\
-                                    <input type="text" name="barcode[]" value="'+ barcode + '" class="form-control form-control-sm rounded-0 barcode text-start" readonly><input type="hidden" value="' + resp.prodArray.product_id + '" name="product_id[]"><input type="hidden" value="' + resp.prodArray.product_type + '" name="product_type[]">\
+                                    <input type="text" name="barcode[]" value="'+ barcode + '" class="form-control form-control-sm rounded-0 barcode text-start" readonly><input type="hidden" value="' + resp.prodArray.product_id + '" name="product_id[]" class="productID"><input type="hidden" value="' + resp.prodArray.product_type + '" name="product_type[]">\
                                     </td>\
                                     <td width="20%">\
                                     <input type="text" name="description[]" value="'+ resp.prodArray.productName + '" class="form-control form-control-sm rounded-0 description text-start" readonly>\
@@ -151,7 +165,7 @@ $(document).ready(function () {
                                     <input type="text" name="price[]" value="'+ resp.prodArray.price + '" class="form-control form-control-sm rounded-0 price text-end">\
                                     </td>\
                                     <td width="10%">\
-                                    <input type="text" name="quantity[]" value="'+ updateQty + '" class="form-control form-control-sm rounded-0 quantity text-center">\
+                                    <input type="text" name="quantity[]" value="'+ updateQty + '" class="form-control form-control-sm rounded-0 quantity text-center"><input type="hidden" value="' + resp.prodArray.quantity + '"  class="productQty">\
                                     </td>\
                                     <td width="10%">\
                                     <input type="text" name="discount[]" value="'+ resp.prodArray.disc + '" class="form-control form-control-sm rounded-0 discount text-end">\
@@ -186,6 +200,83 @@ $(document).ready(function () {
             }
         }
     }
+
+    function rowCalculation(quantity, price, discount, vat, $row) {
+        console.log("quantity " + quantity)
+        console.log("price " + price)
+        console.log("vat " + vat)
+        console.log("discount " + discount)
+
+        var total = (quantity * price);
+        console.log("total " + total)
+        var afterVatTotal = ((total - discount) * vat) / 100;
+        console.log("afterVatTotal " + afterVatTotal)
+        var minusDiscount = (parseInt(total) + parseInt(afterVatTotal)) - discount;
+        console.log("minusDiscount " + minusDiscount)
+        $row.find("input.single_total")
+            .val(minusDiscount);
+        $row.find("input.net_vat").val(
+            minusDiscount);
+        $row.find("input.vat_total").val(afterVatTotal);
+        totalPurchaseAmount();
+    }
+
+    $(document).on('keyup click', '.quantity', function (e) {
+        e.preventDefault();
+        var productQty = $(this).closest("tr").find("input.productQty").val();
+        var quantity = $(this).closest("tr").find("input.quantity").val();
+        var productID = $(this).closest("tr").find("input.productID").val();
+        var price = $(this).closest("tr").find("input.price").val();
+        var vat = $(this).closest("tr").find("input.vat").val();
+        var discount = $(this).closest("tr").find("input.discount").val();
+        var $row = $(this).closest("tr");
+        var sendQty = 1;
+
+        clearTimeout(typingTimer);
+        if (parseInt(quantity) > parseInt(productQty)) {
+            sendQty = productQty;
+        } else {
+            sendQty = quantity;
+        }
+        // console.log("productQty : " + productQty)
+        // console.log("quantityReq : " + quantity)
+        // console.log("sendQty : " + sendQty)
+
+        typingTimer = setTimeout(function () {
+            checkProductQty(quantity, productQty, sendQty, productID, price, discount, vat, $row);
+        }, doneTypingInterval);
+    })
+
+
+
+    function checkProductQty(quantity, productQty, sendQty, productID, price, discount, vat, $row) {
+        $.ajax({
+            url: "/check-prodcut-stock",
+            type: 'GET',
+            data: {
+                quantity: quantity,
+                productID: productID
+            },
+            success: function (response) {
+                console.log(response);
+                if (response.error == true) {
+                    $row.find("input.quantity").val(productQty);
+                    rowCalculation(sendQty, price, discount, vat, $row)
+                    var msgType = 'error';
+                    var msgClass = 'bx bx-check-circle';
+
+                    var sound = 'sound6';
+                    showMsg(msgType, msgClass, response.message);
+
+                }
+            }
+        });
+    }
+
+
+
+
+
 
 
 
@@ -359,6 +450,19 @@ $(document).ready(function () {
             sum += parseFloat(spanAmount);
             tenderAmount = parseFloat(spanAmount) + parseFloat(cashAmount);
         }
+        var totalTenderAmount = (parseFloat(spanAmount) + parseFloat(cashAmount));
+        if (totalTenderAmount < totalAmount) {
+            $("#invoiceSubmitBtn").addClass("disabled");
+        }else{
+            $("#invoiceSubmitBtn").removeClass("disabled");
+        }
+        // console.log("chang Chash: " + showCashTender)
+        // if (showCashTender < 0 || showCashTender == '') {
+        //     $("#invoiceSubmitBtn").addClass("disabled");
+        // }else if(showCashTender >= 0){
+        //     console.log("chang Chash else: " + showCashTender)
+        //     $("#invoiceSubmitBtn").removeClass("disabled");
+        // }
 
         $("#tenderAmount").val(cashAmount);
         $("#showChange").val(showCashTender);
@@ -388,7 +492,7 @@ $(document).ready(function () {
                 total_vat += parseFloat(value);
             }
         });
-console.log("total vat: " + total_vat)
+        console.log("total vat: " + total_vat)
         $('#total_vat').val(total_vat);
     }
 
@@ -400,7 +504,7 @@ console.log("total vat: " + total_vat)
 
         var vat = $(this).closest("tr").find("input.vat").val();
         var total = (quantity * price);
-        var afterVatTotal = ((total - discount) * vat) / 100;
+        var afterVatTotal = ((parseInt(total) - parseInt(discount)) * parseInt(vat)) / 100;
         var minusDiscount = (parseInt(total) + parseInt(afterVatTotal)) - discount;
 
         $(this).closest("tr").find("input.single_total").val(minusDiscount);
@@ -420,6 +524,7 @@ console.log("total vat: " + total_vat)
         // $("#cashAmount").val(cashAmount);
         // $("#showChange").val(balance);
         $("#cashTenderModal").modal('show');
+        $("#invoiceSubmitBtn").addClass("disabled");
     });
 
 
@@ -452,13 +557,23 @@ console.log("total vat: " + total_vat)
                             "scrollbars=1,resizable=1,height=500,width=500");
                         $("#submitInvoiceSpinner").removeClass("spinner-border spinner-border-sm");
 
+                        $("#searchCustomer").val(resp.customer.mobile)
+                        $("#customerName").val(resp.customer.name)
+                        $("#customerID").val(resp.customer.id)
+                        $("#mobile").val(resp.customer.mobile)
+
+                        $("#net_vat").val(0);
+                        $("#total_vat").val(0);
+                        $("#tender_amount").val(0);
+                        $("#balance").val(0);
+
                         var msgType = 'success';
                         var position = 'top-right';
                         var msgClass = 'bx bx-check-circle';
                         var message = resp.message;
                         showMsg(msgType, msgClass, message);
                         $("#cashTenderModal").modal('hide');
-                        $('#posForm').trigger("reset");
+                        // $('#posForm').trigger("reset");
                         $("#otherProductsBody").html('');
                         $("#invoice_no").val(resp.invoice_no);
                     } else if (resp.status === 400) {
@@ -466,7 +581,7 @@ console.log("total vat: " + total_vat)
                         $("#submitInvoiceSpinner").removeClass("spinner-border spinner-border-sm");
                         $("#cashTenderModal").modal('hide');
                         /// $("#locationID").select2("val", "");
-                        $('#posForm').trigger("reset");
+                        // $('#posForm').trigger("reset");
                         $("#otherProductsBody").html('');
                         $.each(resp.errors, function (key, value) {
                             // $.notify(value[0], {globalPosition: 'top right',className: 'error'});
@@ -476,10 +591,10 @@ console.log("total vat: " + total_vat)
                             var message = value[0];
                             showMsg(msgType, msgClass, message);
 
-                    //         let msgType = 'warning';
-                    // let msgClass = 'bx bx-check-circle';
-                    // let message = resp.message;
-                    // showMsg(msgType, msgClass, message);
+                            //         let msgType = 'warning';
+                            // let msgClass = 'bx bx-check-circle';
+                            // let message = resp.message;
+                            // showMsg(msgType, msgClass, message);
 
                         });
                         return false;
@@ -487,7 +602,7 @@ console.log("total vat: " + total_vat)
                         playSound();
                         $("#submitInvoiceSpinner").removeClass("spinner-border spinner-border-sm");
                         $("#cashTenderModal").modal('hide');
-                        $('#posForm').trigger("reset");
+                        // $('#posForm').trigger("reset");
                         $("#otherProductsBody").html('');
                         var msgType = 'error';
                         var position = 'bottom right';

@@ -2,11 +2,11 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header" style="background-color: #F0F0F0; height: 40px;">
-                <h5 class="modal-title">Tender Amount</h5>
+                <!-- <h5 class="modal-title">Tender Amount</h5> -->
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="row" style="width: 100%; height: 50px; background-color: #4F2259; color: #F7F676; margin: 0;">
-                <span class="mt-2"><h4>Cash Sale Amount</h4></span>
+                <span class="mt-2"><h4 style="color: white;">Tender Amount</h4></span>
             </div>
             <div class="modal-body" style="background-color: #F0F0F0;">
 
@@ -42,7 +42,7 @@
                 </div>
                 <div class="row mt-3">
                     <button type="submit" id="invoiceSubmitBtn" class="btn btn-block rounded-0 disabled" style="width:80% !important; margin: auto; background-color: #4F2259; color: white;"><span id="submitInvoiceSpinner" class="" role="status" aria-hidden="true"></span>&nbsp;&nbsp;Submit Invoice</button>
-                    <button type="button" class="btn btn-block rounded-0 mt-2" data-bs-dismiss="modal" style="background-color: red; color: white; width: 100px;">Cancel</button>
+                    <!-- <button type="button" class="btn btn-block rounded-0 mt-2" data-bs-dismiss="modal" style="background-color: red; color: white; width: 100px;">Cancel</button> -->
                 </div>
             </div>
 

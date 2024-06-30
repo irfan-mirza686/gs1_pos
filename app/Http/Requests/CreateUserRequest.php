@@ -25,7 +25,7 @@ class CreateUserRequest extends FormRequest
     {
         // dd($request->user_id);
         return [
-            'name' => 'required',
+            'fname' => 'required',
             'email' => 'required|unique:users,email',
             'group_id' => 'required',
             'status' => 'required',
@@ -36,7 +36,7 @@ class CreateUserRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'Name is Required.',
+            'fname.required' => 'Name is Required.',
             'email.required' => 'Email is Required',
             'group_id.required' => 'Role is Required.',
             'status.required' => 'Status is Required.',

@@ -42,7 +42,7 @@ $(document).ready(function () {
                 $("#updateUserPassModal").modal('hide');
                 removeContent(btn, btnVal);
 
-                
+
 
                 if (resp.status === 200) {
                     Lobibox.notify('default', {
@@ -72,7 +72,7 @@ $(document).ready(function () {
 
 
     function showUsersList() {
-        
+
         var table = $('.admins-table').DataTable({
 
             "ajax": {
@@ -89,16 +89,79 @@ $(document).ready(function () {
             columns: [
                 { data: 'DT_RowIndex', name: 'DT_RowIndex' },
                 { data: 'image', name: 'image'},
-                { data: 'name', name: 'name' },
+                { data: 'fname', name: 'fname' },
                 { data: 'email', name: 'email' },
-                { data: 'group_id', name: 'group' },
+                { data: 'group_id', name: 'group_id' },
                 { data: 'status', name: 'status' },
                 { data: 'action', name: 'action', orderable: false, searchable: false },
             ]
         });
     }  /// END FUNCTION....
 
+
+    /////////// Delete Country \\\\\\\\\\\\\\\\\\\\\\\
+    $(document).on('click','.del',function(e){
+        e.preventDefault();
+        let url = $(this).attr('href');
+        // console.log(url)
+
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        })
+        swalWithBootstrapButtons.fire({
+            title: 'Are you sure?',
+            text: 'Delete Record!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes do it!',
+            cancelButtonText: 'No cancel it!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    method: 'delete',
+                    url: url,
+
+                    success: function (response) {
+                        if (response.status == 200) {
+                            showUsersList();
+                            swalWithBootstrapButtons.fire(
+                                'Data',
+                                response.message,
+                                'success'
+                            )
+                        } else if (response.status == 422) {
+                            swalWithBootstrapButtons.fire(
+                                'Data',
+                                response.message,
+                                'error'
+                            )
+                        }
+                    },
+                    error: function () {
+
+                    }
+                });
+            } else if (
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire(
+                    'Cancelled',
+                    'Data Safed',
+                    'error'
+                )
+            }
+        })
+
+    });
      ///############## Display Messages ################/////////
+
+
 
      function addContent(btn, creating) {
         $('#spinner').addClass('spinner-border spinner-border-sm');

@@ -46,7 +46,7 @@
                                 <th>Image</th>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <th>Group</th>
+                                <th>Role</th>
                                 <th>Status</th>
                                 <th class="text-center">Action</th>
                             </tr>
@@ -64,7 +64,7 @@
 @endsection
 
 @push('custom-script')
-<script src="{{asset('assets/admin/js/sweetalert2@11.js')}}">
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{asset('assets/admin/js/staff/members.js')}}"></script>
 <script type="text/javascript">
        window.setTimeout(function() { $(".alert").alert('close'); }, 10000);

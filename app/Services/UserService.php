@@ -12,7 +12,7 @@ class UserService
 {
 	public function allUsers()
 	{
-		return User::get();
+		return User::with('role')->get();
 	}
 	public function userProfile($data, $id = null)
 	{
@@ -27,11 +27,12 @@ class UserService
 			$user->image = $filename;
 		}
 
-		$user->name = $data['name'];
+		$user->fname = $data['fname'];
 		$user->email = $data['email'];
 		$user->mobile = $data['mobile'];
 		$user->group_id = $data['group_id'];
 		$user->status = $data['status'];
+		$user->parent_memberID = Auth::guard('web')->user()->id;
 		return $user;
 	}
 

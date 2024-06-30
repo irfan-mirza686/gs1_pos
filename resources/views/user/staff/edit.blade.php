@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="{{asset('assets/admin/css/upload_img.css')}}">
 @endsection
 <style type="text/css">
-    
+
 </style>
 @section("content")
 <!--start page wrapper -->
@@ -33,13 +33,13 @@
         </div>
         <!--end breadcrumb-->
 
-      
+
 
         <hr />
 
         <div class="container">
             <form action="{{route('user.update',$user->id)}}" method="post" enctype="multipart/form-data">@csrf
-            <input type="hidden" name="user_id" value="{{$user->id}}">    
+            <input type="hidden" name="user_id" value="{{$user->id}}">
             <div class="main-body">
                     <div class="row">
                         <div class="col-lg-4">
@@ -49,16 +49,16 @@
                                     <div class="profile-pic-wrapper">
                                         <div class="pic-holder">
                                             <!-- uploaded pic shown here -->
-                                            <?php 
+                                            <?php
                                         $image = '';
-                                        if ($user->image) { 
+                                        if ($user->image) {
 
                                             $image = asset('assets/uploads/admins/'.$user->image);
-                                    }else{ 
+                                    }else{
                                             $image = asset('assets/uploads/no-image.png');
-                                         
+
                                         }
-                                    
+
                                        ?>
                                             <img id="profilePic" class="pic" src="<?php echo $image; ?>">
 
@@ -79,7 +79,7 @@
                                         </hr>
 
                                     </div>
-                                    
+
 
                                 </div>
                             </div>
@@ -103,8 +103,8 @@
                                             <h6 class="mb-0">Name</h6>
                                         </div>
                                         <div class="col-sm-9 text-secondary">
-                                            <input type="text" class="form-control" name="name"
-                                                value="{{$user->name}}" />
+                                            <input type="text" class="form-control" name="fname"
+                                                value="{{$user->fname}}" />
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -126,8 +126,8 @@
                                                 value="{{$user->mobile}}" />
                                         </div>
                                     </div>
-                                    
-                                    
+
+
                                     <div class="row mb-3">
                                         <div class="col-sm-3">
                                             <h6 class="mb-0">Role</h6>
@@ -135,8 +135,10 @@
                                         <div class="col-sm-9 text-secondary">
                                         <select class="single-select" name="group_id" id="role">
 												<option value="" disabled selected>-Select</option>
-												<option value="1">Super Admin</option>
-												<option value="2">Manager</option>
+                                                @foreach($groups as $group)
+												<option value="{{$group->id}}" {{($group->id==$user->group_id)?'selected':''}}>{{$group->name}}</option>
+                                                @endforeach
+												<!-- <option value="2">Manager</option> -->
 											</select>
                                         </div>
                                     </div>
@@ -152,9 +154,9 @@
 											</select>
                                         </div>
                                     </div>
-                                   
-                                   
-                                   
+
+
+
                                     <div class="row">
                                         <div class="col-sm-3"></div>
                                         <div class="d-grid">

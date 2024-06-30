@@ -61,7 +61,7 @@
         </div>
         <label for="vat" class="col-sm-1 col-form-label">VAT # <font style="color: red;">*</font></label>
         <div class="col-sm-2">
-            <input type="text" class="form-control" name="vat_no" id="vat_no" placeholder="VAT #">
+            <input type="text" class="form-control" value="{{$customer->vat}}" name="vat_no" id="vat_no" placeholder="VAT #" readonly style="background-color: #D8FDBA">
         </div>
         <label for="invoice_no" class="col-sm-1 col-form-label">Invoice # <font style="color: red;">*</font></label>
         <div class="col-sm-2">
@@ -75,25 +75,27 @@
         <label for="searchCustomer" class="col-sm-1 col-form-label">Search Customer <font style="color: red;">*</font></label>
         <div class="col-sm-2">
         <input type="text" class="form-control rounded-0" id="searchCustomer" name="mobileNumber"
-                placeholder="Search Customer by Mobile & Name ..." value="" style="background-color: #FFF372">
+                placeholder="Search Customer by Mobile & Name ..." value="{{$customer->mobile}}" style="background-color: #FFF372">
         </div>
-        <label for="delivery" class="col-sm-1 col-form-label">Delivery <font style="color: red;">*</font></label>
+        <label for="delivery" class="col-sm-1 col-form-label">Delivery</label>
         <div class="col-sm-2">
-        <select class="single-select form-control rounded-0 delivery" name="delivery" id="delivery">
+        <select class="single-select form-control rounded-0" name="delivery">
                 <option selected value="">Choose...</option>
-
+                @foreach($glns as $gln)
+                <option value="{{$gln['gln']}}">{{$gln['glnName']}}</option>
+                @endforeach
             </select>
         </div>
         <label for="customerName" class="col-sm-1 col-form-label">Customer Name <font style="color: red;">*</font></label>
         <div class="col-sm-2">
         <input type="text" class="form-control rounded-0" id="customerName" name="customerName"
-                placeholder="Customer Name" value="" readonly style="background-color: #D8FDBA">
-            <input type="hidden" name="customer_id" value="" id="customerID">
+                placeholder="Customer Name" value="{{$customer->name}}" readonly style="background-color: #D8FDBA">
+            <input type="hidden" name="customer_id" value="{{$customer->id}}" id="customerID">
         </div>
         <label for="mobile" class="col-sm-1 col-form-label">Mobile # <font style="color: red;">*</font></label>
         <div class="col-sm-2">
         <input type="text" class="form-control rounded-0" id="mobile" name="mobile" placeholder="Mobile Number"
-                value="">
+                value="{{$customer->mobile}}" readonly style="background-color: #D8FDBA">
         </div>
     </div>
 
@@ -114,7 +116,7 @@
             </div>
         </div>
 
-        <label for="remkars" class="col-sm-1 col-form-label">Remarks <font style="color: red;">*</font></label>
+        <label for="remkars" class="col-sm-1 col-form-label">Remarks </label>
         <div class="col-sm-5">
         <input type="text" class="form-control rounded-0" id="remkars" name="remkars" placeholder="Remarks"
                 value="">
@@ -123,7 +125,7 @@
         <div class="col-sm-2">
         <select class="single-select form-control rounded-0" name="type" id="type">
                 <option selected>Choose...</option>
-                <option value="cash">Cash</option>
+                <option value="cash" selected>Cash</option>
                 <option value="credit">Credit</option>
 
             </select>

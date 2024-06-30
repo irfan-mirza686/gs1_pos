@@ -15,18 +15,33 @@ class SaleService
     {
         $product = Product::where('barcode', 'LIKE', "%" . $barcode . "%")->orWhere('productnameenglish', 'LIKE', "%" . $barcode . "%")->first();
 
-        $searchAPiProduct = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-        ])->get('https://gs1ksa.org:3093/api/products', [
-                    'barcode' => $barcode,
-                ]);
-        $searchAPiProductBody = $searchAPiProduct->getBody();
-        $findApiProduct = json_decode($searchAPiProductBody, true);
+        // $searchAPiProduct = Http::withHeaders([
+        //     'Authorization' => 'Bearer ' . $token,
+        // ])->get('https://gs1ksa.org:3093/api/products', [
+        //             'barcode' => $barcode,
+        //         ]);
+        // $searchAPiProductBody = $searchAPiProduct->getBody();
+        // $findApiProduct = json_decode($searchAPiProductBody, true);
 
 
-        if (isset($findApiProduct) && !empty($findApiProduct)) {
-            $findApiProduct = $findApiProduct[0];
-        }
+        // if (isset($findApiProduct) && !empty($findApiProduct)) {
+        //     $findApiProduct = $findApiProduct[0];
+        // }
+        //  if ($findApiProduct) {
+        //     $prodArray = [
+        //         'product_id' => $findApiProduct['id'],
+        //         'product_type' => 'gs1',
+        //         'productName' => $findApiProduct['productnameenglish'],
+        //         'brand' => $findApiProduct['BrandName'],
+        //         'desc1' => $findApiProduct['details_page'],
+        //         'size' => $findApiProduct['size'],
+        //         'price' => 1,
+        //         'disc' => 0,
+        //         'vat' => 15,
+        //         'total_with_vat' => 0,
+        //     ];
+        //     return ['status' => 200, 'prodArray' => $prodArray];
+        // }
 
 
         // echo "<pre>"; print_r($product); exit;
@@ -38,24 +53,11 @@ class SaleService
                 'brand' => $product->BrandName,
                 'desc1' => $product->details_page,
                 'size' => $product->size,
-                'price' => 1,
+                'price' => $product->selling_price,
                 'disc' => 0,
                 'vat' => 15,
                 'total_with_vat' => 0,
-            ];
-            return ['status' => 200, 'prodArray' => $prodArray];
-        } else if ($findApiProduct) {
-            $prodArray = [
-                'product_id' => $findApiProduct['id'],
-                'product_type' => 'gs1',
-                'productName' => $findApiProduct['productnameenglish'],
-                'brand' => $findApiProduct['BrandName'],
-                'desc1' => $findApiProduct['details_page'],
-                'size' => $findApiProduct['size'],
-                'price' => 1,
-                'disc' => 0,
-                'vat' => 15,
-                'total_with_vat' => 0,
+                'quantity' => intval($product->quantity) ?? 0
             ];
             return ['status' => 200, 'prodArray' => $prodArray];
         } else {
@@ -86,7 +88,7 @@ class SaleService
         $create->salesLocation = isset($data['salesLocation']) ? $data['salesLocation'] : '';
         $create->vat_no = isset($data['vat_no']) ? $data['vat_no'] : '';
         $create->order_no = $data['order_no'];
-        $create->delivery = $data['delivery'];
+        $create->delivery = $data['delivery'] ?? '';
         $create->remkars = $data['remkars'];
         $create->customer_id = $data['customer_id'];
         $create->total = $data['totalAmount'];

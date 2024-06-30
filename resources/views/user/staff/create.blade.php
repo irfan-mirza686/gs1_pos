@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="{{asset('assets/admin/css/upload_img.css')}}">
 @endsection
 <style type="text/css">
-    
+
 </style>
 @section("content")
 <!--start page wrapper -->
@@ -49,8 +49,8 @@
                                     <div class="profile-pic-wrapper">
                                         <div class="pic-holder">
                                             <!-- uploaded pic shown here -->
-                                            <?php 
-                                       
+                                            <?php
+
                                             $image = asset('assets/uploads/no-image.png');
                                      ?>
                                             <img id="profilePic" class="pic" src="<?php echo $image; ?>">
@@ -72,7 +72,7 @@
                                         </hr>
 
                                     </div>
-                                    
+
 
                                 </div>
                             </div>
@@ -96,7 +96,7 @@
                                             <h6 class="mb-0">Name</h6>
                                         </div>
                                         <div class="col-sm-9 text-secondary">
-                                            <input type="text" class="form-control" name="name"
+                                            <input type="text" class="form-control" name="fname"
                                                 value="{{old('name')}}" />
                                         </div>
                                     </div>
@@ -119,7 +119,7 @@
                                                 value="{{old('mobile')}}" />
                                         </div>
                                     </div>
-                                    
+
                                     <div class="row mb-3">
                                         <div class="col-sm-3">
                                             <h6 class="mb-0">Password</h6>
@@ -145,8 +145,9 @@
                                         <div class="col-sm-9 text-secondary">
                                         <select class="single-select" name="group_id" id="role">
 												<option value="" disabled selected>-Select</option>
-												<option value="1">Super Admin</option>
-												<option value="2">Manager</option>
+												@foreach($groups as $group)
+												<option value="{{$group->id}}">{{$group->name}}</option>
+                                                @endforeach
 											</select>
                                         </div>
                                     </div>
@@ -162,9 +163,9 @@
 											</select>
                                         </div>
                                     </div>
-                                   
-                                   
-                                   
+
+
+
                                     <div class="row">
                                         <div class="col-sm-3"></div>
                                         <div class="d-grid">

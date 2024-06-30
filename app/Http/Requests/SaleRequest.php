@@ -30,7 +30,7 @@ class SaleRequest extends FormRequest
             'salesLocation' => 'required',
             'vat_no' => 'required',
             'order_no' => 'required',
-            'delivery' => 'required',
+            // 'delivery' => 'required',
             'customerName' => 'required',
             'mobile' => 'required',
             'type' => 'required'
@@ -44,7 +44,7 @@ class SaleRequest extends FormRequest
             'salesLocation.required' => 'Sales Location is required',
             'vat_no.required' => 'VAT # is required',
             'order_no.required' => 'Invoice # is not valid',
-            'delivery.required' => 'Delivery is required',
+            // 'delivery.required' => 'Delivery is required',
             'customerName.required' => 'Customer Name is required',
             'mobile.required' => 'Customer Mobile is required',
             'type.required' => 'Type is required'
