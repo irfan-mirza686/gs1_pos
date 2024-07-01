@@ -84,6 +84,9 @@ $(document).ready(function () {
         const selectedProductList = $('#selected-products');
         selectedProductList.html(selectedProducts.map(product => renderSelectedProductCard(product)).join(''));
     }
+    if (selectedProducts && selectedProducts.length > 0) {
+        updateSelectedProducts();
+    }
 
     function enableTab(step) {
         const stepTabs = $('.nav-link');
