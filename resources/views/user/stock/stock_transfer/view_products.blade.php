@@ -81,16 +81,16 @@
 
         <div class="card">
             <div class="card-header">
-<table class="table table-sm table-stripped" style="border: none;">
-<tr>
-    <td>
-        Request #: {{$stock_transfer->request_no}}
-    </td>
-    <td class="text-end">
-        Status: {{strtoupper($stock_transfer->status)}}
-    </td>
-</tr>
-</table>
+                <table class="table table-sm table-stripped" style="border: none;">
+                    <tr>
+                        <td>
+                            Request #: {{$stock_transfer->request_no}}
+                        </td>
+                        <td class="text-end">
+                            Status: {{strtoupper($stock_transfer->status)}}
+                        </td>
+                    </tr>
+                </table>
             </div>
             <div class="card-body">
                 <div class="container my-5">
@@ -98,14 +98,20 @@
                         @foreach($productInfo as $item)
                         <div class="col-md-4 d-flex justify-content-center">
                             <div class="card productCard">
-                                <img src="{{$item['front_image']}}" class="card-img-top" alt="{{$item['productnameenglish']}}">
+                                <img src="{{$item['front_image']}}" class="card-img-top"
+                                    alt="{{$item['productnameenglish']}}">
                                 <div class="card-body mb-4">
-                                    <div class="discount-badge" style="width: 150px;"><a href="javascript:void(0);" class="viewProductInfo" data-ProductInfo="{{json_encode($item)}}" style="cursor: pointer; text-decoration: none;">{{$item['barcode']}}</a></div>
-                                     <h5 class="card-title">{{$item['productnameenglish']}}</h5>
+                                    <div class="discount-badge" style="width: 150px;"><a href="javascript:void(0);"
+                                            class="viewProductInfo" data-ProductInfo="{{json_encode($item)}}"
+                                            style="cursor: pointer; text-decoration: none;">{{$item['barcode']}}</a>
+                                    </div>
+                                    <h5 class="card-title">{{$item['productnameenglish']}}</h5>
 
                                 </div><br>
-                                <div class="left-badge badge bg-primary mt-2">Request Qty: {{$item['req_quantity']}}</div>
-                                <div class="right-badge badge bg-secondary mt-2">Received Qty: {{$item['receive_quantity']}}</div>
+                                <div class="left-badge badge bg-primary mt-2">Request Qty: {{$item['req_quantity']}}
+                                </div>
+                                <div class="right-badge badge bg-secondary mt-2">Received Qty:
+                                    {{$item['receive_quantity']}}</div>
                             </div>
                         </div>
                         @endforeach

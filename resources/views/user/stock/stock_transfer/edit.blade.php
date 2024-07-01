@@ -139,8 +139,33 @@
     </style>
 
 <div class="container mt-5">
+<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+            <div class="breadcrumb-title pe-3">Stock Transfer Request</div>
+            <div class="ps-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0 p-0">
+                        <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Edit</li>
+                    </ol>
+                </nav>
+            </div>
+
+        </div>
     <div id="stepper1" class="bs-stepper linear">
         <div class="card">
+        <div class="card-header">
+                <table class="table table-sm table-stripped" style="border: none;">
+                    <tr>
+                        <td>
+                            Request #: {{$stockRequestData->request_no}}
+                        </td>
+                        <td class="text-end">
+                            Status: {{strtoupper($stockRequestData->status)}}
+                        </td>
+                    </tr>
+                </table>
+            </div>
 
             <div class="card-header">
                 <div class="d-lg-flex flex-lg-row align-items-lg-center justify-content-lg-between" role="tablist">
