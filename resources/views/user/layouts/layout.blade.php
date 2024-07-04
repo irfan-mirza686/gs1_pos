@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="color-sidebar sidebarcolor1">
+<html lang="en" class="color-sidebar sidebarcolor1 color-header headercolor1">
 
 <head>
     <!-- Required meta tags -->
@@ -92,7 +92,7 @@
     <!--end wrapper-->
     <!--start switcher-->
     @if(@$page_name!='pos')
-    @include("user.layouts.switcher")
+    <!-- @include("user.layouts.switcher") -->
     @endif
     <!--end switcher-->
     <!-- Bootstrap JS -->
