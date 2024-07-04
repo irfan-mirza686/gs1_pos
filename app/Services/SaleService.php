@@ -56,7 +56,8 @@ class SaleService
                 'price' => $product->selling_price,
                 'disc' => 0,
                 'vat' => 15,
-                'total_with_vat' => 0,
+                'vat_amount' => (($product->selling_price * 15) / 100),
+                'total_with_vat' => (($product->selling_price * 15) / 100) + $product->selling_price,
                 'quantity' => intval($product->quantity) ?? 0
             ];
             return ['status' => 200, 'prodArray' => $prodArray];

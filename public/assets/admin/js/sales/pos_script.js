@@ -200,10 +200,10 @@ $(document).ready(function () {
                                     <input type="text" name="discount[]" value="'+ resp.prodArray.disc + '" class="form-control form-control-sm rounded-0 discount text-end">\
                                     </td>\
                                     <td width="10%">\
-                                    <input type="text" name="vat[]" value="'+ resp.prodArray.vat + '" class="form-control form-control-sm rounded-0 vat text-end"><input type="hidden" name="vat_total[]" value="" class="form-control form-control-sm rounded-0 vat_total text-end">\
+                                    <input type="text" name="vat[]" value="'+ resp.prodArray.vat + '" class="form-control form-control-sm rounded-0 vat text-end"><input type="hidden" name="vat_total[]" data-vatAmount="'+resp.prodArray.vat_amount+'" value="" class="form-control form-control-sm rounded-0 vat_total text-end">\
                                     </td>\
                                     <td width="15%">\
-                                    <input type="text" name="single_total[]" value="'+ resp.prodArray.price + '" class="form-control form-control-sm rounded-0 single_total text-end" readonly>\
+                                    <input type="text" name="single_total[]" value="'+ resp.prodArray.total_with_vat + '" class="form-control form-control-sm rounded-0 single_total text-end" readonly>\
                                     </td>\
                                     <td  class="mt-2 text-center" width="10%"><i class="btn btn-danger rounded-5 shadow btn-sm lni lni-close remove_button"></i> </td>\
                                     </tr>'
@@ -516,7 +516,9 @@ $(document).ready(function () {
 
         var total_vat = 0;
         $(".vat_total").each(function () {
+            // var vatAmount = $(this).attr('data-vatAmount');
             var value = $(this).val();
+            console.log('vat amount ' + value)
             if (!isNaN(value) && value.length != 0) {
                 total_vat += parseFloat(value);
             }
@@ -535,7 +537,7 @@ $(document).ready(function () {
         var total = (quantity * price);
         var afterVatTotal = ((parseInt(total) - parseInt(discount)) * parseInt(vat)) / 100;
         var minusDiscount = (parseInt(total) + parseInt(afterVatTotal)) - discount;
-
+//  console.log("afterVatTotal " + afterVatTotal)
         $(this).closest("tr").find("input.single_total").val(minusDiscount);
         $(this).closest("tr").find("input.net_vat").val(minusDiscount);
         $(this).closest("tr").find("input.vat_total").val(afterVatTotal);
@@ -616,7 +618,7 @@ $(document).ready(function () {
                         $("#cashTenderModal").modal('hide');
                         /// $("#locationID").select2("val", "");
                         // $('#posForm').trigger("reset");
-                        $("#otherProductsBody").html('');
+                        // $("#otherProductsBody").html('');
                         $.each(resp.errors, function (key, value) {
                             // $.notify(value[0], {globalPosition: 'top right',className: 'error'});
                             var msgType = 'warning';
