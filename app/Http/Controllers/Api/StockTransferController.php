@@ -45,7 +45,7 @@ class StockTransferController extends Controller
                 $rec_qty = intval(@$checkItem->receive_quantity) ?? 0;
                 $req_qty = intval(@$checkItem->req_quantity) ?? 0;
                 //  echo "<pre>"; print_r($rec_qty); exit;
-                if (intval($value['req_quantity']) + $rec_qty > intval($value['req_quantity'])) {
+                if (intval($value['receive_quantity']) + $rec_qty > intval($value['req_quantity'])) {
                     return response()->json(['message' => 'already received '. $rec_qty . ' Qty, cannot received more than ' . $req_qty . ' Qty'], 200);
                 }
                 if ($product) {
