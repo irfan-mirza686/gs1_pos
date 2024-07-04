@@ -10,7 +10,7 @@ $(document).ready(function () {
         audio.play();
     }
     $('#barcode').prop('disabled', true);
-    $('#searchCustomer').prop('disabled', true);
+    // $('#searchCustomer').prop('disabled', true);
 
     // Click on New or Existing Customer Checkbox ....
     $(document).on('click','#new_existing_customer',function(){

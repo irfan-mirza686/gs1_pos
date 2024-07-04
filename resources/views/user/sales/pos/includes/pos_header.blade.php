@@ -82,10 +82,10 @@
             <input type="text" class="form-control rounded-0" id="searchCustomer"
                 placeholder="Search Customer by Mobile & Name ..." value=""
                 style="background-color: #FFF372">
-            <div class="form-check">
+            <!-- <div class="form-check">
                 <input class="form-check-input" data-CustomerName="{{@$customer->name}}" data-CustomerID="{{@$customer->id}}" type="checkbox" value="" id="new_existing_customer">
                 <label class="form-check-label" for="new_existing_customer">New / Existing Customer</label>
-            </div>
+            </div> -->
         </div>
         <label for="delivery" class="col-sm-1 col-form-label">Delivery</label>
         <div class="col-sm-2">
@@ -96,7 +96,7 @@
                 @endforeach
             </select>
         </div>
-        <label for="customerName" class="col-sm-1 col-form-label" id="customerType">Customer Type <font style="color: red;">*</font>
+        <label for="customerName" class="col-sm-1 col-form-label" id="customerType">Customer <font style="color: red;">*</font>
             </label>
         <div class="col-sm-2">
             <input type="text" class="form-control rounded-0" id="customerName" name="customerName"
