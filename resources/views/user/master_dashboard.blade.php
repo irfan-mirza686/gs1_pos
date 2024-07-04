@@ -188,7 +188,7 @@
                     </div>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">
-                            GS1 Products <span class="badge bg-success rounded-pill">{{@$totalGs1Products}}</span>
+                            GS1 Products <span class="badge bg-success rounded-pill">{{@$gs1_products}}</span>
                         </li>
                         <li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">
                             Non GS1 Products <span class="badge bg-danger rounded-pill">{{@$local_products}}</span>

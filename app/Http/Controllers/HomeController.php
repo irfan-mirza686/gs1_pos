@@ -38,7 +38,8 @@ class HomeController extends Controller
         }
 
         $products = Product::get();
-        $local_products = $products->count();
+        $local_products = $products->where('type','non_gs1')->count();
+        $gs1_products = $products->where('type','gs1')->count();
 
         // Retrieve items from the database
         $items = Sale::select('items', 'created_at')->get(); // Assuming 'items' is the JSON column name
@@ -87,22 +88,22 @@ class HomeController extends Controller
 
         // echo "<pre>"; print_r(array_values($productTypeCounts['gs1'])); exit;
 
-        $apiProducts = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $user_info['token'],
-        ])->get('https://gs1ksa.org:3093/api/products', [
-                    'user_id' => $user_info['memberData']['id'],
-                ]);
+        // $apiProducts = Http::withHeaders([
+        //     'Authorization' => 'Bearer ' . $user_info['token'],
+        // ])->get('https://gs1ksa.org:3093/api/products', [
+        //             'user_id' => $user_info['memberData']['id'],
+        //         ]);
 
 
-        $apiProductsBody = $apiProducts->getBody();
-        $apiProductssData = json_decode($apiProductsBody, true);
-        $totalGs1Products = count($apiProductssData);
-        $pieChartData = [$totalGs1Products,$local_products];
+        // $apiProductsBody = $apiProducts->getBody();
+        // $apiProductssData = json_decode($apiProductsBody, true);
+        // $totalGs1Products = count($apiProductssData);
+        $pieChartData = [$gs1_products,$local_products];
 
-        $total_products = $local_products + $totalGs1Products;
+        $total_products = $local_products + $gs1_products;
         session(['gs1Products' => array_values($productTypeCounts['gs1']),'nonGs1Product'=>array_values($productTypeCounts['non_gs1']),'pieChartData'=>$pieChartData]);
 // echo "<pre>"; print_r(count($apiProductssData)); exit;
-        return view('user.master_dashboard', compact('pageTitle','user_info','total_sales','total_sales_amount','totalVat','total_products','totalGs1Products','local_products'));
+        return view('user.master_dashboard', compact('pageTitle','user_info','total_sales','total_sales_amount','totalVat','total_products','local_products','gs1_products'));
     }
     public function viewUsedItems(Request $request)
     {
