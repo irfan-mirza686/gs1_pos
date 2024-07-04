@@ -41,7 +41,8 @@
     </div>
     <!----- First Row----------------->
     <div class="form-group row">
-        <label for="transactions" class="col-sm-1 col-form-label">Transactions <font style="color: red;">*</font></label>
+        <label for="transactions" class="col-sm-1 col-form-label">Transactions <font style="color: red;">*</font>
+            </label>
         <div class="col-sm-2">
             <select class="single-select appendHscodes form-control rounded-0" name="transactions" id="transactions"
                 style="border-radius: 0">
@@ -50,7 +51,8 @@
                 <option value="direct_sales_return">Direct Sales Return</option>
             </select>
         </div>
-        <label for="salesLocation" class="col-sm-1 col-form-label">Sales Locations <font style="color: red;">*</font></label>
+        <label for="salesLocation" class="col-sm-1 col-form-label">Sales Locations <font style="color: red;">*</font>
+            </label>
         <div class="col-sm-2">
             <select class="single-select appendHscodes form-control rounded-0" name="salesLocation" id="salesLocation">
                 <option disabled selected value="">Choose...</option>
@@ -59,56 +61,64 @@
                 @endforeach
             </select>
         </div>
-        <label for="vat" class="col-sm-1 col-form-label">VAT # <font style="color: red;">*</font></label>
+        <label for="vat" class="col-sm-1 col-form-label">VAT #</label>
         <div class="col-sm-2">
-            <input type="text" class="form-control" value="{{@$customer->vat}}" name="vat_no" id="vat_no" placeholder="VAT #" readonly style="background-color: #D8FDBA">
+            <input type="text" class="form-control" value="" name="vat_no" id="vat_no"
+                placeholder="VAT #" readonly style="background-color: #D8FDBA">
         </div>
         <label for="invoice_no" class="col-sm-1 col-form-label">Invoice # <font style="color: red;">*</font></label>
         <div class="col-sm-2">
-            <input type="text" id="invoice_no" name="order_no" value="{{$printInvoiceNo}}" class="form-control rounded-0"
-                aria-describedby="invoice_no" readonly style="background-color: #F0F0F0">
+            <input type="text" id="invoice_no" name="order_no" value="{{$printInvoiceNo}}"
+                class="form-control rounded-0" aria-describedby="invoice_no" readonly style="background-color: #F0F0F0">
         </div>
     </div>
 
     <!------- Second Row ---------------->
     <div class="form-group row" style="margin-top: -18px;">
-        <label for="searchCustomer" class="col-sm-1 col-form-label">Search Customer <font style="color: red;">*</font></label>
+
+        <label for="searchCustomer" class="col-sm-1 col-form-label">Search Customer</label>
         <div class="col-sm-2">
-        <input type="text" class="form-control rounded-0" id="searchCustomer" name="mobileNumber"
-                placeholder="Search Customer by Mobile & Name ..." value="{{@$customer->mobile}}" style="background-color: #FFF372">
+
+            <input type="text" class="form-control rounded-0" id="searchCustomer"
+                placeholder="Search Customer by Mobile & Name ..." value=""
+                style="background-color: #FFF372">
+            <div class="form-check">
+                <input class="form-check-input" data-CustomerName="{{@$customer->name}}" data-CustomerID="{{@$customer->id}}" type="checkbox" value="" id="new_existing_customer">
+                <label class="form-check-label" for="new_existing_customer">New / Existing Customer</label>
+            </div>
         </div>
         <label for="delivery" class="col-sm-1 col-form-label">Delivery</label>
         <div class="col-sm-2">
-        <select class="single-select form-control rounded-0" name="delivery">
+            <select class="single-select form-control rounded-0" name="delivery">
                 <option selected value="">Choose...</option>
                 @foreach($glns as $gln)
                 <option value="{{$gln['gln']}}">{{$gln['glnName']}}</option>
                 @endforeach
             </select>
         </div>
-        <label for="customerName" class="col-sm-1 col-form-label">Customer Name <font style="color: red;">*</font></label>
+        <label for="customerName" class="col-sm-1 col-form-label" id="customerType">Customer Type <font style="color: red;">*</font>
+            </label>
         <div class="col-sm-2">
-        <input type="text" class="form-control rounded-0" id="customerName" name="customerName"
+            <input type="text" class="form-control rounded-0" id="customerName" name="customerName"
                 placeholder="Customer Name" value="{{@$customer->name}}" readonly style="background-color: #D8FDBA">
             <input type="hidden" name="customer_id" value="{{@$customer->id}}" id="customerID">
         </div>
-        <label for="mobile" class="col-sm-1 col-form-label">Mobile # <font style="color: red;">*</font></label>
+        <label for="mobile" class="col-sm-1 col-form-label">Mobile # </label>
         <div class="col-sm-2">
-        <input type="text" class="form-control rounded-0" id="mobile" name="mobile" placeholder="Mobile Number"
-                value="{{@$customer->mobile}}" readonly style="background-color: #D8FDBA">
+            <input type="text" class="form-control rounded-0" id="mobile" name="mobile" placeholder="Mobile Number"
+                value="" readonly style="background-color: #D8FDBA">
         </div>
     </div>
 
-
-
     <!---- Third Row ------->
     <div class="form-group row" style="margin-top: -18px;">
-    <label for="remkars" class="col-sm-1 col-form-label">Scan Barode <font style="color: red;">*</font></label>
+        <label for="remkars" class="col-sm-1 col-form-label">Scan Barode</label>
         <div class="col-sm-2">
-        <div class="input-group mb-3">
+            <div class="input-group mb-3">
                 <input type="text" class="form-control rounded-0" id="barcode" name="barcode"
-                    placeholder="Scan Barcode..." onmouseover="this.focus();" style="background-color: #FFF372;"> <span class="input-group-text rounded-0"
-                    id="basic-addon2"><i class="fadeIn animated bx bx-barcode-reader"></i></span>
+                    placeholder="Scan Barcode..." onmouseover="this.focus();" style="background-color: #FFF372;"> <span
+                    class="input-group-text rounded-0" id="basic-addon2"><i
+                        class="fadeIn animated bx bx-barcode-reader"></i></span>
                 <div class="barcodeLoader d-none" style="margin-top: -37px; float: right;">
                     <img src="{{asset('assets/uploads/search-barcode.gif')}}" width="40" height="35"
                         style="margin-top: 38px; margin-left: -40px;">
@@ -118,12 +128,12 @@
 
         <label for="remkars" class="col-sm-1 col-form-label">Remarks </label>
         <div class="col-sm-5">
-        <input type="text" class="form-control rounded-0" id="remkars" name="remkars" placeholder="Remarks"
+            <input type="text" class="form-control rounded-0" id="remkars" name="remkars" placeholder="Remarks"
                 value="">
         </div>
         <label for="Type" class="col-sm-1 col-form-label">Type <font style="color: red;">*</font></label>
         <div class="col-sm-2">
-        <select class="single-select form-control rounded-0" name="type" id="type">
+            <select class="single-select form-control rounded-0" name="type" id="type">
                 <option selected>Choose...</option>
                 <option value="cash" selected>Cash</option>
                 <option value="credit">Credit</option>
@@ -150,8 +160,5 @@
 
 
     </div> -->
-
-
-
 
 </div>

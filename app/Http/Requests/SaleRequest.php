@@ -28,11 +28,11 @@ class SaleRequest extends FormRequest
         return [
             'transactions' => 'required',
             'salesLocation' => 'required',
-            'vat_no' => 'required',
+            // 'vat_no' => 'required',
             'order_no' => 'required',
             // 'delivery' => 'required',
             'customerName' => 'required',
-            'mobile' => 'required',
+            // 'mobile' => 'required',
             'type' => 'required'
         ];
     }

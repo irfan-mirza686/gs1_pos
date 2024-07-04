@@ -10,6 +10,35 @@ $(document).ready(function () {
         audio.play();
     }
     $('#barcode').prop('disabled', true);
+    $('#searchCustomer').prop('disabled', true);
+
+    // Click on New or Existing Customer Checkbox ....
+    $(document).on('click','#new_existing_customer',function(){
+        if ($(this).is(':checked')) {
+            console.log('Checkbox is checked.');
+            $(this).prop('checked',true);
+            $(this).val(1);
+            $('#searchCustomer').prop('disabled', false);
+            $("#customerType").text('Customer Name');
+            $('#customerName').val('');
+            $('#customerID').val('');
+        } else {
+            console.log('Checkbox is not checked.');
+            $(this).prop('checked',false);
+            $(this).val(0);
+            $('#searchCustomer').prop('disabled', true);
+            $("#customerType").text('Customer Type');
+            var customerName = $(this).attr('data-CustomerName');
+            var customerID = $(this).attr('data-CustomerID');
+            $('#customerName').val(customerName);
+            $('#customerID').val(customerID);
+            $('#vat_no').val('');
+            $('#mobile').val('');
+        }
+
+    })
+
+
     function toggleBarcodeInput() {
         const salesLocationValue = $('#salesLocation').val();
         const deliveryValue = $('#delivery').val();
@@ -557,10 +586,15 @@ $(document).ready(function () {
                             "scrollbars=1,resizable=1,height=500,width=500");
                         $("#submitInvoiceSpinner").removeClass("spinner-border spinner-border-sm");
 
-                        $("#searchCustomer").val(resp.customer.mobile)
+                        $("#searchCustomer").val('')
+                        $("#searchCustomer").prop('disabled',true);
+                        $("#new_existing_customer").prop('checked',false);
                         $("#customerName").val(resp.customer.name)
                         $("#customerID").val(resp.customer.id)
-                        $("#mobile").val(resp.customer.mobile)
+                        $("#mobile").val('')
+                        $("#vat_no").val('')
+                        $("#customerType").text('Customer Type');
+
 
                         $("#net_vat").val(0);
                         $("#total_vat").val(0);

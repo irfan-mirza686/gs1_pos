@@ -171,6 +171,8 @@ class AuthenticatedSessionController extends Controller
                     $create = $this->userService->migrateGs1Member($data);
                     $create->save();
                 }
+                $gs1UserData = $data['memberData'];
+                User::where('id',$user->id)->update(['gcp_expiry'=>date('Y-m-d h:i:s',strtotime($gs1UserData['gcp_expiry']))]);
 // echo "<pre>";
 //                 print_r($request->all());
 //                 exit;

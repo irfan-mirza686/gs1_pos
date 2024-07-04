@@ -157,6 +157,13 @@ class ProductController extends Controller
                     $image_2D = decodeImage($image_2URL);
                     $image_3D = decodeImage($image_3URL);
 
+                //    echo "<pre>"; print_r($front_imageD); "</br>";
+                //    echo "<pre>"; print_r($back_imageD); "</br>";
+                //    echo "<pre>"; print_r($image_1D); "</br>";
+                //    echo "<pre>"; print_r($image_2D); "</br>";
+                //    echo "<pre>"; print_r($image_3D); "</br>";
+                //    exit;
+
                     $front_image = ($front_imageD !== 'Not Found') ? $front_imageD : '';
                     $back_image = ($back_imageD !== 'Not Found') ? $back_imageD : '';
                     $image_1 = ($image_1D !== 'Not Found') ? $image_1D : '';

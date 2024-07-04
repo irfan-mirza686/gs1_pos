@@ -30,7 +30,7 @@ class StockTransferController extends Controller
     public function itemsReceiving(Request $request)
     {
         DB::beginTransaction();
-        try {
+        // try {
             $data = $request->all();
             $items = $this->makeItemsArr($data);
 
@@ -39,14 +39,14 @@ class StockTransferController extends Controller
                 $product = Product::find($value['product_id']);
                 $checkItem = Receiving::where('gln', $data['gln'])
                 ->where(function ($query) use ($value) {
-                    $query->where('sku', $value['sku'])
-                        ->orWhere('barcode', $value['gtin']);
+                    $query->where('barcode', $value['gtin']);
                 })
                 ->first(['id', 'req_quantity','receive_quantity']);
-
-                //  echo "<pre>"; print_r($checkItem); exit;
-                if (intval(($value['req_quantity']) + intval($checkItem->receive_quantity)) > intval($checkItem->req_quantity)) {
-                    return response()->json(['message' => 'already received '. intval($checkItem->receive_quantity) . ' Qty, cannot received more than ' . $checkItem->req_quantity . ' Qty'], 200);
+                $rec_qty = intval(@$checkItem->receive_quantity) ?? 0;
+                $req_qty = intval(@$checkItem->req_quantity) ?? 0;
+                //  echo "<pre>"; print_r($rec_qty); exit;
+                if (intval($value['req_quantity']) + $rec_qty > intval($value['req_quantity'])) {
+                    return response()->json(['message' => 'already received '. $rec_qty . ' Qty, cannot received more than ' . $req_qty . ' Qty'], 200);
                 }
                 if ($product) {
                     $product->quantity = $value['receive_quantity'] + $product->quantity;
@@ -68,10 +68,10 @@ class StockTransferController extends Controller
             DB::commit();
             return response()->json(['message' => 'Items Received Successfully'], 200);
 
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            return response()->json(['message' => $th->getMessage()], 500);
-        }
+        // } catch (\Throwable $th) {
+        //     DB::rollBack();
+        //     return response()->json(['message' => $th->getMessage()], 500);
+        // }
     }
 
     public function makeItemsArr($data)
@@ -84,7 +84,7 @@ class StockTransferController extends Controller
                 'req_quantity' => $data['req_quantity'][$i],
                 'receive_quantity' => $data['receive_quantity'][$i],
                 'productnameenglish' => $data['productnameenglish'][$i],
-                'sku' => $data['sku'][$i],
+                // 'sku' => $data['sku'][$i],
                 'gtin' => $data['gtin'][$i],
             );
         }

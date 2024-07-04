@@ -124,6 +124,7 @@ class SaleService
         }
         return $purchaseItems;
     }
+
     /********************************************************************/
     public function itmesLog($user_info,$items,$data)
     {
@@ -146,13 +147,16 @@ class SaleService
     {
 
         foreach ($items as $key => $value) {
-            $stock = new Stock;
-            $checkBarcode = Stock::where('barcode', $value['barcode'])->first();
-            // echo "<pre>"; print_r($checkBarcode); exit;
-            $oldQty = $checkBarcode->qty - $value['qty'];
+
+            $checkBarcode = Product::where('barcode', $value['barcode'])->first();
+
+            $newQty = $checkBarcode->quantity - $value['qty'];
+
             if ($checkBarcode) {
-                $checkBarcode->update(['qty' => $oldQty]);
+                // echo "<pre>"; print_r('should update'); exit;
+                Product::where('barcode',$value['barcode'])->update(['quantity' => $newQty]);
             }
+            // echo "<pre>"; print_r("not update"); exit;
 
         }
     }

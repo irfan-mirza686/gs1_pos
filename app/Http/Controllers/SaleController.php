@@ -171,6 +171,7 @@ class SaleController extends Controller
     public function store(SaleRequest $request)
     {
         if ($request->ajax()) {
+            \DB::beginTransaction();
             try {
                 $data = $request->all();
 
@@ -180,10 +181,11 @@ class SaleController extends Controller
                 // print_r($data);
                 // exit();
                 $pos = $this->saleService->saveSale($data, $id = "");
-                \DB::beginTransaction();
+
 
                 $pos->items = $items;
                 if ($pos->save()) {
+                    $this->saleService->updateStock($items);
                     $this->saleService->itmesLog($user_info, $items, $data);
                     $customer = Customer::find(1);
                     // $base64 = \Prgayman\Zatca\Facades\Zatca::sellerName('Zatca')
@@ -204,6 +206,7 @@ class SaleController extends Controller
                 }
 
             } catch (\Throwable $th) {
+                \DB::rollBack();
                 return response()->json(['status' => 500, 'message' => $th->getMessage()], 500);
             }
 
