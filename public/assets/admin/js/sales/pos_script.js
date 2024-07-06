@@ -9,22 +9,22 @@ $(document).ready(function () {
         var audio = new Audio('/sounds/failed.mp3');
         audio.play();
     }
-    $('#barcode').prop('disabled', true);
+    // $('#barcode').prop('disabled', true);
     // $('#searchCustomer').prop('disabled', true);
 
     // Click on New or Existing Customer Checkbox ....
-    $(document).on('click','#new_existing_customer',function(){
+    $(document).on('click', '#new_existing_customer', function () {
         if ($(this).is(':checked')) {
-            console.log('Checkbox is checked.');
-            $(this).prop('checked',true);
+            // console.log('Checkbox is checked.');
+            $(this).prop('checked', true);
             $(this).val(1);
             $('#searchCustomer').prop('disabled', false);
             $("#customerType").text('Customer Name');
             $('#customerName').val('');
             $('#customerID').val('');
         } else {
-            console.log('Checkbox is not checked.');
-            $(this).prop('checked',false);
+            // console.log('Checkbox is not checked.');
+            $(this).prop('checked', false);
             $(this).val(0);
             $('#searchCustomer').prop('disabled', true);
             $("#customerType").text('Customer Type');
@@ -101,6 +101,7 @@ $(document).ready(function () {
                     },
                     success: function (resp) {
                         // console.log(resp)
+                        // console.log(resp.prodArray)
                         if (resp.status == 404 || resp.status == 422) {
                             // playNotFoundSound();
                             $('.barcodeLoader').addClass('d-none');
@@ -121,13 +122,15 @@ $(document).ready(function () {
                         let updateQty = 1;
                         $(table).find("tr").each(function () {
                             check_value = $(this).data('barcode');
-                            console.log(resp.prodArray)
+                            // console.log(resp.prodArray)
                             if (resp.prodArray && check_value == barcode) {
 
                                 let getExistingQty = $(this).closest("tr").find(
                                     "input.quantity").val();
 
                                 updateQty = parseInt(getExistingQty) + 1;
+                                var existItemPriceIncrease = resp.prodArray.price;
+
 
                                 if (updateQty > resp.prodArray.quantity) {
                                     updateQty = $(this).closest("tr").find(
@@ -141,18 +144,29 @@ $(document).ready(function () {
                                     var sound = 'sound5';
                                     showMsg(msgType, msgClass, message);
                                 } else {
+                                     existItemPriceIncrease = updateQty * resp.prodArray.price;
+                                     var calculateVat = (parseInt(existItemPriceIncrease) * resp.prodArray.vat) / 100;
+                                     var newSingleTotal = parseInt(existItemPriceIncrease) + parseInt(calculateVat);
                                     $(this).closest("tr").find("input.quantity")
                                         .val(updateQty);
+                                        $(this).closest("tr").find("input.vat_total")
+                                        .val(calculateVat);
+
+                                        $(this).closest("tr").find("input.single_total")
+                                        .val(newSingleTotal);
                                 }
+
+                                totalPurchaseAmount();
+
                                 // Calculate Price with Updated Qty....
-                                var price = $(this).closest("tr").find(
-                                    "input.price").val();
-                                var vat = $(this).closest("tr").find(
-                                    "input.vat").val();
-                                var discount = $(this).closest("tr").find(
-                                    "input.discount").val();
-                                var $row = $(this).closest("tr");
-                                rowCalculation(updateQty, price, discount, vat, $row)
+                                // var price = $(this).closest("tr").find(
+                                //     "input.price").val();
+                                // var vat = $(this).closest("tr").find(
+                                //     "input.vat").val();
+                                // var discount = $(this).closest("tr").find(
+                                //     "input.discount").val();
+                                // var $row = $(this).closest("tr");
+                                // rowCalculation(updateQty, price, discount, vat, $row)
 
 
                                 exist = true;
@@ -200,7 +214,7 @@ $(document).ready(function () {
                                     <input type="text" name="discount[]" value="'+ resp.prodArray.disc + '" class="form-control form-control-sm rounded-0 discount text-end">\
                                     </td>\
                                     <td width="10%">\
-                                    <input type="text" name="vat[]" value="'+ resp.prodArray.vat + '" class="form-control form-control-sm rounded-0 vat text-end"><input type="hidden" name="vat_total[]" data-vatAmount="'+resp.prodArray.vat_amount+'" value="" class="form-control form-control-sm rounded-0 vat_total text-end">\
+                                    <input type="text" name="vat[]" value="'+ resp.prodArray.vat + '" class="form-control form-control-sm rounded-0 vat text-end"><input type="hidden" name="vat_total[]" data-vatAmount="' + resp.prodArray.vat_amount + '" value="' + resp.prodArray.vat_amount + '" class="form-control form-control-sm rounded-0 vat_total text-end">\
                                     </td>\
                                     <td width="15%">\
                                     <input type="text" name="single_total[]" value="'+ resp.prodArray.total_with_vat + '" class="form-control form-control-sm rounded-0 single_total text-end" readonly>\
@@ -231,22 +245,19 @@ $(document).ready(function () {
     }
 
     function rowCalculation(quantity, price, discount, vat, $row) {
-        console.log("quantity " + quantity)
-        console.log("price " + price)
-        console.log("vat " + vat)
-        console.log("discount " + discount)
+        // console.log("quantity " + quantity)
+        // console.log("price " + price)
+        // console.log("vat " + vat)
+        // console.log("discount " + discount)
 
-        var total = (quantity * price);
-        console.log("total " + total)
-        var afterVatTotal = ((total - discount) * vat) / 100;
-        console.log("afterVatTotal " + afterVatTotal)
-        var minusDiscount = (parseInt(total) + parseInt(afterVatTotal)) - discount;
-        console.log("minusDiscount " + minusDiscount)
-        $row.find("input.single_total")
-            .val(minusDiscount);
-        $row.find("input.net_vat").val(
-            minusDiscount);
-        $row.find("input.vat_total").val(afterVatTotal);
+        // var total = (quantity * price);
+        // var afterVatTotal = ((total - discount) * vat) / 100;
+        // var minusDiscount = (parseInt(total) + parseInt(afterVatTotal)) - discount;
+        // $row.find("input.single_total")
+        //     .val(minusDiscount);
+        // $row.find("input.net_vat").val(
+        //     minusDiscount);
+        // $row.find("input.vat_total").val(afterVatTotal);
         totalPurchaseAmount();
     }
 
@@ -255,30 +266,33 @@ $(document).ready(function () {
         var productQty = $(this).closest("tr").find("input.productQty").val();
         var quantity = $(this).closest("tr").find("input.quantity").val();
         var productID = $(this).closest("tr").find("input.productID").val();
-        var price = $(this).closest("tr").find("input.price").val();
-        var vat = $(this).closest("tr").find("input.vat").val();
-        var discount = $(this).closest("tr").find("input.discount").val();
+        var vat_total = $(this).closest("tr").find("input.vat_total").val();
+        var single_total = $(this).closest("tr").find("input.single_total").val();
+        // var price = $(this).closest("tr").find("input.price").val();
+        // var vat = $(this).closest("tr").find("input.vat").val();
+        // var discount = $(this).closest("tr").find("input.discount").val();
         var $row = $(this).closest("tr");
-        var sendQty = 1;
+        // var sendQty = 1;
 
         clearTimeout(typingTimer);
-        if (parseInt(quantity) > parseInt(productQty)) {
-            sendQty = productQty;
-        } else {
-            sendQty = quantity;
-        }
+        // if (parseInt(quantity) > parseInt(productQty)) {
+        //     sendQty = productQty;
+        // } else {
+        //     sendQty = quantity;
+        // }
         // console.log("productQty : " + productQty)
         // console.log("quantityReq : " + quantity)
         // console.log("sendQty : " + sendQty)
 
         typingTimer = setTimeout(function () {
-            checkProductQty(quantity, productQty, sendQty, productID, price, discount, vat, $row);
+            // checkProductQty(quantity, productQty, sendQty, productID, price, discount, vat, $row);
+            checkProductQty(quantity, productQty, productID,vat_total,single_total,$row);
         }, doneTypingInterval);
     })
 
 
 
-    function checkProductQty(quantity, productQty, sendQty, productID, price, discount, vat, $row) {
+    function checkProductQty(quantity, productQty, productID,vat_total,single_total,$row) {
         $.ajax({
             url: "/check-prodcut-stock",
             type: 'GET',
@@ -287,10 +301,13 @@ $(document).ready(function () {
                 productID: productID
             },
             success: function (response) {
-                console.log(response);
+                // console.log(response);
                 if (response.error == true) {
                     $row.find("input.quantity").val(productQty);
-                    rowCalculation(sendQty, price, discount, vat, $row)
+                    $row.find("input.vat_total").val(vat_total);
+                    $row.find("input.single_total").val(single_total);
+                    // rowCalculation(sendQty, price, discount, vat, $row)
+                    totalPurchaseAmount();
                     var msgType = 'error';
                     var msgClass = 'bx bx-check-circle';
 
@@ -302,6 +319,105 @@ $(document).ready(function () {
         });
     }
 
+
+    function getAllItems() {
+        $('.display-itmes').html("");
+        $('.display-total').html("");
+        // Get all rows with the class 'delete_add_more_item'
+        var rows = $('#otherProductsBody .delete_add_more_item');
+
+        // Initialize an array to hold the row data
+        var rowDataArray = [];
+
+        // Iterate over each row and extract data
+        rows.each(function () {
+            var rowData = {
+                barcode: $(this).find('input[name="barcode[]"]').val(),
+                productId: $(this).find('input[name="product_id[]"]').val(),
+                productType: $(this).find('input[name="product_type[]"]').val(),
+                description: $(this).find('input[name="description[]"]').val(),
+                price: $(this).find('input[name="price[]"]').val(),
+                quantity: $(this).find('input[name="quantity[]"]').val(),
+                discount: $(this).find('input[name="discount[]"]').val(),
+                vat: $(this).find('input[name="vat[]"]').val(),
+                vatTotal: $(this).find('input[name="vat_total[]"]').data('vatamount'),
+                singleTotal: $(this).find('input[name="single_total[]"]').val()
+            };
+
+            // Push the row data to the array
+            rowDataArray.push(rowData);
+        });
+
+
+        // Do something with the rowDataArray
+        if (rowDataArray.length <= 0) {
+            return false;
+        }
+        $.each(rowDataArray, function (i, res) {
+            $('.display-itmes').append('<div class="d-flex justify-content-between">\
+                <div>'+ res.quantity + ' x ' + res.description + '</div>\
+                <div>'+ res.singleTotal + '</div>\
+                </div>');
+        });
+        const totalSum = rowDataArray.reduce((sum, product) => {
+            return sum + parseFloat(product.singleTotal);
+        }, 0);
+        $('.display-total').append('<hr><div class="d-flex justify-content-between">\
+                                    <div>Subtotal</div>\
+                                    <div>'+ totalSum + '</div>\
+                                </div>');
+        $("#amountDue").val(totalSum);
+
+        // For example, if you want to display it in an alert
+        // console.log(JSON.stringify(rowDataArray, null, 2));
+    };
+    $('.payment-method button').on('click', function (e) {
+        e.preventDefault();
+    })
+    $('.number-pad button').on('click', function (e) {
+        e.preventDefault();
+        // ($(this).text() == '0') ? '' :
+        if ($(this).attr('id') === 'backButton') {
+            let currentAmount = $('#amountReceived').val();
+            let newAmount = currentAmount.slice(0, -1);
+            $('#amountReceived').val(newAmount);
+
+            if (newAmount === "") {
+                $('#changeAmount').val("");
+            } else {
+                let amountDue = parseFloat($('#amountDue').val());
+                let amountReceived = parseFloat(newAmount);
+                if (amountReceived < amountDue) {
+                    $("#invoiceSubmitBtn").addClass("disabled");
+                } else {
+                    $("#invoiceSubmitBtn").removeClass("disabled");
+                }
+                if (!isNaN(amountDue) && !isNaN(amountReceived)) {
+                    let change = amountReceived - amountDue;
+                    $('#changeAmount').val(change.toFixed(2));
+                }
+            }
+        } else {
+            let currentAmount = $('#amountReceived').val();
+            let newAmount = currentAmount + $(this).text();
+            $('#amountReceived').val(newAmount);
+
+            let amountDue = parseFloat($('#amountDue').val());
+            let amountReceived = parseFloat(newAmount);
+
+
+            if (amountReceived < amountDue) {
+                $("#invoiceSubmitBtn").addClass("disabled");
+            } else {
+                $("#invoiceSubmitBtn").removeClass("disabled");
+            }
+
+            if (!isNaN(amountDue) && !isNaN(amountReceived)) {
+                let change = amountReceived - amountDue;
+                $('#changeAmount').val(change.toFixed(2));
+            }
+        }
+    });
 
 
 
@@ -453,7 +569,7 @@ $(document).ready(function () {
         $(this).closest(".delete_add_more_item").remove();
         totalPurchaseAmount();
         let rowCount = $('#otherProductsBody tr').length;
-        console.log('total rows ' + rowCount)
+        // console.log('total rows ' + rowCount)
         if (rowCount < 1) {
             $("#invoiceSubmitBtn").addClass("disabled");
         }
@@ -482,7 +598,7 @@ $(document).ready(function () {
         var totalTenderAmount = (parseFloat(spanAmount) + parseFloat(cashAmount));
         if (totalTenderAmount < totalAmount) {
             $("#invoiceSubmitBtn").addClass("disabled");
-        }else{
+        } else {
             $("#invoiceSubmitBtn").removeClass("disabled");
         }
         // console.log("chang Chash: " + showCashTender)
@@ -497,6 +613,7 @@ $(document).ready(function () {
         $("#showChange").val(showCashTender);
         $("#tenderAmount").val(tenderAmount);
     });
+
 
     function totalPurchaseAmount() {
         var sum = 0;
@@ -516,14 +633,25 @@ $(document).ready(function () {
 
         var total_vat = 0;
         $(".vat_total").each(function () {
-            // var vatAmount = $(this).attr('data-vatAmount');
+            // var value = $(this).attr('data-vatAmount');
             var value = $(this).val();
-            console.log('vat amount ' + value)
+            // console.log('vat amount ' + value)
             if (!isNaN(value) && value.length != 0) {
                 total_vat += parseFloat(value);
             }
         });
-        console.log("total vat: " + total_vat)
+
+        var total_discount = 0;
+        $(".discount").each(function () {
+            // var value = $(this).attr('data-vatAmount');
+            var value = $(this).val();
+            // console.log('vat amount ' + value)
+            if (!isNaN(value) && value.length != 0) {
+                total_discount += parseFloat(value);
+            }
+        });
+
+        // console.log("total vat: " + total_vat)
         $('#total_vat').val(total_vat);
     }
 
@@ -532,28 +660,46 @@ $(document).ready(function () {
         var price = $(this).closest("tr").find("input.price").val();
         var discount = $(this).closest("tr").find("input.discount").val();
         var quantity = $(this).closest("tr").find("input.quantity").val();
+        var vat_total = $(this).closest("tr").find("input.vat_total").val();
+
 
         var vat = $(this).closest("tr").find("input.vat").val();
         var total = (quantity * price);
-        var afterVatTotal = ((parseInt(total) - parseInt(discount)) * parseInt(vat)) / 100;
+        // console.log('single_total '+single_total)
+        // var afterVatTotal = ((parseInt(total) - parseInt(discount)) * 15) / 100;
+        var afterVatTotal = ((parseInt(total)) * parseInt(vat)) / 100;
         var minusDiscount = (parseInt(total) + parseInt(afterVatTotal)) - discount;
-//  console.log("afterVatTotal " + afterVatTotal)
+        //  console.log("afterVatTotal " + afterVatTotal)
+        //  console.log("minusDiscount " + minusDiscount)
         $(this).closest("tr").find("input.single_total").val(minusDiscount);
         $(this).closest("tr").find("input.net_vat").val(minusDiscount);
         $(this).closest("tr").find("input.vat_total").val(afterVatTotal);
         totalPurchaseAmount();
     });
     $("#cashTender").on('click', function () {
-        let totalAmount = $("#net_vat").val();
-        let cashAmount = $("#tender_amount").val();
+         var countItems = getAllItems();
+         if (countItems === false) {
+            var msgType = 'warning';
+                            var position = 'top-right';
+                            var msgClass = 'bx bx-check-circle';
+                            var message = 'add item to cart';
+                            showMsg(msgType, msgClass, message);
+                            return false;
+         }
+        // let totalAmount = $("#net_vat").val();
+        // let cashAmount = $("#tender_amount").val();
         // let balance = $("#balance").val();
-        $("#totalAmount").val(totalAmount);
-        $("#cashAmount").val(0);
-        $("#spanAmount").val(0);
-        $("#tenderAmount").val(0);
-        $("#showChange").val(0);
+        // $("#totalAmount").val(totalAmount);
+        // $("#cashAmount").val(0);
+        // $("#spanAmount").val(0);
+        // $("#tenderAmount").val(0);
+        // $("#showChange").val(0);
         // $("#cashAmount").val(cashAmount);
         // $("#showChange").val(balance);
+
+        $("#amountReceived").val('');
+        $("#changeAmount").val('');
+
         $("#cashTenderModal").modal('show');
         $("#invoiceSubmitBtn").addClass("disabled");
     });
@@ -566,7 +712,7 @@ $(document).ready(function () {
 
         let formData = new FormData($('#posForm')[0]);
         let url = $("#posForm").attr('action');
-        console.log(formData)
+        // console.log(formData)
         if (!isLoading) {
             isLoading = true;
             $.ajax({
@@ -589,8 +735,8 @@ $(document).ready(function () {
                         $("#submitInvoiceSpinner").removeClass("spinner-border spinner-border-sm");
 
                         $("#searchCustomer").val('')
-                        $("#searchCustomer").prop('disabled',true);
-                        $("#new_existing_customer").prop('checked',false);
+                        // $("#searchCustomer").prop('disabled', true);
+                        // $("#new_existing_customer").prop('checked', false);
                         $("#customerName").val(resp.customer.name)
                         $("#customerID").val(resp.customer.id)
                         $("#mobile").val('')

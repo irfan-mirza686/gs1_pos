@@ -96,7 +96,7 @@ class SaleService
         $create->date = date('Y-m-d');
         $create->time = date('h:i A', strtotime($currentDate));
         $create->net_with_vat = $data['net_with_vat'];
-        $create->cashAmount = $data['cashAmount'];
+        $create->cashAmount = $data['totalAmount'];
         $create->tender_amount = $data['tender_amount'];
         $create->change_amount = $data['change_amount'];
 
