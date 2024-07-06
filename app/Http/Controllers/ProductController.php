@@ -192,7 +192,7 @@ class ProductController extends Controller
                     $product->ProvGLN = $value['ProvGLN'];
                     $product->unit = $value['unit'];
                     $product->size = $value['size'];
-                    $product->quantity = $value['quantity'];
+                    // $product->quantity = $value['quantity'];
                     $product->barcode = $value['barcode'];
                     $product->gpc = $value['gpc'];
                     $product->gpc_code = $value['gpc_code'];
