@@ -9,7 +9,7 @@ $(document).ready(function () {
         var audio = new Audio('/sounds/failed.mp3');
         audio.play();
     }
-    // $('#barcode').prop('disabled', true);
+    $('#barcode').prop('disabled', true);
     // $('#searchCustomer').prop('disabled', true);
 
     // Click on New or Existing Customer Checkbox ....
@@ -268,8 +268,8 @@ $(document).ready(function () {
         var productID = $(this).closest("tr").find("input.productID").val();
         var vat_total = $(this).closest("tr").find("input.vat_total").val();
         var single_total = $(this).closest("tr").find("input.single_total").val();
-        // var price = $(this).closest("tr").find("input.price").val();
-        // var vat = $(this).closest("tr").find("input.vat").val();
+        var price = $(this).closest("tr").find("input.price").val();
+        var vat = $(this).closest("tr").find("input.vat").val();
         // var discount = $(this).closest("tr").find("input.discount").val();
         var $row = $(this).closest("tr");
         // var sendQty = 1;
@@ -286,13 +286,13 @@ $(document).ready(function () {
 
         typingTimer = setTimeout(function () {
             // checkProductQty(quantity, productQty, sendQty, productID, price, discount, vat, $row);
-            checkProductQty(quantity, productQty, productID,vat_total,single_total,$row);
+            checkProductQty(quantity, productQty, price, vat,productID,vat_total,single_total,$row);
         }, doneTypingInterval);
     })
 
 
 
-    function checkProductQty(quantity, productQty, productID,vat_total,single_total,$row) {
+    function checkProductQty(quantity, productQty,price,vat, productID,vat_total,single_total,$row) {
         $.ajax({
             url: "/check-prodcut-stock",
             type: 'GET',
@@ -301,11 +301,15 @@ $(document).ready(function () {
                 productID: productID
             },
             success: function (response) {
-                // console.log(response);
+
                 if (response.error == true) {
+                    var existItemPriceIncrease = parseInt(productQty) * parseInt(price);
+                    var vatCal = (parseInt(existItemPriceIncrease) * parseInt(vat)) / 100;
+
+                    var newSingleTotal = parseInt(vatCal) + parseInt(existItemPriceIncrease);
                     $row.find("input.quantity").val(productQty);
-                    $row.find("input.vat_total").val(vat_total);
-                    $row.find("input.single_total").val(single_total);
+                    $row.find("input.vat_total").val(vatCal);
+                    $row.find("input.single_total").val(newSingleTotal);
                     // rowCalculation(sendQty, price, discount, vat, $row)
                     totalPurchaseAmount();
                     var msgType = 'error';
