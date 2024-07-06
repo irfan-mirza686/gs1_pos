@@ -143,12 +143,35 @@ class ProductController extends Controller
             foreach (array_chunk($apiProductssData, $chunkSize) as $chunk) {
                 foreach ($chunk as $key => $value) {
                     // $baseURL = "https://gs1ksa.org:3093/";
-
+                    // echo "<pre>"; print_r($value); "</br>";
                     $front_imageURL = $baseURL . $value['front_image'];
                     $back_imageURL = $baseURL . $value['back_image'];
                     $image_1URL = $baseURL . $value['image_1'];
                     $image_2URL = $baseURL . $value['image_2'];
                     $image_3URL = $baseURL . $value['image_3'];
+
+                    if ($value['front_image']) {
+                        // echo "<pre>";
+                        // print_r($value);
+                        // "</br>";
+                        // echo "<pre>";
+                        // print_r($front_imageURL);
+                        // "</br>";
+                        // echo "<pre>";
+                        // print_r($back_imageURL);
+                        // "</br>";
+                        // echo "<pre>";
+                        // print_r($image_1URL);
+                        // "</br>";
+                        // echo "<pre>";
+                        // print_r($image_2URL);
+                        // "</br>";
+                        // echo "<pre>";
+                        // print_r($image_3URL);
+                        // "</br>";
+                        // exit;
+
+
 
                     // Decode images (assuming decodeImage is a defined function)
                     $front_imageD = decodeImage($front_imageURL);
@@ -156,19 +179,33 @@ class ProductController extends Controller
                     $image_1D = decodeImage($image_1URL);
                     $image_2D = decodeImage($image_2URL);
                     $image_3D = decodeImage($image_3URL);
+                    if ($front_imageD !== 'Not Found') {
+                        echo "<pre>";
+                        print_r($front_imageD);
+                        "</br>";
+                        echo "<pre>";
+                        print_r($back_imageD);
+                        "</br>";
+                        echo "<pre>";
+                        print_r($image_1D);
+                        "</br>";
+                        echo "<pre>";
+                        print_r($image_2D);
+                        "</br>";
+                        echo "<pre>";
+                        print_r($image_3D);
+                        "</br>";
+                        exit;
+                    }
+                }
 
-                //    echo "<pre>"; print_r($front_imageD); "</br>";
-                //    echo "<pre>"; print_r($back_imageD); "</br>";
-                //    echo "<pre>"; print_r($image_1D); "</br>";
-                //    echo "<pre>"; print_r($image_2D); "</br>";
-                //    echo "<pre>"; print_r($image_3D); "</br>";
-                //    exit;
 
-                    $front_image = ($front_imageD !== 'Not Found') ? $front_imageD : '';
-                    $back_image = ($back_imageD !== 'Not Found') ? $back_imageD : '';
-                    $image_1 = ($image_1D !== 'Not Found') ? $image_1D : '';
-                    $image_2 = ($image_2D !== 'Not Found') ? $image_2D : '';
-                    $image_3 = ($image_3D !== 'Not Found') ? $image_3D : '';
+
+                    $front_image = (@$front_imageD !== 'Not Found') ? @$front_imageD : '';
+                    $back_image = (@$back_imageD !== 'Not Found') ? @$back_imageD : '';
+                    $image_1 = (@$image_1D !== 'Not Found') ? @$image_1D : '';
+                    $image_2 = (@$image_2D !== 'Not Found') ? @$image_2D : '';
+                    $image_3 = (@$image_3D !== 'Not Found') ? @$image_3D : '';
 
                     // Find or create the product
                     $product = Product::where('barcode', $value['barcode'])->first();
