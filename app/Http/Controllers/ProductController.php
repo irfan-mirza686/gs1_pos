@@ -238,11 +238,6 @@ class ProductController extends Controller
                 $productData = $this->productService->localProductData();
             }
 
-
-
-
-
-            // echo "<pre>"; print_r($productData); exit;
             $title = "Create Product";
             return view('user.product.create', compact('pageTitle', 'productData', 'user_info', 'product_type'));
         } catch (RequestException $e) {

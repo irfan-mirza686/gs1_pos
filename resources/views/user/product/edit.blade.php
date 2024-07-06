@@ -100,7 +100,7 @@
                     <ol class="breadcrumb mb-0 p-0">
                         <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">Create</li>
+                        <li class="breadcrumb-item active" aria-current="page">Update</li>
                     </ol>
                 </nav>
             </div>
@@ -127,7 +127,7 @@
                 <input type="hidden" name="product_id" value="{{$editProduct['id']}}">
                 @endif
                 <div class="card-body p-4">
-                    <h5 class="card-title">Add New Product</h5>
+                    <h5 class="card-title">Update Product</h5>
                     <hr />
                     <div class="form-body mt-4">
                         <div class="row">
