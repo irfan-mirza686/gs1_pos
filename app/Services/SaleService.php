@@ -50,7 +50,7 @@ class SaleService
                 'product_id' => $product->id,
                 'product_type' => $product->type,
                 'productName' => $product->productnameenglish,
-                'gpc' => $product->gpc,
+                'gpc' => $product->gpc ?? '',
                 'brand' => $product->BrandName,
                 'desc1' => $product->details_page,
                 'size' => $product->size,
