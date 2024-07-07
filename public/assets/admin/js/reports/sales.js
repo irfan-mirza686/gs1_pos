@@ -88,7 +88,7 @@ $(document).ready(function () {
     // });
 
     $('#appendGpc').select2({
-        placeholder: 'Search for GCP Type',
+        placeholder: 'Search for GPC Type',
         ajax: {
             url: '/Report/get-gpc', // Replace with your endpoint URL
             method: 'GET',
