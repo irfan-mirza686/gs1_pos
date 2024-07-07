@@ -94,7 +94,7 @@
                 </div>
                 <div class="card-footer">
                     <button type="button" id="show_report" data-Route="{{route('report.sales.data')}}"
-                        class="btn btn-info showUserSaleBtn">Show Report</button>
+                        class="btn btn-info showUserSaleBtn shadow rounded-0">Show Report</button>
 
                 </div>
             </div>
