@@ -53,7 +53,7 @@ class HomeController extends Controller
             $productTypeCounts['gs1'][$i] = 0;
             $months[$i] = date('F', mktime(0, 0, 0, $i, 1)); // Get month name (e.g., January, February, etc.)
         }
-        // echo "<pre>"; print_r($items->toArray()); exit;
+        // echo "<pre>"; print_r($productTypeCounts); exit;
         // Process each item
         foreach ($items as $item) {
             $products = $item;

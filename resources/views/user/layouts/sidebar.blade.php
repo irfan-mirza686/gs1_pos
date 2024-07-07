@@ -21,7 +21,7 @@
         </li>
         <li>
             <a href="{{ route('pos') }}" target="_blank">
-                <div class="parent-icon"><img src="{{asset('assets/uploads/sidebar_icons/pos.png')}}" alt="pos"
+                <div class="parent-icon"><img src="{{asset('assets/uploads/sidebar_icons/pos1.png')}}" alt="pos"
                         height="30" width="30">
                 </div>
                 <div class="menu-title">POS</div>
@@ -107,11 +107,11 @@
             <ul>
                 <li> <a href="{{route('sales')}}"><i class="bx bx-right-arrow-alt"></i>Sales</a>
                 </li>
-                <li> <a href="{{route('sales')}}"><i class="bx bx-right-arrow-alt"></i>Invoices</a>
+                <li> <a href="#"><i class="bx bx-right-arrow-alt"></i>Invoices</a>
                 </li>
-                <li> <a href="{{route('sales')}}"><i class="bx bx-right-arrow-alt"></i>Sales Returns</a>
+                <li> <a href="#"><i class="bx bx-right-arrow-alt"></i>Sales Returns</a>
                 </li>
-                <li> <a href="{{route('sales')}}"><i class="bx bx-right-arrow-alt"></i>POS</a>
+                <li> <a href="{{route('pos')}}"><i class="bx bx-right-arrow-alt"></i>POS</a>
                 </li>
                 <li> <a href="{{route('customers')}}"><i class="bx bx-right-arrow-alt"></i>Customers</a>
                 </li>
@@ -146,7 +146,7 @@
                 <div class="menu-title">Reports</div>
             </a>
             <ul>
-                <li> <a href="{{route('sales')}}"><i class="bx bx-right-arrow-alt"></i>Sales Report</a>
+                <li> <a href="{{route('report.sales')}}"><i class="bx bx-right-arrow-alt"></i>Sales Report</a>
                 </li>
                 <li> <a href="{{route('sales')}}"><i class="bx bx-right-arrow-alt"></i>Inventory Report</a>
                 </li>

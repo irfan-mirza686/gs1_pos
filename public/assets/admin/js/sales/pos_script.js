@@ -199,7 +199,7 @@ $(document).ready(function () {
 
                             $('#otherProductsBody').append('<tr class="delete_add_more_item" data-barcode="' + barcode + '" id="delete_add_more_item">\
                                     <td width="15%">\
-                                    <input type="text" name="barcode[]" value="'+ barcode + '" class="form-control form-control-sm rounded-0 barcode text-start" readonly><input type="hidden" value="' + resp.prodArray.product_id + '" name="product_id[]" class="productID"><input type="hidden" value="' + resp.prodArray.product_type + '" name="product_type[]">\
+                                    <input type="text" name="barcode[]" value="'+ barcode + '" class="form-control form-control-sm rounded-0 barcode text-start" readonly><input type="hidden" value="' + resp.prodArray.product_id + '" name="product_id[]" class="productID"><input type="hidden" value="' + resp.prodArray.gpc + '" name="gpc[]" class="gpc"><input type="hidden" value="' + resp.prodArray.product_type + '" name="product_type[]">\
                                     </td>\
                                     <td width="20%">\
                                     <input type="text" name="description[]" value="'+ resp.prodArray.productName + '" class="form-control form-control-sm rounded-0 description text-start" readonly>\
@@ -359,15 +359,15 @@ $(document).ready(function () {
         }
         $.each(rowDataArray, function (i, res) {
             $('.display-itmes').append('<div class="d-flex justify-content-between">\
-                <div>'+ res.quantity + ' x ' + res.description + '</div>\
-                <div>'+ res.singleTotal + '</div>\
+                <div>'+ res.quantity + ' x <span style="font-weight:bold;">' + res.description + '</span>&nbsp;</div> <span style="color: red;">|</span> \
+                <div> &nbsp;&nbsp;'+ res.singleTotal + '</div>\
                 </div>');
         });
         const totalSum = rowDataArray.reduce((sum, product) => {
             return sum + parseFloat(product.singleTotal);
         }, 0);
         $('.display-total').append('<hr><div class="d-flex justify-content-between">\
-                                    <div>Subtotal</div>\
+                                    <div><b>Subtotal</b></div>\
                                     <div>'+ totalSum + '</div>\
                                 </div>');
         $("#amountDue").val(totalSum);

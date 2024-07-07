@@ -14,7 +14,8 @@ use App\Http\Controllers\Reports\SoldItemController;
 Route::
         namespace('Reports')->prefix('Report')->name('report.')->group(function () {
             Route::get('sales',[PosSaleReportController::class,'index'])->name('sales');
-            Route::post('sales/list',[PosSaleReportController::class,'List'])->name('sales.list');
+            Route::get('get-gpc',[PosSaleReportController::class,'getGPCData']);
+            Route::get('get-sale-report',[PosSaleReportController::class,'getSaleData'])->name('sales.data');
 
             Route::get('sale/items',[SoldItemController::class,'index'])->name('sale.items');
             Route::post('sale/items/list',[SoldItemController::class,'saleItemsList'])->name('sale.items.list');

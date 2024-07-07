@@ -48,8 +48,9 @@ class SaleService
         if (isset($product) && !empty($product)) {
             $prodArray = [
                 'product_id' => $product->id,
-                'product_type' => 'non_gs1',
+                'product_type' => $product->type,
                 'productName' => $product->productnameenglish,
+                'gpc' => $product->gpc,
                 'brand' => $product->BrandName,
                 'desc1' => $product->details_page,
                 'size' => $product->size,
@@ -112,6 +113,7 @@ class SaleService
         for ($i = 0; $i < count($data['description']); $i++) {
             $purchaseItems[] = array(
                 'productName' => $data['description'][$i],
+                'gpc' => $data['gpc'][$i],
                 'product_id' => $data['product_id'][$i],
                 'product_type' => $data['product_type'][$i],
                 'barcode' => $data['barcode'][$i],
