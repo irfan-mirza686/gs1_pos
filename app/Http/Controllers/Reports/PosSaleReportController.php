@@ -75,26 +75,42 @@ class PosSaleReportController extends Controller
     {
         if ($request->ajax()) {
             // echo "<pre>"; print_r(Sale::get()->toArray()); exit;
-            $year = $request->input('year', date('Y'));
-            // $year = date('Y-m-d',strtotime($year));
-            $type = $request->input('type');
+            // $year = $request->input('year', date('Y'));
+            // $type = $request->input('type');
 
+            // $gpcz = $request->input('gpc', []);
+
+            // $data = DB::table('sales')
+            // ->select(DB::raw('MONTH(date) as month'), DB::raw('COUNT(*) as total_sales'))
+            // ->where('customer_id', $type)
+            // ->whereYear('date', $year)
+            // ->where(function($query) use ($gpcz) {
+            //     foreach ($gpcz as $gpc) {
+            //         $query->orWhereJsonContains('items', [['gpc' => $gpc]]);
+            //     }
+            // })
+            // ->groupBy(DB::raw('MONTH(date)'))
+            // ->get();
+
+            // return response()->json($data);
+
+            $year = (int) $request->input('year', date('Y')); // Ensure year is an integer
+            $type = $request->input('type');
             $gpcz = $request->input('gpc', []);
 
+            // Ensure correct date type handling for SQL Server
             $data = DB::table('sales')
-            ->select(DB::raw('MONTH(date) as month'), DB::raw('COUNT(*) as total_sales'))
-            ->where('customer_id', $type)
-            ->whereYear('date', $year)
-            ->where(function($query) use ($gpcz) {
-                foreach ($gpcz as $gpc) {
-                    $query->orWhereJsonContains('items', [['gpc' => $gpc]]);
-                }
-            })
-            ->groupBy(DB::raw('MONTH(date)'))
-            ->get();
-            // echo "<pre>";
-            // print_r($data);
-            // exit;
+                ->select(DB::raw('MONTH(CAST(date AS date)) as month'), DB::raw('COUNT(*) as total_sales'))
+                ->where('customer_id', $type)
+                ->whereRaw('YEAR(CAST(date AS date)) = ?', [$year])
+                ->where(function ($query) use ($gpcz) {
+                    foreach ($gpcz as $gpc) {
+                        $query->orWhereJsonContains('items', [['gpc' => $gpc]]);
+                    }
+                })
+                ->groupBy(DB::raw('MONTH(CAST(date AS date))'))
+                ->get();
+
             return response()->json($data);
 
         }
