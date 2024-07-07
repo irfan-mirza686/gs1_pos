@@ -113,7 +113,7 @@ class SaleService
         for ($i = 0; $i < count($data['description']); $i++) {
             $purchaseItems[] = array(
                 'productName' => $data['description'][$i],
-                'gpc' => $data['gpc'][$i],
+                'gpc' => @$data['gpc'][$i] ?? '',
                 'product_id' => $data['product_id'][$i],
                 'product_type' => $data['product_type'][$i],
                 'barcode' => $data['barcode'][$i],
