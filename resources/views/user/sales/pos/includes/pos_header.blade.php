@@ -36,7 +36,7 @@
             <!-- <h4><mark>Rizwan Mobiles & Repairing</mark></h4> -->
         </div>
         <div class="col-md-4 text-end">
-            <h4><mark>Cashier : {{ $user_info['memberData']['company_name_eng'] }}</mark></h4>
+            <h4><mark>Cashier : {{ $user['user']['company_name_eng'] }}</mark></h4>
         </div>
     </div>
     <!----- First Row----------------->

@@ -146,7 +146,7 @@ class SaleController extends Controller
         $customer = Customer::find(1);
         // echo "<pre>"; print_r($userLocation); exit;
 
-        return view('user.sales.pos.index', compact('pageTitle', 'printInvoiceNo', 'page_name', 'userLocation', 'glns', 'customer'));
+        return view('user.sales.pos.index', compact('pageTitle', 'printInvoiceNo', 'page_name', 'userLocation', 'glns', 'customer','user'));
     }
     /********************************************************************/
     public function findProduct(Request $request)
