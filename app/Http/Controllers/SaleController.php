@@ -113,15 +113,18 @@ class SaleController extends Controller
         $this->authenticateRole($roles);
 
         $pageTitle = "POS";
-        $user_info = session('user_info');
+        $user = checkMemberID(Auth::guard('web')->user()->id);
+            // echo "<pre>"; print_r($user); exit;
+            $token = $user['user']['v2_token'];
+            $gs1MemberID = $user['user']['parentMemberUniqueID'];
         // echo "<pre>"; print_r($user_info['memberData']['companyID']); exit;
         $printInvoiceNo = time();
         $page_name = "pos";
 
         $gln = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $user_info['token'],
+            'Authorization' => 'Bearer ' . $token,
         ])->get('https://gs1ksa.org:3093/api/gln', [
-                    'user_id' => $user_info['memberData']['id'],
+                    'user_id' => $gs1MemberID,
                 ]);
         $glnBody = $gln->getBody();
         $glnData = json_decode($glnBody, true);
@@ -143,7 +146,7 @@ class SaleController extends Controller
         $customer = Customer::find(1);
         // echo "<pre>"; print_r($userLocation); exit;
 
-        return view('user.sales.pos.index', compact('pageTitle', 'printInvoiceNo', 'page_name', 'user_info', 'userLocation', 'glns', 'customer'));
+        return view('user.sales.pos.index', compact('pageTitle', 'printInvoiceNo', 'page_name', 'userLocation', 'glns', 'customer'));
     }
     /********************************************************************/
     public function findProduct(Request $request)
