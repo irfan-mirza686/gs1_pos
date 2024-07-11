@@ -404,7 +404,7 @@
                                                 <option disabled selected>-select-</option>
                                                 @foreach($productData['countryOfSaleData'] as $country)
                                                 <option value="{{$country['country_name']}}"
-                                                    {{($editProduct['Origin']==$country['Alpha3'])?'selected':''}}>
+                                                    {{($editProduct['Origin']==$country['country_name'])?'selected':''}}>
                                                     {{$country['country_name']}}</option>
                                                 @endforeach
                                             </select>
