@@ -79,7 +79,7 @@ class StockTransferController extends Controller
     {
         if ($request->ajax()) {
 
-            $data = StockTransfer::get();
+            $data = StockTransfer::orderBy('id','DESC')->get();
 
             return DataTables::of($data)
                 ->addIndexColumn()
