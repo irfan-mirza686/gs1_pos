@@ -35,6 +35,7 @@ $(document).ready(function () {
                 $(btn).prepend('<i class="fa fa-spinner fa-spin"></i>');
                 $(btn).attr("disabled", 'disabled');
             }, success: function (resp) {
+                console.log(resp)
                 $(btn).text(btnVal);
                 $(btn).find(".fa-spinner").remove();
                 $(btn).removeAttr("disabled");
@@ -78,8 +79,9 @@ $(document).ready(function () {
         e.preventDefault();
 
         let formData = new FormData($('#activityFormData')[0]);
-        let btn = $('.loginActivityBtn');
-        let btnVal = $('.loginActivityBtn').text();
+        let btn = $('.newLoginBtn');
+        let btnVal = $('.newLoginBtn').text();
+        // console.log(btnVal)
         let url = $("#activityFormData").attr('action');
         let creating = ' Processing...';
         let email = formData.get('email');
@@ -103,6 +105,9 @@ $(document).ready(function () {
                 $(btn).prepend('<i class="fa fa-spinner fa-spin"></i>');
                 $(btn).attr("disabled", 'disabled');
             }, success: function (resp) {
+                console.log('response')
+
+                $(btn).text("");
                 $(btn).text(btnVal);
                 $(btn).find(".fa-spinner").remove();
                 $(btn).removeAttr("disabled");
@@ -123,7 +128,7 @@ $(document).ready(function () {
                 }
 
             }, error: function (xhr, textStatus, errorThrown) {
-
+                console.log('error')
                 $(btn).text("");
                 $(btn).text(btnVal);
                 $(btn).find(".fa-spinner").remove();

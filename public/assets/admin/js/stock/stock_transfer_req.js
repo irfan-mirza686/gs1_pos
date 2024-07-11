@@ -28,6 +28,7 @@ $(document).ready(function () {
                         <p class="card-text">${product.description}</p>
                         <div class="d-flex justify-content-between align-items-center mt-auto">
                             <p class="mb-0">SAR ${product.price}</p>
+                            <button class="btn btn-info mt-2 view-details">View Details</button>
                             <button class="btn btn-primary mt-2 add-to-cart">Add to Cart</button>
                         </div>
                     </div>
@@ -72,6 +73,7 @@ $(document).ready(function () {
                             <button class="btn btn-secondary increase-qty">+</button>
                         </div>
                         <button class="btn btn-danger mt-2 remove-from-cart">Remove</button>
+                        <button class="btn btn-info mt-2 view-details">View Details</button>
                         <input type="hidden" name="product_type[]" value="${product.type}">
                         <input type="hidden" name="barcode[]" value="${product.barcode}">
                     </div>
@@ -225,8 +227,8 @@ $(document).ready(function () {
             url: `/products/${selectedProductId}`,
             method: 'GET',
             success: function (response) {
-                $('#modalProductName').text(response.product.name);
-                $('#modalBrandName').text(response.product.brand);
+                $('#modalProductName').text(response.product.productnameenglish);
+                $('#modalBrandName').text(response.product.BrandName);
                 $('#modalBarcode').text(response.product.barcode);
                 $('#productModal').modal('show');
             }
@@ -275,7 +277,7 @@ $(document).ready(function () {
                 updateSelectedProducts();
                 enableTab(1);
                 $('#request_no').val(generateUniqueRequestNo());
-                window.location = 'https://pos.gs1ksa.org/stock/transfer/requests'
+                window.location = response.url + '/stock/transfer/requests'
             },
             error: function () {
                 toastr.error('Failed to submit stock request.');

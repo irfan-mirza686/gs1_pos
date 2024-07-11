@@ -9,6 +9,7 @@ use App\Http\Requests\UnitRequest;
 use Auth;
 use DataTables;
 use App\Models\Unit;
+use Session;
 
 class UnitController extends Controller
 {
@@ -19,12 +20,38 @@ class UnitController extends Controller
         $this->unitService = $unitService;
     }
     /********************************************************************/
+    public function authenticateRole($roles = null)
+    {
+
+
+        $permissionRole = [];
+        foreach ($roles as $key => $value) {
+
+            $permissionCheck = checkRolePermission($value);
+
+            $permissionRole[] = [
+                'role' => $value,
+                'access' => $permissionCheck->access
+            ];
+        }
+
+        if ($permissionRole[0]['access'] == 0 && $permissionRole[1]['access'] == 0) {
+            Session::flash('flash_message_warning', 'You have no permission');
+            return redirect(route('dashboard'))->send();
+        }
+    }
+    /********************************************************************/
 
     public function index(Request $request)
     {
+        $roles = [
+            '0' => 'inventory',
+            '1' => 'units'
+        ];
+        $this->authenticateRole($roles);
+
         $pageTitle = 'Units';
-        $user_info = session('user_info');
-        return view('user.unit.index', compact('pageTitle','user_info'));
+        return view('user.unit.index', compact('pageTitle'));
     }
     /********************************************************************/
     public function List(Request $request)
@@ -45,11 +72,11 @@ class UnitController extends Controller
                 })
                 ->addColumn('action', function ($row) {
 
-                    $btn = '<a href="' . route('unit.update',$row->id) . '" data-toggle="tooltip"  data-name="' . $row->name . '" data-status="' . $row->status . '"  data-id="' . $row->id . '" data-original-title="Edit Unit" class="btn btn-primary btn-sm edit"><i class="fadeIn animated bx bx-edit"></i></a>';
-                    $btn = $btn . ' <a href="' . route('unit.delete',$row->id) . '"data-toggle="tooltip"  data-name="' . $row->name . '" data-status="' . $row->status . '"  data-id="' . $row->id . '" data-original-title="Delete Unit" class="btn btn-danger btn-sm del"><i class="fadeIn animated bx bx-trash"></i></a>';
+                    $btn = '<a href="' . route('unit.update', $row->id) . '" data-toggle="tooltip"  data-name="' . $row->name . '" data-status="' . $row->status . '"  data-id="' . $row->id . '" data-original-title="Edit Unit" class="btn btn-primary btn-sm edit"><i class="fadeIn animated bx bx-edit"></i></a>';
+                    $btn = $btn . ' <a href="' . route('unit.delete', $row->id) . '"data-toggle="tooltip"  data-name="' . $row->name . '" data-status="' . $row->status . '"  data-id="' . $row->id . '" data-original-title="Delete Unit" class="btn btn-danger btn-sm del"><i class="fadeIn animated bx bx-trash"></i></a>';
                     return $btn;
                 })
-                ->rawColumns(['status','action'])
+                ->rawColumns(['status', 'action'])
                 ->make(true);
         }
     }
@@ -57,7 +84,11 @@ class UnitController extends Controller
     /********************************************************************/
     public function store(UnitRequest $request)
     {
-
+        $roles = [
+            '0' => 'inventory',
+            '1' => 'units'
+        ];
+        $this->authenticateRole($roles);
         $data = $request->all();
         try {
             $country = $this->unitService->store($data, $id = "");
@@ -76,6 +107,11 @@ class UnitController extends Controller
     /********************************************************************/
     public function update(UnitRequest $request, $id = null)
     {
+        $roles = [
+            '0' => 'inventory',
+            '1' => 'units'
+        ];
+        $this->authenticateRole($roles);
         $data = $request->all();
         try {
             $country = $this->unitService->store($data, $id);
@@ -93,6 +129,11 @@ class UnitController extends Controller
     {
 
         try {
+            $roles = [
+                '0' => 'inventory',
+                '1' => 'units'
+            ];
+            $this->authenticateRole($roles);
             if (Unit::find($id)->delete()) {
                 return response()->json(['status' => 200, 'message' => 'Data has been deleted successfully']);
             } else {

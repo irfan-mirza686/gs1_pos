@@ -284,6 +284,7 @@
           $image = asset('assets/uploads/no-image.png');
 
         }
+        $user = checkMemberID(Auth::guard('web')->user()->id);
 
         ?>
             <div class="user-box dropdown">
@@ -291,7 +292,7 @@
                     role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="<?php echo $image; ?>" class="user-img" alt="user avatar">
                     <div class="user-info ps-3">
-                        <p class="user-name mb-0">{{ $user_info['memberData']['company_name_eng'] }}</p>
+                        <p class="user-name mb-0">{{ $user['user']['company_name_eng'] }}</p>
                         <!-- <p class="designattion mb-0">Web Designer</p> -->
                     </div>
                 </a>

@@ -28,10 +28,20 @@ class SaleController extends Controller
         $this->saleService = $saleService;
     }
     /********************************************************************/
-    public function authenticateRole($module_page = null)
+    public function authenticateRole($roles = null)
     {
-        $permissionCheck = checkRolePermission($module_page);
-        if ($permissionCheck->access == 0) {
+        $permissionRole = [];
+        foreach ($roles as $key => $value) {
+
+            $permissionCheck = checkRolePermission($value);
+
+            $permissionRole[] = [
+                'role' => $value,
+                'access' => $permissionCheck->access
+            ];
+        }
+
+        if ($permissionRole[0]['access'] == 0 && $permissionRole[1]['access'] == 0) {
             Session::flash('flash_message_warning', 'You have no permission');
             return redirect(route('dashboard'))->send();
         }
@@ -39,8 +49,12 @@ class SaleController extends Controller
     /********************************************************************/
     public function index()
     {
-        $this->authenticateRole("sales_management");
-        $this->authenticateRole("sales");
+        $roles = [
+            '0' => 'sales_management',
+            '1' => 'sales'
+        ];
+        $this->authenticateRole($roles);
+        // $this->authenticateRole("sales");
 
         $pageTitle = "Sales";
         $user_info = session('user_info');
@@ -92,8 +106,11 @@ class SaleController extends Controller
     /********************************************************************/
     public function pos(Request $request)
     {
-        $this->authenticateRole("sales_management");
-        $this->authenticateRole("sales");
+        $roles = [
+            '0' => 'sales_management',
+            '1' => 'sales'
+        ];
+        $this->authenticateRole($roles);
 
         $pageTitle = "POS";
         $user_info = session('user_info');
@@ -126,7 +143,7 @@ class SaleController extends Controller
         $customer = Customer::find(1);
         // echo "<pre>"; print_r($userLocation); exit;
 
-        return view('user.sales.pos.index', compact('pageTitle', 'printInvoiceNo', 'page_name', 'user_info', 'userLocation', 'glns','customer'));
+        return view('user.sales.pos.index', compact('pageTitle', 'printInvoiceNo', 'page_name', 'user_info', 'userLocation', 'glns', 'customer'));
     }
     /********************************************************************/
     public function findProduct(Request $request)
@@ -147,7 +164,7 @@ class SaleController extends Controller
                     return response()->json(['status' => 200, 'prodArray' => $product['prodArray']]);
                 }
             } catch (\Throwable $th) {
-                return response()->json(['status' => 500, 'message' => $th->getMessage()],500);
+                return response()->json(['status' => 500, 'message' => $th->getMessage()], 500);
             }
 
         }
@@ -156,7 +173,7 @@ class SaleController extends Controller
     public function checkProductStock(Request $request)
     {
         $data = $request->all();
-// echo "<pre>"; print_r($data); exit;
+        // echo "<pre>"; print_r($data); exit;
         $product = Product::where('id', $data['productID'])->first()->toArray();
         if ($product['quantity'] < $data['quantity']) {
             return response()->json(
@@ -200,7 +217,7 @@ class SaleController extends Controller
 
                     \LogActivity::addToLog(strtoupper($user_info['memberData']['company_name_eng']) . ' Add a new Sale Order (' . $data['order_no'] . ')', route('sale.view', $pos->order_no));
                     \DB::commit();
-                    return response()->json(['status' => 200, 'message' => 'Data has been saved successfully', 'invoice_no' => time(), 'print_invoiceNo' => $data['order_no'],'customer'=>$customer]);
+                    return response()->json(['status' => 200, 'message' => 'Data has been saved successfully', 'invoice_no' => time(), 'print_invoiceNo' => $data['order_no'], 'customer' => $customer]);
                 } else {
                     return response()->json(['status' => 401, 'message' => 'Data has not been saved']);
                 }

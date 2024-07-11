@@ -22,10 +22,22 @@ class GroupController extends Controller
         $this->groupService = $groupService;
     }
     /********************************************************************/
-    public function authenticateRole($module_page = null)
+    public function authenticateRole($roles = null)
     {
-        $permissionCheck = checkRolePermission($module_page);
-        if ($permissionCheck->access == 0) {
+
+
+        $permissionRole = [];
+        foreach ($roles as $key => $value) {
+
+            $permissionCheck = checkRolePermission($value);
+
+            $permissionRole[] = [
+                'role' => $value,
+                'access' => $permissionCheck->access
+            ];
+        }
+
+        if ($permissionRole[0]['access'] == 0 && $permissionRole[1]['access'] == 0) {
             Session::flash('flash_message_warning', 'You have no permission');
             return redirect(route('dashboard'))->send();
         }
@@ -33,8 +45,12 @@ class GroupController extends Controller
     /********************************************************************/
     public function index()
     {
-        $this->authenticateRole("user_management");
-        $this->authenticateRole("roles");
+        $roles = [
+            '0' => 'user_management',
+            '1' => 'roles'
+        ];
+        $this->authenticateRole($roles);
+
         $pageTitle = "Roles";
         $user_info = session('user_info');
         return view('roles.index', compact('pageTitle','user_info'));
@@ -89,14 +105,25 @@ class GroupController extends Controller
     /********************************************************************/
     public function create()
     {
+        $roles = [
+            '0' => 'user_management',
+            '1' => 'roles'
+        ];
+        $this->authenticateRole($roles);
+
         $pageTitle = "Create Role";
-        $user_info = session('user_info');
         $groupModule = $this->groupService->groupModules();
-        return view('roles.create', compact('pageTitle', 'groupModule','user_info'));
+        return view('roles.create', compact('pageTitle', 'groupModule'));
     }
     /********************************************************************/
     public function store(Request $request)
     {
+        $roles = [
+            '0' => 'user_management',
+            '1' => 'roles'
+        ];
+        $this->authenticateRole($roles);
+
         $request->validate([
             'name' => 'required'
         ]);
@@ -114,15 +141,18 @@ class GroupController extends Controller
     public function edit($id = null)
     {
         try {
-            $this->authenticateRole("user_management");
-            $this->authenticateRole("roles");
-            $user_info = session('user_info');
+            $roles = [
+                '0' => 'user_management',
+                '1' => 'roles'
+            ];
+            $this->authenticateRole($roles);
+
             $pageTitle = "Edit Role";
             $groupModule = GroupModule::get()->toArray();
             $editGroup = Group::where(['id' => $id])->first();
             $data['editPermission'] = GroupPermission::select('module_page')->where(['group_id' => $id])->where('access', 1)->get()->toArray();
             $mergeArr = array_column($data['editPermission'], 'module_page');
-            return view('roles.edit', compact('pageTitle', 'editGroup', 'groupModule', 'mergeArr','user_info'));
+            return view('roles.edit', compact('pageTitle', 'editGroup', 'groupModule', 'mergeArr'));
         } catch (\Throwable $th) {
             Session::flash('flash_message_error', $th->getMessage());
             return redirect()->back();

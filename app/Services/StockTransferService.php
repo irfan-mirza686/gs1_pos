@@ -13,23 +13,31 @@ class StockTransferService
     }
 
     /********************************************************************/
-    public function store($data, $id = null)
+    public function store($data, $request_no = null)
     {
         date_default_timezone_set((config('app.timezone')));
-                $currentDate = date('Y-m-d h:i:s');
+        $currentDate = date('Y-m-d h:i:s');
 
-        if ($id == null) {
+        // if ($request_no == null) {
+        //     $create = new StockTransfer;
+        // } else if ($request_no != null) {
+        //     $create = StockTransfer::where('request_no',$request_no)->first();
+        // }
+
+        $create = StockTransfer::where('request_no', $request_no)->first();
+        // echo "<pre>"; print_r($request_no); exit;
+        if ($create) {
+            $create;
+        } else {
             $create = new StockTransfer;
-        } else if ($id != null) {
-            $create = StockTransfer::find($id);
         }
 
         $create->request_no = $data['request_no'];
         $create->gln_from = $data['gln_from'];
         $create->gln_to = $data['gln_to'];
-        $create->date = date('Y-m-d',strtotime($currentDate));
+        $create->date = date('Y-m-d', strtotime($currentDate));
         $create->time = date('h:i A', strtotime($currentDate));
-        $create->note = isset($data['note'])?$data['note']:'';
+        $create->note = isset($data['note']) ? $data['note'] : '';
         return $create;
     }
     public function makeArr($data)

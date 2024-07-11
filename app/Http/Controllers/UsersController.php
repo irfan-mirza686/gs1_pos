@@ -22,10 +22,22 @@ class UsersController extends Controller
         $this->userService = $userService;
     }
     /********************************************************************/
-    public function authenticateRole($module_page = null)
+    public function authenticateRole($roles = null)
     {
-        $permissionCheck = checkRolePermission($module_page);
-        if ($permissionCheck->access == 0) {
+
+
+        $permissionRole = [];
+        foreach ($roles as $key => $value) {
+
+            $permissionCheck = checkRolePermission($value);
+
+            $permissionRole[] = [
+                'role' => $value,
+                'access' => $permissionCheck->access
+            ];
+        }
+
+        if ($permissionRole[0]['access'] == 0 && $permissionRole[1]['access'] == 0) {
             Session::flash('flash_message_warning', 'You have no permission');
             return redirect(route('dashboard'))->send();
         }
@@ -33,8 +45,11 @@ class UsersController extends Controller
     /******************************************************/
     public function index()
     {
-        $this->authenticateRole("user_management");
-        $this->authenticateRole("users");
+        $roles = [
+            '0' => 'user_management',
+            '1' => 'users'
+        ];
+        $this->authenticateRole($roles);
 
         $pageTitle = "Users";
         $user_info = session('user_info');
@@ -151,18 +166,26 @@ class UsersController extends Controller
     /******************************************************/
     public function create()
     {
-        $this->authenticateRole("user_management");
-        $this->authenticateRole("users");
+        $roles = [
+            '0' => 'user_management',
+            '1' => 'users'
+        ];
+        $this->authenticateRole($roles);
 
         $pageTitle = "Create User";
-        $user_info = session('user_info');
         $groups = Group::get();
-        return view('user.staff.create', compact('pageTitle', 'user_info', 'groups'));
+        return view('user.staff.create', compact('pageTitle', 'groups'));
     }
     /******************************************************/
     public function store(CreateUserRequest $request)
     {
         try {
+            $roles = [
+                '0' => 'user_management',
+                '1' => 'users'
+            ];
+            $this->authenticateRole($roles);
+
             $settings = [
                 'themeMode' => 'lightmode',
                 'headerColor' => '',
@@ -188,8 +211,11 @@ class UsersController extends Controller
     public function edit($id = null)
     {
         try {
-            $this->authenticateRole("user_management");
-            $this->authenticateRole("users");
+            $roles = [
+                '0' => 'user_management',
+                '1' => 'users'
+            ];
+            $this->authenticateRole($roles);
 
             $user_info = session('user_info');
             $pageTitle = "Update User";
@@ -233,6 +259,12 @@ class UsersController extends Controller
     public function delete($id = null)
     {
         try {
+            $roles = [
+                '0' => 'user_management',
+                '1' => 'users'
+            ];
+            $this->authenticateRole($roles);
+
             $user = User::find($id);
             if ($user) {
                 @unlink(filePath('admins') . '/' . $user->image);

@@ -13,8 +13,32 @@ use Session;
 
 class PosSaleReportController extends Controller
 {
+    /********************************************************************/
+    public function authenticateRole($roles = null)
+    {
+        $permissionRole = [];
+        foreach ($roles as $key => $value) {
+
+            $permissionCheck = checkRolePermission($value);
+
+            $permissionRole[] = [
+                'role' => $value,
+                'access' => $permissionCheck->access
+            ];
+        }
+
+        if ($permissionRole[0]['access'] == 0 && @$permissionRole[1]['access'] == 0) {
+            Session::flash('flash_message_warning', 'You have no permission');
+            return redirect(route('dashboard'))->send();
+        }
+    }
     public function index()
     {
+        $roles = [
+            '0' => 'reports'
+        ];
+        $this->authenticateRole($roles);
+
         $pageTitle = "Sales Report";
         $user_info = session('user_info');
         $customers = Customer::get();

@@ -24,8 +24,35 @@ class ProductController extends Controller
         $this->productService = $productService;
     }
     /********************************************************************/
+    public function authenticateRole($roles = null)
+    {
+
+
+        $permissionRole = [];
+        foreach ($roles as $key => $value) {
+
+            $permissionCheck = checkRolePermission($value);
+
+            $permissionRole[] = [
+                'role' => $value,
+                'access' => $permissionCheck->access
+            ];
+        }
+
+        if ($permissionRole[0]['access'] == 0 && $permissionRole[1]['access'] == 0) {
+            Session::flash('flash_message_warning', 'You have no permission');
+            return redirect(route('dashboard'))->send();
+        }
+    }
+    /********************************************************************/
     public function index()
     {
+        $roles = [
+            '0' => 'inventory',
+            '1' => 'products'
+        ];
+        $this->authenticateRole($roles);
+
         $pageTitle = "Products";
         $user_info = session('user_info');
         // echo "<pre>"; print_r($user_info); exit;
@@ -45,10 +72,11 @@ class ProductController extends Controller
     public function List(Request $request)
     {
         if ($request->ajax()) {
-            $user_info = session('user_info');
-
-            $token = $user_info['token'];
-            $gs1MemberID = $user_info['memberData']['id'];
+            // $user_info = session('user_info');
+            $user = checkMemberID(Auth::guard('web')->user()->id);
+            // echo "<pre>"; print_r($user); exit;
+            $token = $user['user']['v2_token'];
+            $gs1MemberID = $user['user']['parentMemberUniqueID'];
             $products = $this->productService->getAllProducts($token, $gs1MemberID);
             // echo "<pre>"; print_r($products); exit;
 
@@ -122,11 +150,13 @@ class ProductController extends Controller
     public function syncProducts(Request $request)
     {
         if ($request->ajax()) {
-            $user_info = session('user_info');
+            // $user_info = session('user_info');
             // $url = 'https://gs1ksa.org:3093/uploads/products/memberProductsImages/front_image-1717839864972.jpg';
-
-            $token = $user_info['token'];
-            $gs1MemberID = $user_info['memberData']['id'];
+            $user = checkMemberID(Auth::guard('web')->user()->id);
+            // echo "<pre>"; print_r($user); exit;
+            $token = $user['user']['v2_token'];
+            // $token = $user_info['token'];
+            $gs1MemberID = $user['user']['parentMemberUniqueID'];
             $apiProducts = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $token,
             ])->get('https://gs1ksa.org:3093/api/products', [
@@ -157,12 +187,12 @@ class ProductController extends Controller
                     $image_2D = decodeImage($image_2URL);
                     $image_3D = decodeImage($image_3URL);
 
-                //    echo "<pre>"; print_r($front_imageD); "</br>";
-                //    echo "<pre>"; print_r($back_imageD); "</br>";
-                //    echo "<pre>"; print_r($image_1D); "</br>";
-                //    echo "<pre>"; print_r($image_2D); "</br>";
-                //    echo "<pre>"; print_r($image_3D); "</br>";
-                //    exit;
+                    //    echo "<pre>"; print_r($front_imageD); "</br>";
+                    //    echo "<pre>"; print_r($back_imageD); "</br>";
+                    //    echo "<pre>"; print_r($image_1D); "</br>";
+                    //    echo "<pre>"; print_r($image_2D); "</br>";
+                    //    echo "<pre>"; print_r($image_3D); "</br>";
+                    //    exit;
 
                     $front_image = ($front_imageD !== 'Not Found') ? $front_imageD : '';
                     $back_image = ($back_imageD !== 'Not Found') ? $back_imageD : '';
@@ -212,6 +242,7 @@ class ProductController extends Controller
                     $product->image_1 = $image_1;
                     $product->image_2 = $image_2;
                     $product->image_3 = $image_3;
+                    $product->user_id = $user['user']['id'];
 
                     $product->save();
                 }
@@ -272,12 +303,16 @@ class ProductController extends Controller
         try {
             $data = $request->all();
 
-            $user_info = session('user_info');
-            $gcpGLNID = $user_info['memberData']['gcpGLNID'];
-            // echo "<pre>"; print_r($user_info['memberData']['gcpGLNID']); exit;
+            // $user_info = session('user_info');
+            $user = checkMemberID(Auth::guard('web')->user()->id);
+            $token = $user['user']['v2_token'];
+            $gs1MemberID = $user['user']['parentMemberUniqueID'];
+            $gcpGLNID = $user['user']['gcpGLNID'];
+
             if ($data['product_type'] == 'gs1') {
+
                 try {
-                    $user_info = session('user_info');
+                    // $user_info = session('user_info');
 
                     $frontImagePath = $data['front_image'];
                     $backImagePath = $data['back_image'];
@@ -286,7 +321,7 @@ class ProductController extends Controller
                     $image3Path = $data['image_3'];
 
                     $response = Http::withHeaders([
-                        'Authorization' => 'Bearer ' . $user_info['token'],
+                        'Authorization' => 'Bearer ' . $token,
                     ])
                         ->attach('front_image', file_get_contents($frontImagePath), 'front_image.jpg')
                         ->attach('back_image', file_get_contents($backImagePath), 'back_image.jpg')
@@ -294,7 +329,7 @@ class ProductController extends Controller
                         ->attach('image_2', file_get_contents($image2Path), 'image_2.jpg')
                         ->attach('image_3', file_get_contents($image3Path), 'image_3.jpg')
                         ->post('https://gs1ksa.org:3093/api/products', [
-                            'user_id' => $user_info['memberData']['id'],
+                            'user_id' => $gs1MemberID,
                             'productnameenglish' => $data['productnameenglish'],
                             'productnamearabic' => $data['productnamearabic'],
                             'BrandName' => $data['BrandName'],
@@ -316,34 +351,18 @@ class ProductController extends Controller
                             'product_url' => $data['product_url'],
                         ]);
 
-                    // $response = Http::withHeaders([
-                    //     'Authorization' => 'Bearer ' . $user_info['token'],
-                    // ])->post('https://gs1ksa.org:3093/api/products', $requestData);
 
                     $responseBody = $response->getBody();
                     $responseSaleData = json_decode($responseBody, true);
-                    // echo "<pre>";
-                    // print_r($responseSaleData['product']['barcode']);
-                    // exit;
+
                     $barcode = isset($responseSaleData['product']) ? $responseSaleData['product']['barcode'] : $data['product_code'];
                     if (@$responseSaleData['error']) {
                         return redirect()->back()->with('flash_message_warning', @$responseSaleData['error']);
                     }
                     $create = $this->productService->storeProduct($data, $id = null, $gcpGLNID, $barcode);
                     $create->save();
-                    $gtinData = checkGtinData($create->barcode);
-                    if ($gtinData != true) {
-                        // $postProduct = $this->productService->sendProdutsToGepir($data);
-                        // // echo "<pre>"; print_r($postProduct); exit();
-                        // if ($postProduct['validationErrors']) {
-                        //     Session::flash('flash_message_error', $postProduct['validationErrors']);
-                        //     // return response()->json(['status' => 400, 'errors' => $postProduct['validationErrors']]);
-                        // } else {
-                        //     Session::flash('flash_message_success', 'Product Posted to GEPIR');
-                        //     // return response()->json(['status' => 200, 'errors' => _('notifications.notify.added')]);
-                        // }
-                    }
-                    \LogActivity::addToLog(strtoupper($user_info['memberData']['company_name_eng']) . ' Added a gs1 product (' . $data['productnameenglish'] . ')', null);
+
+                    \LogActivity::addToLog(strtoupper($user['user']['company_name_eng']) . ' Added a gs1 product (' . $data['productnameenglish'] . ')', null);
                     return redirect(route('products'))->with('flash_message_success', 'Product successfully Added!');
                 } catch (RequestException $e) {
                     if ($e->hasResponse()) {
@@ -376,7 +395,7 @@ class ProductController extends Controller
                 // echo "<pre>"; print_r($create); exit;
                 \DB::beginTransaction();
                 if ($create->save()) {
-                    \LogActivity::addToLog(strtoupper($user_info['memberData']['company_name_eng']) . ' Added a gs1 product (' . $data['productnameenglish'] . ')', \Config::get('app.url') . '/product' . '/' . $create->slug);
+                    \LogActivity::addToLog(strtoupper($user['user']['company_name_eng']) . ' Added a gs1 product (' . $data['productnameenglish'] . ')', \Config::get('app.url') . '/product' . '/' . $create->slug);
                     \DB::commit();
                     return redirect(route('products'))->with('flash_message_success', 'Product successfully Added!');
                 } else {
@@ -391,182 +410,162 @@ class ProductController extends Controller
     }
     public function edit(Request $request)
     {
+        $user = checkMemberID(Auth::guard('web')->user()->id);
+        $token = $user['user']['v2_token'];
+        $gs1MemberID = $user['user']['parentMemberUniqueID'];
+        $gcpGLNID = $user['user']['gcpGLNID'];
 
-        $user_info = session('user_info');
-        // dd($request->product_type);
         $editProduct = Product::where('barcode', $request->barcode)->first();
         if ($request->product_type == 'gs1') {
 
             $productData = $this->productService->productData();
-            // echo "<pre>"; print_r($productData); exit;
-            // $editData = Http::withHeaders([
-            //     'Authorization' => 'Bearer ' . $user_info['token'],
-            // ])->get('https://gs1ksa.org:3093/api/products', [
-            //             'barcode' => $request->barcode,
-            //         ]);
-            // $editDataBody = $editData->getBody();
-            // $editProduct = json_decode($editDataBody, true);
 
-            // $editProduct = $editProduct[0];
-
-
-            //     echo "<pre>";
-            // print_r($editProduct);
-            // exit;
             $product_type = 'gs1';
         } else {
             $productData = $this->productService->localProductData();
 
-            // $editProduct = Product::where('barcode', $request->barcode)->first();
             $product_type = 'non_gs1';
         }
-        // echo "<pre>"; print_r($productData['countryOfSaleData']); exit;
         $pageTitle = "Edit Product";
 
-        return view('user.product.edit', compact('pageTitle', 'editProduct', 'productData', 'user_info', 'product_type'));
+        return view('user.product.edit', compact('pageTitle', 'editProduct', 'productData', 'user', 'product_type'));
 
     }
     /**********************************************************************/
     public function update(ProductRequest $request, $id = null)
     {
 
-        // try {
-        $data = $request->all();
-        // echo "<pre>"; print_r($data); exit;
-        $user_info = session('user_info');
-        $gcpGLNID = $user_info['memberData']['gcpGLNID'];
-        if ($request->product_type == 'gs1') {
-            try {
-                // echo "<pre>"; print_r($data); exit;
-                $frontImagePath = $data['front_image'] ?? null;
-                $backImagePath = $data['back_image'] ?? null;
-                $image1Path = $data['image_1'] ?? null;
-                $image2Path = $data['image_2'] ?? null;
-                $image3Path = $data['image_3'] ?? null;
+        try {
+            $data = $request->all();
+            $user = checkMemberID(Auth::guard('web')->user()->id);
+            $token = $user['user']['v2_token'];
+            $gs1MemberID = $user['user']['parentMemberUniqueID'];
+            $gcpGLNID = $user['user']['gcpGLNID'];
+            if ($request->product_type == 'gs1') {
+                try {
+                    // echo "<pre>"; print_r($data); exit;
+                    $frontImagePath = $data['front_image'] ?? null;
+                    $backImagePath = $data['back_image'] ?? null;
+                    $image1Path = $data['image_1'] ?? null;
+                    $image2Path = $data['image_2'] ?? null;
+                    $image3Path = $data['image_3'] ?? null;
 
-                // Prepare the HTTP request
-                $request = Http::withHeaders([
-                    'Authorization' => 'Bearer ' . $user_info['token'],
-                ]);
+                    // Prepare the HTTP request
+                    $request = Http::withHeaders([
+                        'Authorization' => 'Bearer ' . $token,
+                    ]);
 
-                // Conditionally attach images if they exist
-                if ($frontImagePath) {
-                    $request->attach('front_image', file_get_contents($frontImagePath), 'front_image.jpg');
-                }
-
-                if ($backImagePath) {
-                    $request->attach('back_image', file_get_contents($backImagePath), 'back_image.jpg');
-                }
-
-                if ($image1Path) {
-                    $request->attach('image_1', file_get_contents($image1Path), 'image_1.jpg');
-                }
-
-                if ($image2Path) {
-                    $request->attach('image_2', file_get_contents($image2Path), 'image_2.jpg');
-                }
-
-                if ($image3Path) {
-                    $request->attach('image_3', file_get_contents($image3Path), 'image_3.jpg');
-                }
-
-                // Make the PUT request
-                $response = $request->put('https://gs1ksa.org:3093/api/products/gtin/' . $data['product_id'], [
-                    'user_id' => $user_info['memberData']['id'],
-                    'productnameenglish' => $data['productnameenglish'],
-                    'productnamearabic' => $data['productnamearabic'],
-                    'BrandName' => $data['BrandName'],
-                    'BrandNameAr' => $data['BrandNameAr'],
-                    'ProductType' => $data['ProductType'],
-                    'Origin' => $data['Origin'],
-                    'PackagingType' => $data['PackagingType'],
-                    'unit' => $data['unit'],
-                    'size' => $data['size'],
-                    'gpc' => $data['gpc'],
-                    'gpc_code' => '10000027',
-                    'countrySale' => $data['countrySale'],
-                    'HSCODES' => '1234.56.78',
-                    'HsDescription' => $data['HsDescription'],
-                    'gcp_type' => '1',
-                    'prod_lang' => $data['prod_lang'],
-                    'details_page' => $data['details_page'],
-                    'details_page_ar' => $data['details_page_ar'],
-                    'product_url' => $data['product_url'],
-                ]);
-                $responseBody = $response->getBody();
-                $responseSaleData = json_decode($responseBody, true);
-                $barcode = isset($responseSaleData['product']) ? $responseSaleData['product']['barcode'] : $data['product_code'];
-
-                // $response = Http::withHeaders([
-                //     'Authorization' => 'Bearer ' . $user_info['token'],
-                // ])->put('https://gs1ksa.org:3093/api/products/gtin/' . $request->product_id, $requestData);
-
-                $responseBody = $response->getBody();
-                $responseSaleData = json_decode($responseBody, true);
-
-                if (@$responseSaleData['error']) {
-                    return redirect()->back()->with('flash_message_warning', @$responseSaleData['error']);
-                }
-                $update = $this->productService->storeProduct($data, $id, $gcpGLNID, $barcode);
-                $update->save();
-                $gtinData = checkGtinData($update->barcode);
-                if ($gtinData != true) {
-                    $postProduct = $this->productService->sendProdutsToGepir($data);
-                    // echo "<pre>"; print_r($postProduct); exit();
-                    if ($postProduct['validationErrors']) {
-                        Session::flash('flash_message_error', $postProduct['validationErrors']);
-                        // return response()->json(['status' => 400, 'errors' => $postProduct['validationErrors']]);
-                    } else {
-                        Session::flash('flash_message_success', 'Product Posted to GEPIR');
-                        // return response()->json(['status' => 200, 'errors' => _('notifications.notify.added')]);
+                    // Conditionally attach images if they exist
+                    if ($frontImagePath) {
+                        $request->attach('front_image', file_get_contents($frontImagePath), 'front_image.jpg');
                     }
-                }
-                \LogActivity::addToLog(strtoupper($user_info['memberData']['company_name_eng']) . ' Updated a gs1 product (' . $data['productnameenglish'] . ')', null);
-                return redirect(route('products'))->with('flash_message_success', 'Product successfully Updated!');
-            } catch (RequestException $e) {
-                if ($e->hasResponse()) {
-                    // Extract the error message from the response body
-                    $responseBody = $e->getResponse()->getBody()->getContents();
-                    $responseData = json_decode($responseBody, true);
-                    // echo "<pre>"; print_r($responseData['error']); exit;
-                    $errorMessage = isset($responseData['error']) ? $responseData['error'] : 'An unexpected error occurred.';
-                } else {
-                    // If the response is not available, use a default error message
-                    $errorMessage = 'An unexpected error occurred.';
-                }
 
-                // You can log the error message
-                \Log::error('Guzzle HTTP request failed: ' . $errorMessage);
+                    if ($backImagePath) {
+                        $request->attach('back_image', file_get_contents($backImagePath), 'back_image.jpg');
+                    }
 
-                // Return an error response with the extracted error message
-                return redirect()->back()->with('flash_message_error', $errorMessage);
-            } catch (\Throwable $th) {
-                \Log::error('An unexpected error occurred: ' . $th->getMessage());
+                    if ($image1Path) {
+                        $request->attach('image_1', file_get_contents($image1Path), 'image_1.jpg');
+                    }
 
-                // Return an error response
-                return redirect()->back()->with('flash_message_error', 'An unexpected error occurred. Please try again later.');
-            }
-        } else {
-            $barcode = $data['product_code'];
-            $update = $this->productService->storeProduct($data, $id, $gcpGLNID, $barcode);
-            $update->user_id = (Auth::user()) ? Auth::user()->id : 0;
-            \DB::beginTransaction();
-            if ($update->save()) {
-                $gtinData = checkGtinData($update->barcode);
-                if ($gtinData != true) {
-                    // Post to GEPIR...
+                    if ($image2Path) {
+                        $request->attach('image_2', file_get_contents($image2Path), 'image_2.jpg');
+                    }
+
+                    if ($image3Path) {
+                        $request->attach('image_3', file_get_contents($image3Path), 'image_3.jpg');
+                    }
+
+                    // Make the PUT request
+                    $response = $request->put('https://gs1ksa.org:3093/api/products/gtin/' . $data['product_id'], [
+                        'user_id' => $gs1MemberID,
+                        'productnameenglish' => $data['productnameenglish'],
+                        'productnamearabic' => $data['productnamearabic'],
+                        'BrandName' => $data['BrandName'],
+                        'BrandNameAr' => $data['BrandNameAr'],
+                        'ProductType' => $data['ProductType'],
+                        'Origin' => $data['Origin'],
+                        'PackagingType' => $data['PackagingType'],
+                        'unit' => $data['unit'],
+                        'size' => $data['size'],
+                        'gpc' => $data['gpc'],
+                        'gpc_code' => '10000027',
+                        'countrySale' => $data['countrySale'],
+                        'HSCODES' => '1234.56.78',
+                        'HsDescription' => $data['HsDescription'],
+                        'gcp_type' => '1',
+                        'prod_lang' => $data['prod_lang'],
+                        'details_page' => $data['details_page'],
+                        'details_page_ar' => $data['details_page_ar'],
+                        'product_url' => $data['product_url'],
+                    ]);
+                    $responseBody = $response->getBody();
+                    $responseSaleData = json_decode($responseBody, true);
+                    $barcode = isset($responseSaleData['product']) ? $responseSaleData['product']['barcode'] : $data['product_code'];
+
+                    $responseBody = $response->getBody();
+                    $responseSaleData = json_decode($responseBody, true);
+
+                    if (@$responseSaleData['error']) {
+                        return redirect()->back()->with('flash_message_warning', @$responseSaleData['error']);
+                    }
+                    $update = $this->productService->storeProduct($data, $id, $gcpGLNID, $barcode);
+                    $update->save();
+                    $gtinData = checkGtinData($update->barcode);
+                    if ($gtinData != true) {
+                        $postProduct = $this->productService->sendProdutsToGepir($data);
+                        // echo "<pre>"; print_r($postProduct); exit();
+                        if ($postProduct['validationErrors']) {
+                            Session::flash('flash_message_error', $postProduct['validationErrors']);
+                            // return response()->json(['status' => 400, 'errors' => $postProduct['validationErrors']]);
+                        } else {
+                            Session::flash('flash_message_success', 'Product Posted to GEPIR');
+                            // return response()->json(['status' => 200, 'errors' => _('notifications.notify.added')]);
+                        }
+                    }
+                    \LogActivity::addToLog(strtoupper($user['user']['company_name_eng']) . ' Updated a gs1 product (' . $data['productnameenglish'] . ')', null);
+                    return redirect(route('products'))->with('flash_message_success', 'Product successfully Updated!');
+                } catch (RequestException $e) {
+                    if ($e->hasResponse()) {
+                        // Extract the error message from the response body
+                        $responseBody = $e->getResponse()->getBody()->getContents();
+                        $responseData = json_decode($responseBody, true);
+                        // echo "<pre>"; print_r($responseData['error']); exit;
+                        $errorMessage = isset($responseData['error']) ? $responseData['error'] : 'An unexpected error occurred.';
+                    } else {
+                        // If the response is not available, use a default error message
+                        $errorMessage = 'An unexpected error occurred.';
+                    }
+
+                    // You can log the error message
+                    \Log::error('Guzzle HTTP request failed: ' . $errorMessage);
+
+                    // Return an error response with the extracted error message
+                    return redirect()->back()->with('flash_message_error', $errorMessage);
+                } catch (\Throwable $th) {
+                    \Log::error('An unexpected error occurred: ' . $th->getMessage());
+
+                    // Return an error response
+                    return redirect()->back()->with('flash_message_error', 'An unexpected error occurred. Please try again later.');
                 }
-                \LogActivity::addToLog(strtoupper($user_info['memberData']['company_name_eng']) . ' Updated a non gs1 product (' . $data['productnameenglish'] . ')', \Config::get('app.url') . '/product' . '/' . $update->slug);
-                \DB::commit();
-                return redirect(route('products'))->with('flash_message_success', 'Product successfully updated!');
             } else {
-                return redirect(route('products'))->with('flash_message_success', 'Data has not been updated!');
-            }
-        }
+                $barcode = $data['product_code'];
+                $update = $this->productService->storeProduct($data, $id, $gcpGLNID, $barcode);
+                $update->user_id = (Auth::user()) ? Auth::user()->id : 0;
+                \DB::beginTransaction();
+                if ($update->save()) {
 
-        // } catch (\Throwable $th) {
-        //     return redirect(route('products'))->with('flash_message_error', $th->getMessage());
-        // }
+                    \LogActivity::addToLog(strtoupper($user['user']['company_name_eng']) . ' Updated a non gs1 product (' . $data['productnameenglish'] . ')', \Config::get('app.url') . '/product' . '/' . $update->slug);
+                    \DB::commit();
+                    return redirect(route('products'))->with('flash_message_success', 'Product successfully updated!');
+                } else {
+                    return redirect(route('products'))->with('flash_message_success', 'Data has not been updated!');
+                }
+            }
+
+        } catch (\Throwable $th) {
+            return redirect(route('products'))->with('flash_message_error', $th->getMessage());
+        }
 
     }
     /**********************************************************************/
@@ -640,10 +639,13 @@ class ProductController extends Controller
             try {
 
                 Session::put('page', 'addProduct');
-                $user_info = session('user_info');
+                $user = checkMemberID(Auth::guard('web')->user()->id);
+                $token = $user['user']['v2_token'];
+                $gs1MemberID = $user['user']['parentMemberUniqueID'];
+                $gcpGLNID = $user['user']['gcpGLNID'];
 
                 $gpc = Http::withHeaders([
-                    'Authorization' => 'Bearer ' . $user_info['token'],
+                    'Authorization' => 'Bearer ' . $token,
                 ])->get('https://gs1ksa.org:4044/api/findSimilarRecords', [
                             'text' => trim($request->search),
                             'tableName' => 'gpc_bricks',
@@ -651,9 +653,7 @@ class ProductController extends Controller
 
                 $gpcBody = $gpc->getBody();
                 $gpcData = json_decode($gpcBody, true);
-                // echo "<pre>";
-                // print_r($gpcData);
-                // exit;
+
                 if ($gpcData) {
                     return response()->json(['status' => 200, 'data' => $gpcData]);
                 }
@@ -662,7 +662,6 @@ class ProductController extends Controller
                     // Extract the error message from the response body
                     $responseBody = $e->getResponse()->getBody()->getContents();
                     $responseData = json_decode($responseBody, true);
-                    // echo "<pre>"; print_r($responseData['error']); exit;
                     $errorMessage = isset($responseData['error']) ? $responseData['error'] : 'An unexpected error occurred.';
                 } else {
                     // If the response is not available, use a default error message
@@ -670,15 +669,15 @@ class ProductController extends Controller
                 }
 
                 // You can log the error message
-                \Log::error('Guzzle HTTP request failed: ' . $errorMessage);
+                // \Log::error('Guzzle HTTP request failed: ' . $errorMessage);
 
                 // Return an error response with the extracted error message
                 return response()->json(['status' => 404, 'error' => $errorMessage], 404);
             } catch (\Throwable $th) {
-                \Log::error('An unexpected error occurred: ' . $th->getMessage());
+                // \Log::error('An unexpected error occurred: ' . $th->getMessage());
 
                 // Return an error response
-                return response()->json(['error' => 'An unexpected error occurred. Please try again later.'], 500);
+                return response()->json(['error' => $th->getMessage()], 500);
             }
 
         }
@@ -689,10 +688,13 @@ class ProductController extends Controller
             try {
 
                 Session::put('page', 'addProduct');
-                $user_info = session('user_info');
+                $user = checkMemberID(Auth::guard('web')->user()->id);
+                $token = $user['user']['v2_token'];
+                $gs1MemberID = $user['user']['parentMemberUniqueID'];
+                $gcpGLNID = $user['user']['gcpGLNID'];
 
                 $hsCode = Http::withHeaders([
-                    'Authorization' => 'Bearer ' . $user_info['token'],
+                    'Authorization' => 'Bearer ' . $token,
                 ])->get('https://gs1ksa.org:4044/api/findSimilarRecords', [
                             'text' => $request->title ?? $request->productName,
                             'tableName' => 'hs_codes',
@@ -723,10 +725,10 @@ class ProductController extends Controller
                 // Return an error response with the extracted error message
                 return response()->json(['status' => 404, 'error' => $errorMessage], 404);
             } catch (\Throwable $th) {
-                \Log::error('An unexpected error occurred: ' . $th->getMessage());
+                // \Log::error('An unexpected error occurred: ' . $th->getMessage());
 
                 // Return an error response
-                return response()->json(['error' => 'An unexpected error occurred. Please try again later.'], 500);
+                return response()->json(['error' => $th->getMessage()], 500);
             }
         }
     }

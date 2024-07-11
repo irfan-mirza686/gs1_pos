@@ -95,7 +95,7 @@
 
                                                 <div class="col-12 mt-2">
                                                     <div class="d-grid">
-                                                    <button type="submit" class="btn loginActivityBtn" style="background-color: #044E75; color: white;">Login</button>
+                                                    <button type="submit" class="btn loginActivityBtn newLoginBtn" style="background-color: #044E75; color: white;">Login</button>
                                                     </div>
                                                 </div>
                                             </form>

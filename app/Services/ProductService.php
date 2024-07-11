@@ -16,40 +16,40 @@ class ProductService
     public function getAllProducts($token, $gs1MemberID)
     {
 
-        $apiProducts = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-        ])->get('https://gs1ksa.org:3093/api/products', [
-                    'user_id' => $gs1MemberID,
-                ]);
+        // $apiProducts = Http::withHeaders([
+        //     'Authorization' => 'Bearer ' . $token,
+        // ])->get('https://gs1ksa.org:3093/api/products', [
+        //             'user_id' => $gs1MemberID,
+        //         ]);
 
 
-        $apiProductsBody = $apiProducts->getBody();
-        $apiProductssData = json_decode($apiProductsBody, true);
-        // echo "<pre>"; print_r($apiProductssData); exit;
-        if (isset($apiProductssData['error']) && !empty($apiProductssData['error'])) {
-            return ['error' => $apiProductssData['error']];
-        }
-        $apiArrayData = [];
-        if ($apiProductssData) {
-            foreach ($apiProductssData as $key => $apiP) {
-                $url = 'https://gs1ksa.org:3093/';
-                $image = ($apiP['front_image']) ? $url . $apiP['front_image'] : asset('assets/uploads/no-image.png');
-                $apiArrayData[] = array(
-                    'id' => $apiP['id'],
-                    'user_id' => $apiP['user_id'],
-                    'image' => $image,
-                    'productnameenglish' => $apiP['productnameenglish'],
-                    'productnamearabic' => $apiP['productnamearabic'],
-                    'BrandName' => $apiP['BrandName'],
-                    'barcode' => $apiP['barcode'],
-                    'type' => 'gs1_product',
-                );
-            }
-        }
+        // $apiProductsBody = $apiProducts->getBody();
+        // $apiProductssData = json_decode($apiProductsBody, true);
+        // // echo "<pre>"; print_r($apiProductssData); exit;
+        // if (isset($apiProductssData['error']) && !empty($apiProductssData['error'])) {
+        //     return ['error' => $apiProductssData['error']];
+        // }
+        // $apiArrayData = [];
+        // if ($apiProductssData) {
+        //     foreach ($apiProductssData as $key => $apiP) {
+        //         $url = 'https://gs1ksa.org:3093/';
+        //         $image = ($apiP['front_image']) ? $url . $apiP['front_image'] : asset('assets/uploads/no-image.png');
+        //         $apiArrayData[] = array(
+        //             'id' => $apiP['id'],
+        //             'user_id' => $apiP['user_id'],
+        //             'image' => $image,
+        //             'productnameenglish' => $apiP['productnameenglish'],
+        //             'productnamearabic' => $apiP['productnamearabic'],
+        //             'BrandName' => $apiP['BrandName'],
+        //             'barcode' => $apiP['barcode'],
+        //             'type' => 'gs1_product',
+        //         );
+        //     }
+        // }
 
 
-
-        $localProducts = Product::get();
+       $user =  checkMemberID(Auth::guard('web')->user()->id);
+        $localProducts = Product::where('user_id',$user['user']['id'])->get();
 
         $localArrayData = [];
         if ($localProducts) {
@@ -68,7 +68,7 @@ class ProductService
             }
         }
 
-        $mergeProducts = array_merge($apiArrayData, $localArrayData);
+        // $mergeProducts = array_merge($apiArrayData, $localArrayData);
         return $localArrayData;
     }
     /********************************************************************/
@@ -164,25 +164,29 @@ class ProductService
     /*******************************************************************/
     public function productData()
     {
-        $user_info = session('user_info');
+        // $user_info = session('user_info');
+
+        $user = checkMemberID(Auth::guard('web')->user()->id);
+        $token = $user['user']['v2_token'];
+        $gs1MemberID = $user['user']['parentMemberUniqueID'];
 
         $brands = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $user_info['token'],
+            'Authorization' => 'Bearer ' . $token,
         ])->get('https://gs1ksa.org:3093/api/brands', [
-                    'user_id' => $user_info['memberData']['id'],
+                    'user_id' => $gs1MemberID,
                 ]);
         $brandsBody = $brands->getBody();
         $brandsData = json_decode($brandsBody, true);
 
         $units = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $user_info['token'],
+            'Authorization' => 'Bearer ' . $token,
         ])->get('https://gs1ksa.org:3093/api/getAllunit');
         $unitsBody = $units->getBody();
         $unitsData = json_decode($unitsBody, true);
 
 
         $countryOfSale = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $user_info['token'],
+            'Authorization' => 'Bearer ' . $token,
         ])->get('https://gs1ksa.org:3093/api/getAllcountryofsale');
 
         $countryOfSaleBody = $countryOfSale->getBody();
@@ -190,7 +194,7 @@ class ProductService
 
 
         $prodLang = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $user_info['token'],
+            'Authorization' => 'Bearer ' . $token,
         ])->get('https://gs1ksa.org:3093/api/getAllprod_desc_languages');
 
         $prodLangBody = $prodLang->getBody();
@@ -198,13 +202,13 @@ class ProductService
 
 
         $prodTypes = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $user_info['token'],
+            'Authorization' => 'Bearer ' . $token,
         ])->get('https://gs1ksa.org:3093/api/productTypes');
         $prodTypesBody = $prodTypes->getBody();
         $prodTypesData = json_decode($prodTypesBody, true);
 
         $pkgTypes = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $user_info['token'],
+            'Authorization' => 'Bearer ' . $token,
         ])->get('https://gs1ksa.org:3093/api/getAllproductPackag');
 
 

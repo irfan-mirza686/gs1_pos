@@ -10,6 +10,7 @@ use App\Models\CustomerAddress;
 use App\Services\CustomerService;
 use App\Http\Requests\CustomerRequest;
 use Auth;
+use Session;
 use DataTables;
 
 class BrandController extends Controller
@@ -21,9 +22,35 @@ class BrandController extends Controller
         $this->brandService = $brandService;
     }
     /********************************************************************/
+    public function authenticateRole($roles = null)
+    {
+
+
+        $permissionRole = [];
+        foreach ($roles as $key => $value) {
+
+            $permissionCheck = checkRolePermission($value);
+
+            $permissionRole[] = [
+                'role' => $value,
+                'access' => $permissionCheck->access
+            ];
+        }
+
+        if ($permissionRole[0]['access'] == 0 && $permissionRole[1]['access'] == 0) {
+            Session::flash('flash_message_warning', 'You have no permission');
+            return redirect(route('dashboard'))->send();
+        }
+    }
+    /********************************************************************/
 
     public function index(Request $request)
     {
+        $roles = [
+            '0' => 'inventory',
+            '1' => 'brands'
+        ];
+        $this->authenticateRole($roles);
         $pageTitle = 'Brands';
         $user_info = session('user_info');
         return view('user.brands.index', compact('pageTitle','user_info'));
@@ -59,7 +86,11 @@ class BrandController extends Controller
     /********************************************************************/
     public function store(Request $request)
     {
-
+        $roles = [
+            '0' => 'inventory',
+            '1' => 'brands'
+        ];
+        $this->authenticateRole($roles);
         $data = $request->all();
         try {
             $country = $this->brandService->store($data, $id = "");
@@ -78,6 +109,12 @@ class BrandController extends Controller
     /********************************************************************/
     public function update(Request $request, $id = null)
     {
+        $roles = [
+            '0' => 'inventory',
+            '1' => 'brands'
+        ];
+        $this->authenticateRole($roles);
+
         $data = $request->all();
         try {
             $country = $this->brandService->store($data, $id);
@@ -95,6 +132,12 @@ class BrandController extends Controller
     {
 
         try {
+            $roles = [
+                '0' => 'inventory',
+                '1' => 'brands'
+            ];
+            $this->authenticateRole($roles);
+
             if (Brand::find($id)->delete()) {
                 return response()->json(['status' => 200, 'message' => 'Data has been deleted successfully']);
             } else {

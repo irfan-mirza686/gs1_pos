@@ -99,13 +99,13 @@
                 </div>
             </div>
 
-            <div class="card salesList">
-                <div class="card-body">
+            <!-- <div class="card salesList"> -->
+                <!-- <div class="card-body"> -->
                     <div class="loader" id="loader"></div>
                     <canvas id="myChart" width="400" height="200"></canvas>
-                </div>
+                <!-- </div> -->
 
-            </div>
+            <!-- </div> -->
         </div>
     </div>
     <!--end page wrapper -->

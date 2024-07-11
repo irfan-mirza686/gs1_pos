@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Receiving;
 use App\Models\StockTransfer;
 use App\Services\StockTransferService;
+use Auth;
 use DataTables;
 use Http;
 use Illuminate\Http\Request;
@@ -21,10 +22,22 @@ class StockTransferController extends Controller
         $this->stockTransferService = $stockTransferService;
     }
     /********************************************************************/
-    public function authenticateRole($module_page = null)
+    public function authenticateRole($roles = null)
     {
-        $permissionCheck = checkRolePermission($module_page);
-        if ($permissionCheck->access == 0) {
+
+
+        $permissionRole = [];
+        foreach ($roles as $key => $value) {
+
+            $permissionCheck = checkRolePermission($value);
+
+            $permissionRole[] = [
+                'role' => $value,
+                'access' => $permissionCheck->access
+            ];
+        }
+
+        if ($permissionRole[0]['access'] == 0 && $permissionRole[1]['access'] == 0) {
             Session::flash('flash_message_warning', 'You have no permission');
             return redirect(route('dashboard'))->send();
         }
@@ -32,16 +45,23 @@ class StockTransferController extends Controller
     /********************************************************************/
     public function index()
     {
-        $this->authenticateRole("stock_management");
-        $this->authenticateRole("stock_transfer");
+        $roles = [
+            '0' => 'stock_management',
+            '1' => 'stock_transfer'
+        ];
+        $this->authenticateRole($roles);
+
 
         $pageTitle = "Manage Stock";
-        $user_info = session('user_info');
+        $user = checkMemberID(Auth::guard('web')->user()->id);
+        $token = $user['user']['v2_token'];
+        $gs1MemberID = $user['user']['parentMemberUniqueID'];
+        $gcpGLNID = $user['user']['gcpGLNID'];
         // echo "<pre>"; print_r($user_info); exit;
         $gln = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $user_info['token'],
+            'Authorization' => 'Bearer ' . $token,
         ])->get('https://gs1ksa.org:3093/api/gln', [
-                    'user_id' => $user_info['memberData']['id'],
+                    'user_id' => $gs1MemberID,
                 ]);
         $glnBody = $gln->getBody();
         $glnData = json_decode($glnBody, true);
@@ -53,7 +73,7 @@ class StockTransferController extends Controller
             $glnName[] = $value['locationNameEn'];
         }
 
-        return view('user.stock.stock_transfer.index', compact('pageTitle', 'user_info', 'glnName'));
+        return view('user.stock.stock_transfer.index', compact('pageTitle', 'glnName'));
     }
     public function List(Request $request)
     {
@@ -105,15 +125,21 @@ class StockTransferController extends Controller
     }
     public function create()
     {
-        $this->authenticateRole("stock_management");
-        $this->authenticateRole("stock_transfer");
+        $roles = [
+            '0' => 'stock_management',
+            '1' => 'stock_transfer'
+        ];
+        $this->authenticateRole($roles);
 
-        $pageTitle = "Manage Stock";
-        $user_info = session('user_info');
+        $pageTitle = "Stock Transfer Request";
+        $user = checkMemberID(Auth::guard('web')->user()->id);
+        $token = $user['user']['v2_token'];
+        $gs1MemberID = $user['user']['parentMemberUniqueID'];
+        $gcpGLNID = $user['user']['gcpGLNID'];
         $gln = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $user_info['token'],
+            'Authorization' => 'Bearer ' . $token,
         ])->get('https://gs1ksa.org:3093/api/gln', [
-                    'user_id' => $user_info['memberData']['id'],
+                    'user_id' => $gs1MemberID,
                 ]);
         $glnBody = $gln->getBody();
         $glnData = json_decode($glnBody, true);
@@ -126,7 +152,7 @@ class StockTransferController extends Controller
             );
         }
         session(['stock_request' => 'create', 'stockRequestData' => array()]);
-        return view('user.stock.stock_transfer.create', compact('pageTitle', 'user_info', 'glns'));
+        return view('user.stock.stock_transfer.create', compact('pageTitle', 'glns'));
     }
     public function searchProducts(Request $request)
     {
@@ -156,8 +182,11 @@ class StockTransferController extends Controller
     }
     public function viewStockRequest($id = null)
     {
-        $this->authenticateRole("stock_management");
-        $this->authenticateRole("stock_transfer");
+        $roles = [
+            '0' => 'stock_management',
+            '1' => 'stock_transfer'
+        ];
+        $this->authenticateRole($roles);
 
         $pageTitle = "View Stock Request";
         $user_info = session('user_info');
@@ -165,7 +194,7 @@ class StockTransferController extends Controller
         $productInfo = [];
 
         foreach ($stock_transfer->items as $key => $value) {
-            $receiving = Receiving::where('request_no',$stock_transfer->request_no)->where('product_id',$value['product_id'])->first();
+            $receiving = Receiving::where('request_no', $stock_transfer->request_no)->where('product_id', $value['product_id'])->first();
             // echo "<pre>"; print_r($value); exit;
             $product = Product::find($value['product_id']);
             if ($product) {
@@ -181,8 +210,8 @@ class StockTransferController extends Controller
                     'receive_quantity' => $receiving['receive_quantity'] ?? 0,
                     'size' => $product->size,
                     'barcode' => $product->barcode,
-                    'front_image' => ($product->front_image) ? getFile('products',$product->front_image) : getFile('','no-image.png'),
-                    'back_image' => ($product->back_image) ? getFile('products',$product->back_image) : getFile('','no-image.png'),
+                    'front_image' => ($product->front_image) ? getFile('products', $product->front_image) : getFile('', 'no-image.png'),
+                    'back_image' => ($product->back_image) ? getFile('products', $product->back_image) : getFile('', 'no-image.png'),
                 );
             }
 
@@ -194,24 +223,29 @@ class StockTransferController extends Controller
     public function saveStockTransferReq(Request $request)
     {
         if ($request->ajax()) {
+            \DB::beginTransaction();
             try {
+
+                $user = checkMemberID(Auth::guard('web')->user()->id);
+
                 $data = $request->all();
                 $selectProduct = json_decode($data['selectedProducts']);
                 // $items = $this->stockTransferService->makeArr($data);
                 $items = $this->stockTransferService->makeSelecteProductsArr($selectProduct);
                 // echo "<pre>"; print_r($items); exit;
-
-                $save = $this->stockTransferService->store($data, $id = null);
+                $request_no = $request->request_no;
+                $save = $this->stockTransferService->store($data, $request_no);
                 $save->items = $items;
                 if ($save->save()) {
-                    $user_info = session('user_info');
-                    \LogActivity::addToLog(strtoupper($user_info['memberData']['company_name_eng']) . ' Add a new Transfer Stock Request (' . $data['request_no'] . ')', null);
+                    $url = config('app.url');
+                    \LogActivity::addToLog(strtoupper($user['user']['company_name_eng']) . ' Add a new Transfer Stock Request (' . $data['request_no'] . ')', null);
                     \DB::commit();
-                    return response()->json(['status' => 200, 'message' => 'Data has been saved successfully']);
+                    return response()->json(['status' => 200, 'message' => 'Data has been saved successfully', 'url' => $url]);
                 } else {
                     return response()->json(['status' => 401, 'message' => 'Data has not been saved']);
                 }
             } catch (\Throwable $th) {
+                \DB::rollBack();
                 return response()->json(['status' => 500, 'message' => $th->getMessage()], 500);
             }
 
@@ -228,13 +262,16 @@ class StockTransferController extends Controller
     {
         if ($request->ajax()) {
             // echo "<pre>"; print_r($request->all()); exit;
-            $user_info = session('user_info');
+            $user = checkMemberID(Auth::guard('web')->user()->id);
+            $token = $user['user']['v2_token'];
+            $gs1MemberID = $user['user']['parentMemberUniqueID'];
+            $gcpGLNID = $user['user']['gcpGLNID'];
             $product = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $user_info['token'],
+                'Authorization' => 'Bearer ' . $token,
             ])->get('https://gs1ksa.org:3093/api/getAlldigital_linkBYfield', [
                         'digital_info_type' => $request->category,
-                        // 'user_id' => $user_info['memberData']['companyID']
-                        'user_id' => '10105'
+                        'user_id' => $gs1MemberID
+                        // 'user_id' => '10105'
                     ]);
             $productBody = $product->getBody();
             $productData = json_decode($productBody, true);
@@ -301,15 +338,21 @@ class StockTransferController extends Controller
     /***************************************************************/
     public function edit($id = null)
     {
-        $this->authenticateRole("stock_management");
-        $this->authenticateRole("stock_transfer");
+        $roles = [
+            '0' => 'stock_management',
+            '1' => 'stock_transfer'
+        ];
+        $this->authenticateRole($roles);
 
         $pageTitle = "Manage Stock";
-        $user_info = session('user_info');
+        $user = checkMemberID(Auth::guard('web')->user()->id);
+        $token = $user['user']['v2_token'];
+        $gs1MemberID = $user['user']['parentMemberUniqueID'];
+        $gcpGLNID = $user['user']['gcpGLNID'];
         $gln = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $user_info['token'],
+            'Authorization' => 'Bearer ' . $token,
         ])->get('https://gs1ksa.org:3093/api/gln', [
-                    'user_id' => $user_info['memberData']['id'],
+                    'user_id' => $gs1MemberID,
                 ]);
         $glnBody = $gln->getBody();
         $glnData = json_decode($glnBody, true);
@@ -345,12 +388,13 @@ class StockTransferController extends Controller
         }
         session(['stock_request' => 'edit', 'stockRequestData' => $itemArr]);
         // echo "<pre>"; print_r($stockRequestData->toArray()); exit;
-        return view('user.stock.stock_transfer.edit', compact('pageTitle', 'user_info', 'glns', 'stockRequestData'));
+        return view('user.stock.stock_transfer.edit', compact('pageTitle', 'glns', 'stockRequestData'));
     }
-    public function update(Request $request,$id=null)
+    public function update(Request $request, $id = null)
     {
         if ($request->ajax()) {
             try {
+
                 $data = $request->all();
                 $selectProduct = json_decode($data['selectedProducts']);
                 // $items = $this->stockTransferService->makeArr($data);

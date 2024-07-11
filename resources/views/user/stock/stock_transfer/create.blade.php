@@ -370,7 +370,7 @@
                     </div>
                     <div class="col text-center"><strong>Brand Name:</strong> <span id="modalBrandName"></span></div>
                     <div class="col text-center"><strong>Barcode:</strong> <span id="modalBarcode"></span></div>
-                    <div class="col text-center"><button class="btn btn-primary">Add Digital Link</button></div>
+                    <!-- <div class="col text-center"><button class="btn btn-primary">Add Digital Link</button></div> -->
                 </div>
                 <div class="row">
                     <div class="col-12">

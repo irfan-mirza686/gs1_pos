@@ -32,6 +32,11 @@ class UserService
 		$user->mobile = $data['mobile'];
 		$user->group_id = $data['group_id'];
 		$user->status = $data['status'];
+		$user->companyID = Auth::guard('web')->user()->companyID;
+		$user->cr_number = Auth::guard('web')->user()->cr_number;
+		$user->cr_activity = Auth::guard('web')->user()->cr_activity;
+		$user->company_name_eng = Auth::guard('web')->user()->company_name_eng;
+		$user->company_name_arabic = Auth::guard('web')->user()->company_name_arabic;
 		$user->parent_memberID = Auth::guard('web')->user()->id;
 		return $user;
 	}
@@ -47,6 +52,7 @@ class UserService
 // echo "<pre>"; print_r($data); exit;
         $user = $data['memberData'];
         $newUser = new User;
+        $newUser->parentMemberUniqueID = $user['id'];
         $newUser->group_id = 1;
         $newUser->user_type = $user['user_type'];
         $newUser->parent_memberID = 0;
@@ -66,6 +72,7 @@ class UserService
         $newUser->company_name_arabic = $user['company_name_arabic'];
         $newUser->gcpGLNID = $user['gcpGLNID'];
         $newUser->gln = $user['gln'];
+        $newUser->v2_token = $data['token'];
         $newUser->gcp_expiry = date('Y-m-d h:i:s',strtotime($user['gcp_expiry']));
         $newUser->password = bcrypt('123456');
         $newUser->code = '123456';

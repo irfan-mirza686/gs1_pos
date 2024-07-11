@@ -4,17 +4,42 @@ use App\Models\Product;
 use App\Models\User;
 
 
-function checkMemberID($userID)
+function checkMemberID($user_id)
 {
 
-    $getMainMember = User::where('id', $userID)->first();
-    $user = '';
-    if ($getMainMember->parent_memberID == 0) {
-        $user = $getMainMember;
-    } else {
-        $user = User::where('id', $getMainMember->parent_memberID)->first();
+    $getCurrentMember = User::find($user_id);
+    $mainMember = [];
+    $userType = '';
+    if (isset($getCurrentMember) && $getCurrentMember->parent_memberID == 0) {
+        $userType = 'parent';
+        $mainMember = $getCurrentMember;
+    } else if(isset($getCurrentMember) && !empty($getCurrentMember)){
+        $userType = 'child';
+        $mainMember = User::where('id', $getCurrentMember->parent_memberID)->first();
+    }else{
+        $userType = '';
+        $mainMember = [];
     }
-    return $user;
+    return ['userType'=> $userType,'user'=>$mainMember];
+}
+
+function checkMemberByEmail($email)
+{
+
+    $getCurrentMember = User::where('email',$email)->first();
+    $mainMember = [];
+    $userType = '';
+    if (isset($getCurrentMember) && $getCurrentMember->parent_memberID == 0) {
+        $userType = 'parent';
+        $mainMember = $getCurrentMember;
+    } else if(isset($getCurrentMember) && !empty($getCurrentMember)){
+        $userType = 'child';
+        $mainMember = User::where('id', $getCurrentMember->parent_memberID)->first();
+    }else{
+        $userType = '';
+        $mainMember = [];
+    }
+    return ['userType'=> $userType,'user'=>$mainMember];
 }
 
 if (!function_exists('formatArabicText')) {
