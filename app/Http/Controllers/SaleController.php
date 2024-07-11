@@ -114,9 +114,8 @@ class SaleController extends Controller
 
         $pageTitle = "POS";
         $user = checkMemberID(Auth::guard('web')->user()->id);
-            // echo "<pre>"; print_r($user); exit;
-            $token = $user['user']['v2_token'];
-            $gs1MemberID = $user['user']['parentMemberUniqueID'];
+        $token = $user['user']['v2_token'];
+        $gs1MemberID = $user['user']['parentMemberUniqueID'];
         // echo "<pre>"; print_r($user_info['memberData']['companyID']); exit;
         $printInvoiceNo = time();
         $page_name = "pos";
@@ -146,26 +145,26 @@ class SaleController extends Controller
         $customer = Customer::find(1);
         // echo "<pre>"; print_r($userLocation); exit;
 
-        return view('user.sales.pos.index', compact('pageTitle', 'printInvoiceNo', 'page_name', 'userLocation', 'glns', 'customer','user'));
+        return view('user.sales.pos.index', compact('pageTitle', 'printInvoiceNo', 'page_name', 'userLocation', 'glns', 'customer', 'user'));
     }
     /********************************************************************/
     public function findProduct(Request $request)
     {
         if ($request->ajax()) {
             try {
-                $user_info = session('user_info');
-                $token = $user_info['token'];
-                $barcode = $request->barcode;
-                $product = $this->saleService->findProductData($token, $barcode);
-                // echo "<pre>"; print_r($product['prodArray']['quantity']); exit;
-                if ($product['prodArray']['quantity'] <= 0) {
-                    return response()->json(['status' => 422, 'message' => 'Out of stock! Remaining quantity is ' . $product['prodArray']['quantity']]);
-                }
-                if ($product['status'] === 404) {
-                    return response()->json(['status' => 404, 'message' => $product['message']]);
-                } else {
-                    return response()->json(['status' => 200, 'prodArray' => $product['prodArray']]);
-                }
+                $user = checkMemberID(Auth::guard('web')->user()->id);
+                $token = $user['user']['v2_token'];
+            $barcode = $request->barcode;
+            $product = $this->saleService->findProductData($token, $barcode);
+            // echo "<pre>"; print_r($product['prodArray']['quantity']); exit;
+            if ($product['prodArray']['quantity'] <= 0) {
+                return response()->json(['status' => 422, 'message' => 'Out of stock! Remaining quantity is ' . $product['prodArray']['quantity']]);
+            }
+            if ($product['status'] === 404) {
+                return response()->json(['status' => 404, 'message' => $product['message']]);
+            } else {
+                return response()->json(['status' => 200, 'prodArray' => $product['prodArray']]);
+            }
             } catch (\Throwable $th) {
                 return response()->json(['status' => 500, 'message' => $th->getMessage()], 500);
             }
