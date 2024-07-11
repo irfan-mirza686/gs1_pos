@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Reports;
 
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use Auth;
 use Illuminate\Http\Request;
 use App\Models\Sale;
 use DB;
@@ -40,9 +41,8 @@ class PosSaleReportController extends Controller
         $this->authenticateRole($roles);
 
         $pageTitle = "Sales Report";
-        $user_info = session('user_info');
         $customers = Customer::get();
-        return view('user.reports.sales.index', compact('pageTitle', 'user_info', 'customers'));
+        return view('user.reports.sales.index', compact('pageTitle', 'customers'));
     }
     /********************************************************************/
     public function getGPCData(Request $request)
@@ -51,10 +51,11 @@ class PosSaleReportController extends Controller
             try {
 
                 Session::put('page', 'addProduct');
-                $user_info = session('user_info');
+                $user = checkMemberID(Auth::guard('web')->user()->id);
+                $token = $user['user']['v2_token'];
                 $search = $request->input('q');
                 $gpc = Http::withHeaders([
-                    'Authorization' => 'Bearer ' . $user_info['token'],
+                    'Authorization' => 'Bearer ' . $token,
                 ])->get('https://gs1ksa.org:4044/api/findSimilarRecords', [
                             'text' => trim($search),
                             'tableName' => 'gpc_bricks',
